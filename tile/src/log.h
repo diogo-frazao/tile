@@ -26,8 +26,16 @@ enum TextColor
     TEXT_COLOR_COUNT
 };
 
+enum LogType
+{
+    MINI,
+    LOG,
+    WARNING,
+    ERROR
+};
+
 template <typename ...Args>
-void _log(const char* prefix, const char* msg, const TextColor textColor, Args... args)
+void _log(const LogType logType, const char* msg, Args... args)
 {
     static const char* TextColorTable[TEXT_COLOR_COUNT] =
     {
@@ -49,6 +57,42 @@ void _log(const char* prefix, const char* msg, const TextColor textColor, Args..
       "\x1b[97m", // TEXT_COLOR_BRIGHT_WHITE
     };
 
+    const char* prefix;
+    TextColor textColor;
+
+    switch (logType)
+    {
+        case MINI:
+        {
+            prefix = "MINI:";
+            textColor = TEXT_COLOR_WHITE;
+            break;
+        }
+        case LOG:
+        {
+            prefix = "LOG:";
+            textColor = TEXT_COLOR_GREEN;
+            break;
+        }
+        case WARNING:
+        {
+            prefix = "WARNING:";
+            textColor = TEXT_COLOR_YELLOW;
+            break;
+        }
+        case ERROR:
+        {
+            prefix = "ERROR";
+            textColor = TEXT_COLOR_RED;
+            break;
+        }
+        default:
+        {
+            __debugbreak();
+            return;
+        }
+    }
+
     // Init color, prefix, message and close color
     char formatBuffer[8192]{};
     sprintf_s(formatBuffer, sizeof(formatBuffer), "%s %s %s \033[0m", TextColorTable[textColor], prefix, msg);
@@ -60,23 +104,14 @@ void _log(const char* prefix, const char* msg, const TextColor textColor, Args..
 }
 
 #if DEBUG_ENABLED
-#define D_MINI(msg, ...) _log("MINI: ", msg, TEXT_COLOR_WHITE, ##__VA_ARGS__);
-#define D_LOG(msg, ...) _log("LOG: ", msg, TEXT_COLOR_GREEN, ##__VA_ARGS__);
-#define D_WARNING(msg, ...) _log("WARN: ", msg, TEXT_COLOR_YELLOW, ##__VA_ARGS__);
-#define D_ERROR(msg, ...) _log("ERROR: ", msg, TEXT_COLOR_RED, ##__VA_ARGS__);
+#define D_LOG(logType, msg, ...) _log(logType, ##__VA_ARGS__);
 #define D_ASSERT(x, msg, ...)           \
 {                                       \
     if (!x)                             \
     {                                   \
-        D_ERROR(msg, ##__VA_ARGS__);    \
+        D_LOG(ERROR, msg, ##__VA_ARGS__);    \
         __debugbreak();                 \
     }                                   \
 }                                       \
 
-#else
-#define D_MINI(msg, ...);
-#define D_LOG(msg, ...);
-#define D_WARNING(msg, ...);
-#define D_ERROR(msg, ...);
-#define D_ASSERT(x, msg, ...);
 #endif
