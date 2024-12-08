@@ -1,8 +1,9 @@
 #include <SDL.h>
-#include "app.h"
+#include "core/app.h"
 
 int main(int argc, char* args[])
 {
-	runApp();
+	App app;
+	app.runApp();
 	return 0;
 }

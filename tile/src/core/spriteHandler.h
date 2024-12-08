@@ -16,7 +16,6 @@ struct Sprite
 	Vec2 position;
 	IVec2 size;
 	IVec2 offset;
-	void setupSprite(const IVec2& size, const IVec2& offset);
 };
 
 

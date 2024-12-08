@@ -27,23 +27,18 @@ namespace textures
 
 		switch (type)
 		{
-		case CURSOR:
-		{
-			sprite.setupSprite(IVec2(7, 10), IVec2(0, 0));
-			break;
-		}
-		default:
-		{
-			D_ASSERT(false, "Invalid texture to load");
-		}
+			case CURSOR:
+			{
+				sprite.offset = { 0 ,0 };
+				sprite.size = { 7, 10 };
+				break;
+			}
+			default:
+			{
+				D_ASSERT(false, "Invalid texture to load");
+			}
 		}
 
 		return sprite;
 	}
-}
-
-void Sprite::setupSprite(const IVec2& size, const IVec2& offset)
-{
-	this->size = size;
-	this->offset = offset;
 }
