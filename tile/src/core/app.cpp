@@ -2,11 +2,13 @@
 #include <SDL.h>
 #include "log.h"
 #include "spriteHandler.h"
+#include "input.h"
 
 void App::runApp()
 {
 	initWindow();
 	textures::loadAtlas();
+	start();
 	update();
 	killWindow();
 }
@@ -44,11 +46,14 @@ void App::initWindow()
 	SDL_SetWindowSize(s_window, 960, 540);
 }
 
-void App::update()
+void App::start()
 {
 	_mainScreen.start();
-	SDL_Event ev;
+}
 
+void App::update()
+{
+	SDL_Event ev;
 	while (true)
 	{
 		SDL_PollEvent(&ev);
@@ -57,8 +62,12 @@ void App::update()
 			return;
 		}
 		
+		handleKeyboardInput(ev);
+		handleMouseInput(ev);
+
 		_mainScreen.update();
 
+		resetKeyboardAndMouseInput();
 		render();
 	}
 }

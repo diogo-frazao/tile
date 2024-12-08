@@ -1,6 +1,6 @@
 #pragma once
-#include <stdint.h>
 #include "core/spriteHandler.h"
+#include "core/lib.h"
 
 class MainScreen
 {
@@ -11,6 +11,5 @@ public:
 private:
 	Sprite _mouseSprite;
 	// TODO port to input system
-	int32_t lastMouseX = 0;
-	int32_t lastMouseY = 0;
+	IVec2 _lastMousePosition;
 };

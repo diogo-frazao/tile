@@ -3,6 +3,8 @@
 #include <SDL.h>
 #include "core/app.h"
 #include "core/lib.h"
+#include "core/input.h"
+#include "core/log.h"
 
 void MainScreen::start()
 {
@@ -12,23 +14,12 @@ void MainScreen::start()
 
 void MainScreen::update()
 {
-	// TODO port to input system
-	int32_t w = 0;
-	SDL_GetWindowSize(s_window, &w, nullptr);
-	uint8_t screenfactor = w / s_screenWidth;
+	IVec2 mousePos = getMousePosition();
+	_mouseSprite.position.x = lerp(_lastMousePosition.x, mousePos.x, 0.6f);
+	_mouseSprite.position.y = lerp(_lastMousePosition.y, mousePos.y, 0.6f);
 
-	int32_t mx = 0;
-	int32_t my = 0;
-	SDL_GetMouseState(&mx, &my);
-
-	int32_t mouseX = mx / screenfactor;
-	int32_t mouseY = my / screenfactor;
-
-	_mouseSprite.position.x = lerp(lastMouseX, mouseX, 0.6f);
-	_mouseSprite.position.y = lerp(lastMouseY, mouseY, 0.6f);
-
-	lastMouseX = mouseX;
-	lastMouseY = mouseY;
+	_lastMousePosition.x = mousePos.x;
+	_lastMousePosition.y = mousePos.y;
 }
 
 void MainScreen::render()

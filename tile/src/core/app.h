@@ -13,6 +13,7 @@ public:
 	void runApp();
 private:
 	void initWindow();
+	void start();
 	void update();
 	void render();
 	void killWindow();

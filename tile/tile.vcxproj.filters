@@ -18,24 +18,36 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\app.cpp">
+    <ClCompile Include="src\core\app.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\spriteHandler.cpp">
+    <ClCompile Include="src\mainScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\spriteHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\log.h">
+    <ClInclude Include="src\core\app.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\app.h">
+    <ClInclude Include="src\core\lib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\spriteHandler.h">
+    <ClInclude Include="src\core\log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib.h">
+    <ClInclude Include="src\core\spriteHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\screens.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

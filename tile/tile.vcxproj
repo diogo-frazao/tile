@@ -164,12 +164,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\core\app.cpp" />
+    <ClCompile Include="src\core\input.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mainScreen.cpp" />
     <ClCompile Include="src\core\spriteHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\app.h" />
+    <ClInclude Include="src\core\input.h" />
     <ClInclude Include="src\core\lib.h" />
     <ClInclude Include="src\core\log.h" />
     <ClInclude Include="src\core\spriteHandler.h" />

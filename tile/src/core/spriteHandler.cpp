@@ -4,6 +4,7 @@
 #include <string>
 #include "app.h"
 #include "log.h"
+
 namespace textures
 {
 	SDL_Texture* loadAtlas()
