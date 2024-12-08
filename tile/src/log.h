@@ -104,7 +104,7 @@ void _log(const LogType logType, const char* msg, Args... args)
 }
 
 #if DEBUG_ENABLED
-#define D_LOG(logType, msg, ...) _log(logType, ##__VA_ARGS__);
+#define D_LOG(logType, msg, ...) _log(logType, msg, ##__VA_ARGS__);
 #define D_ASSERT(x, msg, ...)           \
 {                                       \
     if (!x)                             \

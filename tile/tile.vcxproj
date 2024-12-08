@@ -165,10 +165,13 @@
   <ItemGroup>
     <ClCompile Include="src\app.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\spriteHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app.h" />
+    <ClInclude Include="src\lib.h" />
     <ClInclude Include="src\log.h" />
+    <ClInclude Include="src\spriteHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
