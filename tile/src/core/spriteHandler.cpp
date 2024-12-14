@@ -13,7 +13,7 @@ namespace textures
 		SDL_Texture* const texture = IMG_LoadTexture(s_renderer, path);
 		if (texture == nullptr)
 		{
-			D_ASSERT(false, "Texture is null. Error %s", SDL_GetError());
+			D_ASSERT(false, "Failed to load atlas texture. Error %s", SDL_GetError());
 			return nullptr;
 		}
 

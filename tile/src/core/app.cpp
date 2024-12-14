@@ -3,6 +3,7 @@
 #include "log.h"
 #include "spriteHandler.h"
 #include "input.h"
+#include <SDL_ttf.h>
 
 void App::runApp()
 {
@@ -19,6 +20,11 @@ void App::initWindow()
 	{
 		D_ASSERT(false, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 		return;
+	}
+
+	if (TTF_Init() < 0)
+	{
+		D_ASSERT(false, "Failed to init TTF text lib. Error: &s\n", TTF_GetError());
 	}
 
 	s_window = SDL_CreateWindow("tile", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, s_screenWidth, s_screenHeight, SDL_WINDOW_SHOWN);
@@ -79,6 +85,11 @@ void App::render()
 
 	_mainScreen.render();
 
+	/*// Render panel in front of main screen but behind everything else
+	SDL_SetRenderDrawColor(s_renderer, 0, 0, 0, 200);
+	SDL_RenderFillRect(s_renderer, nullptr);
+	SDL_SetRenderDrawColor(s_renderer, 0, 0, 0, 1);*/
+
 	SDL_RenderPresent(s_renderer);
 }
 
@@ -88,5 +99,6 @@ void App::killWindow()
 	SDL_DestroyWindow(s_window);
 	s_window = nullptr;
 	s_renderer = nullptr;
+	TTF_Quit();
 	SDL_Quit();
 }

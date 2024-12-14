@@ -10,6 +10,5 @@ public:
 	void render();
 private:
 	Sprite _mouseSprite;
-	// TODO port to input system
 	IVec2 _lastMousePosition;
 };
