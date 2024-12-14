@@ -29,6 +29,7 @@ namespace ui
 
 		SDL_FRect newRect { position.x, position.y, (float)textSurface->w, (float)textSurface->h };
 		SDL_FreeSurface(textSurface);
+		TTF_CloseFont(font);
 
 		return Text(position, Vec2(newRect.w, newRect.h), textTexture);
 	}
