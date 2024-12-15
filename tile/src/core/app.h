@@ -18,5 +18,6 @@ private:
 	void render();
 	void killWindow();
 
+	MouseScreen _mouseScreen;
 	MainScreen _mainScreen;
 };

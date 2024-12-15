@@ -31,5 +31,5 @@ bool wasMouseButtonPressedThisFrame(uint8_t mouseButtonIndex);
 bool wasMouseButtonReleasedThisFrame(uint8_t mouseButtonIndex);
 IVec2 getMousePosition();
 
-static std::array<KeyState, 290> s_keyboardInputState;
-static MouseState s_mouseInputState;
+inline std::array<KeyState, 290> s_keyboardInputState;
+inline MouseState s_mouseInputState;

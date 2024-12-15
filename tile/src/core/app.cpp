@@ -55,6 +55,8 @@ void App::initWindow()
 void App::start()
 {
 	_mainScreen.start();
+
+	_mouseScreen.start();
 }
 
 void App::update()
@@ -73,6 +75,7 @@ void App::update()
 
 		_mainScreen.update();
 
+		_mouseScreen.update();
 		resetKeyboardAndMouseInput();
 		render();
 	}
@@ -85,11 +88,7 @@ void App::render()
 
 	_mainScreen.render();
 
-	/*// Render panel in front of main screen but behind everything else
-	SDL_SetRenderDrawColor(s_renderer, 0, 0, 0, 200);
-	SDL_RenderFillRect(s_renderer, nullptr);
-	SDL_SetRenderDrawColor(s_renderer, 0, 0, 0, 1);*/
-
+	_mouseScreen.render();
 	SDL_RenderPresent(s_renderer);
 }
 

@@ -34,6 +34,12 @@ namespace textures
 				sprite.size = { 7, 10 };
 				break;
 			}
+			case MAIN:
+			{
+				sprite.offset = { 7, 0 };
+				sprite.size = { 320, 180 };
+				break;
+			}
 			default:
 			{
 				D_ASSERT(false, "Invalid texture to load");
