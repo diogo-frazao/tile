@@ -34,7 +34,7 @@ namespace textures
 				sprite.size = { 7, 10 };
 				break;
 			}
-			case MAIN:
+			case MOCKUP:
 			{
 				sprite.offset = { 7, 0 };
 				sprite.size = { 320, 180 };

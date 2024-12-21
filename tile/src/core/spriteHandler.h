@@ -8,7 +8,7 @@ inline SDL_Texture* s_atlasTexture;
 enum spriteType
 {
 	CURSOR,
-	MAIN,
+	MOCKUP,
 	SPRITES_MAX,
 };
 

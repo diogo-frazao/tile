@@ -8,9 +8,6 @@ public:
 	void start();
 	void update();
 	void render();
-private:
-	Sprite _mouseSprite;
-	IVec2 _lastMousePosition;
 };
 
 class MouseScreen
