@@ -4,6 +4,7 @@
 #include "spriteHandler.h"
 #include "input.h"
 #include <SDL_ttf.h>
+#include <cmath>
 
 void App::runApp()
 {
@@ -35,7 +36,7 @@ void App::initWindow()
 		return;
 	}
 
-	s_renderer = SDL_CreateRenderer(s_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	s_renderer = SDL_CreateRenderer(s_window, -1, SDL_RENDERER_ACCELERATED);
 
 	if (s_renderer == nullptr)
 	{
@@ -62,22 +63,33 @@ void App::start()
 void App::update()
 {
 	SDL_Event ev;
+	uint64_t lastFrameTimeStamp = SDL_GetTicks64();
 	while (true)
 	{
-		SDL_PollEvent(&ev);
-		if (ev.type == SDL_QUIT)
+		static constexpr uint8_t s_targetFrameRate = 60;
+		static const uint8_t s_millisecondsBetweenFrames = static_cast<uint8_t>(std::floorf(1000.f / s_targetFrameRate));
+
+		const uint64_t millisecondsSinceLastFrame = SDL_GetTicks64() - lastFrameTimeStamp;
+		if (millisecondsSinceLastFrame >= s_millisecondsBetweenFrames)
 		{
-			return;
+			//D_LOG(MINI, "FPS: %i", 1000 / millisecondsSinceLastFrame);
+			lastFrameTimeStamp = SDL_GetTicks64();
+
+			SDL_PollEvent(&ev);
+			if (ev.type == SDL_QUIT)
+			{
+				return;
+			}
+
+			handleKeyboardInput(ev);
+			handleMouseInput(ev);
+
+			_mainScreen.update();
+
+			_mouseScreen.update();
+			resetKeyboardAndMouseInput();
+			render();
 		}
-		
-		handleKeyboardInput(ev);
-		handleMouseInput(ev);
-
-		_mainScreen.update();
-
-		_mouseScreen.update();
-		resetKeyboardAndMouseInput();
-		render();
 	}
 }
 
