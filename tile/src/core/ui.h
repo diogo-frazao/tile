@@ -2,9 +2,14 @@
 #include "lib.h"
 #include <stdint.h>
 #include <SDL_pixels.h>
+#include <vector>
 
 struct SDL_Texture;
 struct SDL_FRect;
+
+inline SDL_Color s_white{ 255, 255, 255 };
+inline SDL_Color s_gray{ 137, 128, 128 };
+inline SDL_Color s_orange{ 234, 140, 70 };
 
 enum DrawMode
 {
@@ -46,5 +51,23 @@ public:
 	CheckBox() = default;
 };
 
+class OptionSelector
+{
+public:
+	Text text;
+	int8_t selectedIndex = 0;
+	std::vector<const char*> options;
+	bool allowWrap = true;
+
+	void render(SDL_Texture* targetTexture, SDL_FRect& dest);
+	void destroy();
+	void onHovered();
+	void onRightPressed();
+	void onLeftPressed();
+	OptionSelector() = default;
+};
+
 Text createText(const char* text, const Vec2& position, uint16_t size, const SDL_Color& color, const DrawMode drawMode = TOP_CENTER);
 CheckBox createCheckbox(bool startEnabled, const Vec2& position, uint16_t size, const SDL_Color& color, const DrawMode drawMode = TOP_CENTER);
+OptionSelector createOptionSelector(const std::vector<const char*>& options, const Vec2& position, uint16_t size, const SDL_Color& color, 
+	const DrawMode drawMode = TOP_CENTER, bool allowWrap = true);

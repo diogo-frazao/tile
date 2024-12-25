@@ -23,6 +23,7 @@ private:
 	Text title;
 	Text subtitle;
 	CheckBox testCheckBox;
+	OptionSelector testOptionSelector;
 };
 
 class PanelScreen

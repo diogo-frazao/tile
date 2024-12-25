@@ -6,16 +6,16 @@
 
 struct KeyState
 {
-	bool isDown;
-	bool justPressed;
-	bool justReleased;
+	bool isDown = false;
+	bool justPressed = false;
+	bool justReleased = false;
 	uint8_t pressedCounter = 0;
 };
 
 struct MouseState
 {
 	std::array<KeyState, 3> mouseButtonsState;
-	float mouseWheelScroll;
+	float mouseWheelScroll = 0.f;
 };
 
 void handleKeyboardInput(SDL_Event& ev);

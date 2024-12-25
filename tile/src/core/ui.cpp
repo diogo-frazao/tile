@@ -6,7 +6,6 @@
 
 static Text s_invalidText{ Vec2(0, 0), Vec2(0, 0), nullptr, {255, 255, 255}, 150 };
 
-static SDL_Color s_selectedUIColor{ 234, 140, 70 };
 static const char* s_selectedCharacter = "x";
 static const char* s_notSelectedCharacter = "_";
 
@@ -43,6 +42,17 @@ CheckBox createCheckbox(bool startEnabled, const Vec2& position, uint16_t size, 
 	const char* newCheckboxText = startEnabled ? s_selectedCharacter : s_notSelectedCharacter;
 	checkbox.text = createText(newCheckboxText, position, size, color, drawMode);
 	return checkbox;
+}
+
+OptionSelector createOptionSelector(const std::vector<const char*>& options, const Vec2& position, uint16_t size, 
+	const SDL_Color& color, const DrawMode drawMode, bool allowWrap)
+{
+	D_ASSERT((options.size() > 0) && (options.size() < 250), "Invalid options array");
+	OptionSelector optionSelector;
+	optionSelector.allowWrap = allowWrap;
+	optionSelector.options = options;
+	optionSelector.text = createText(options[optionSelector.selectedIndex], position, size, color, drawMode);
+	return optionSelector;
 }
 
 void Text::render(SDL_Texture* targetTexture, SDL_FRect& dest)
@@ -96,7 +106,7 @@ void Text::destroy()
 
 void Text::onHovered()
 {
-	if (!texture || SDL_SetTextureColorMod(texture, s_selectedUIColor.r, s_selectedUIColor.g, s_selectedUIColor.b) < 0)
+	if (!texture || SDL_SetTextureColorMod(texture, s_orange.r, s_orange.g, s_orange.b) < 0)
 	{
 		D_ASSERT(false, "Invalid texture blend");
 		return;
@@ -126,3 +136,55 @@ void CheckBox::onSelected()
 	text.destroy();
 	text = newText;
 }
+
+void OptionSelector::render(SDL_Texture* targetTexture, SDL_FRect& dest)
+{
+	text.render(targetTexture, dest);
+}
+
+void OptionSelector::destroy()
+{
+	text.destroy();
+}
+
+void OptionSelector::onHovered()
+{
+	text.onHovered();
+}
+
+void OptionSelector::onRightPressed()
+{
+	if ((selectedIndex == (options.size() - 1)) && allowWrap)
+	{
+		selectedIndex = 0;
+	}
+	else
+	{
+		selectedIndex = min(++selectedIndex, static_cast<int>(options.size() - 1));
+	}
+
+	Text newText = createText(options[selectedIndex], text.position, text.size, text.color, text.drawMode);
+	text.destroy();
+	text = newText;
+}
+
+void OptionSelector::onLeftPressed()
+{
+	if (selectedIndex == 0 && allowWrap)
+	{
+		selectedIndex = static_cast<int>(options.size() - 1);
+	}
+	else
+	{
+		selectedIndex = max(--selectedIndex, 0);
+	}
+
+	Text newText = createText(options[selectedIndex], text.position, text.size, text.color, text.drawMode);
+	text.destroy();
+	text = newText;
+}
+
+
+
+
+
