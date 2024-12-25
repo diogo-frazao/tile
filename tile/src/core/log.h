@@ -103,7 +103,7 @@ void _log(const LogType logType, const char* msg, Args... args)
     puts(textBuffer);
 }
 
-#if DEBUG_ENABLED
+#if DEBUG_ENABLED == 1
 #define D_LOG(logType, msg, ...) _log(logType, msg, ##__VA_ARGS__);
 #define D_ASSERT(x, msg, ...)           \
 {                                       \
@@ -113,5 +113,9 @@ void _log(const LogType logType, const char* msg, Args... args)
         __debugbreak();                 \
     }                                   \
 }                                       \
+
+#else
+#define D_LOG(logType, msg, ...)
+#define D_ASSERT(x, msg, ...)
 
 #endif

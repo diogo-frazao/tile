@@ -22,6 +22,7 @@ public:
 private:
 	Text title;
 	Text subtitle;
+	CheckBox testCheckBox;
 };
 
 class PanelScreen

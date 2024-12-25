@@ -4,11 +4,13 @@
 #include "log.h"
 #include "app.h"
 
-static Text s_invalidText{Vec2(0, 0), Vec2(0, 0), nullptr};
+static Text s_invalidText{ Vec2(0, 0), Vec2(0, 0), nullptr, {255, 255, 255}, 150 };
 
 static SDL_Color s_selectedUIColor{ 234, 140, 70 };
+static const char* s_selectedCharacter = "x";
+static const char* s_notSelectedCharacter = "_";
 
-Text createText(const char* text, const Vec2& position, uint8_t size, const SDL_Color& color, const DrawMode drawmode)
+Text createText(const char* text, const Vec2& position, uint16_t size, const SDL_Color& color, const DrawMode drawmode)
 {
 	static const char* fontPath = "font/Renogare.ttf";
 
@@ -31,59 +33,96 @@ Text createText(const char* text, const Vec2& position, uint8_t size, const SDL_
 	SDL_FreeSurface(textSurface);
 	TTF_CloseFont(font);
 
-	return Text(position, Vec2(newRect.w, newRect.h), textTexture, drawmode);
+	return Text(position, Vec2(newRect.w, newRect.h), textTexture, color, size, drawmode);
 }
 
-void renderText(SDL_Texture* targetTexture, SDL_FRect& dest, const Text& text)
+CheckBox createCheckbox(bool startEnabled, const Vec2& position, uint16_t size, const SDL_Color& color, const DrawMode drawMode)
+{
+	CheckBox checkbox;
+	checkbox.isSelected = startEnabled;
+	const char* newCheckboxText = startEnabled ? s_selectedCharacter : s_notSelectedCharacter;
+	checkbox.text = createText(newCheckboxText, position, size, color, drawMode);
+	return checkbox;
+}
+
+void Text::render(SDL_Texture* targetTexture, SDL_FRect& dest)
 {
 	SDL_SetRenderTarget(s_renderer, targetTexture);
 
-	switch (text.drawMode)
+	switch (drawMode)
 	{
 		case TOP_LEFT:
 		{
-			dest.x = text.position.x;
-			dest.y = text.position.y;
+			dest.x = position.x;
+			dest.y = position.y;
 			break;
 		}
 		case TOP_CENTER:
 		{
-			dest.x = text.position.x - (text.bounds.x / 2);
-			dest.y = text.position.y;
+			dest.x = position.x - (bounds.x / 2);
+			dest.y = position.y;
 			break;
 		}
 		case TOP_RIGHT:
 		{
-			dest.x = text.position.x - text.bounds.x;
-			dest.y = text.position.y;
+			dest.x = position.x - bounds.x;
+			dest.y = position.y;
 			break;
 		}
 	}
 
-	dest.w = text.bounds.x;
-	dest.h = text.bounds.y;
+	dest.w = bounds.x;
+	dest.h = bounds.y;
 
-	SDL_RenderCopyExF(s_renderer, text.texture, nullptr, &dest, 0, nullptr, SDL_FLIP_NONE);
+	// Prevent artifacts/leftovers on this new texture. This will not clear the whole renderer, just the new target it points to (aka target texture)
+	// This way we can have a "new" draw per frame like we have with game sprites
+	SDL_RenderClear(s_renderer);
+
+	SDL_RenderCopyExF(s_renderer, texture, nullptr, &dest, 0, nullptr, SDL_FLIP_NONE);
 	SDL_SetRenderTarget(s_renderer, nullptr);
 	SDL_RenderCopy(s_renderer, targetTexture, nullptr, nullptr);
 }
 
-void destroyText(const Text& text)
+void Text::destroy()
 {
-	if (text.texture == nullptr)
+	if (texture == nullptr)
 	{
 		D_ASSERT(false, "Text has invalid texture");
 		return;
 	}
 
-	SDL_DestroyTexture(text.texture);
+	SDL_DestroyTexture(texture);
 }
 
-void onUISelected(const Text& text)
+void Text::onHovered()
 {
-	if (!text.texture || SDL_SetTextureColorMod(text.texture, s_selectedUIColor.r, s_selectedUIColor.g, s_selectedUIColor.b) < 0)
+	if (!texture || SDL_SetTextureColorMod(texture, s_selectedUIColor.r, s_selectedUIColor.g, s_selectedUIColor.b) < 0)
 	{
 		D_ASSERT(false, "Invalid texture blend");
 		return;
 	}
+}
+
+void CheckBox::render(SDL_Texture* targetTexture, SDL_FRect& dest)
+{
+	text.render(targetTexture, dest);
+}
+
+void CheckBox::destroy()
+{
+	text.destroy();
+}
+
+void CheckBox::onHovered()
+{
+	text.onHovered();
+}
+
+void CheckBox::onSelected()
+{
+	isSelected = !isSelected;
+	const char* newCheckboxText = isSelected ? s_selectedCharacter : s_notSelectedCharacter;
+	Text newText = createText(newCheckboxText, text.position, text.size, text.color, text.drawMode);
+	text.destroy();
+	text = newText;
 }
