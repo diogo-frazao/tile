@@ -3,6 +3,16 @@
 #include "core/input.h"
 #include "core/app.h"
 
+void PanelScreen::render()
+{
+	if (isPanelActive)
+	{
+		SDL_SetRenderDrawColor(s_renderer, 0, 0, 0, 200);
+		SDL_RenderFillRect(s_renderer, nullptr);
+		SDL_SetRenderDrawColor(s_renderer, 0, 0, 0, 1);
+	}
+}
+
 void MouseScreen::start()
 {
 	SDL_ShowCursor(SDL_DISABLE);

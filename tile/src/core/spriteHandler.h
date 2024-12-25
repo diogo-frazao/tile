@@ -5,7 +5,7 @@
 struct SDL_Texture;
 inline SDL_Texture* s_atlasTexture;
 
-enum spriteType
+enum SpriteType
 {
 	CURSOR,
 	MOCKUP,
@@ -23,5 +23,5 @@ struct Sprite
 namespace textures
 {
 	SDL_Texture* loadAtlas();
-	Sprite getSprite(spriteType type);
+	Sprite getSprite(SpriteType type);
 }

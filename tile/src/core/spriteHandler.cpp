@@ -22,7 +22,7 @@ namespace textures
 		return s_atlasTexture;
 	}
 
-	Sprite getSprite(spriteType type)
+	Sprite getSprite(SpriteType type)
 	{
 		Sprite sprite;
 

@@ -170,6 +170,7 @@
     <ClCompile Include="src\core\spriteHandler.cpp" />
     <ClCompile Include="src\core\ui.cpp" />
     <ClCompile Include="src\mouseScreen.cpp" />
+    <ClCompile Include="src\settingsScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\app.h" />

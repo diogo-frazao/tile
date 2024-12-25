@@ -13,6 +13,10 @@ void MainScreen::start()
 
 void MainScreen::update()
 {
+	if (wasKeyPressedThisFrame(SDL_SCANCODE_ESCAPE))
+	{
+		SettingsScreen::active = !SettingsScreen::active;
+	}
 }
 
 void MainScreen::render()

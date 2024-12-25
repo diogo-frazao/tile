@@ -56,7 +56,7 @@ void App::initWindow()
 void App::start()
 {
 	_mainScreen.start();
-
+	_settingsScreen.start();
 	_mouseScreen.start();
 }
 
@@ -85,7 +85,7 @@ void App::update()
 			handleMouseInput(ev);
 
 			_mainScreen.update();
-
+			_settingsScreen.update();
 			_mouseScreen.update();
 			resetKeyboardAndMouseInput();
 			render();
@@ -99,13 +99,17 @@ void App::render()
 	SDL_RenderClear(s_renderer);
 
 	_mainScreen.render();
-
+	// Update panel between main screen and ui screens
+	_panelScreen.render();
+	_settingsScreen.render();
 	_mouseScreen.render();
 	SDL_RenderPresent(s_renderer);
 }
 
 void App::killWindow()
 {
+	_settingsScreen.destroy();
+
 	SDL_DestroyRenderer(s_renderer);
 	SDL_DestroyWindow(s_window);
 	s_window = nullptr;
