@@ -15,7 +15,7 @@ void MainScreen::update()
 {
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_ESCAPE))
 	{
-		SettingsScreen::active = !SettingsScreen::active;
+		SettingsScreen::s_active = !SettingsScreen::s_active;
 	}
 }
 

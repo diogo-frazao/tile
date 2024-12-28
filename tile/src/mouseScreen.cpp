@@ -5,7 +5,7 @@
 
 void PanelScreen::render()
 {
-	if (isPanelActive)
+	if (s_isPanelActive)
 	{
 		SDL_SetRenderDrawColor(s_renderer, 0, 0, 0, 200);
 		SDL_RenderFillRect(s_renderer, nullptr);
