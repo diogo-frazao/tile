@@ -8,12 +8,12 @@
 
 void SettingsScreen::start()
 {
-	_uiTexture = SDL_CreateTexture(s_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, s_uiWidth, s_uiHeight);
+	_uiTexture = SDL_CreateTexture(s_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, k_uiResolutionWidth, k_uiResolutionHeight);
 	SDL_SetTextureBlendMode(_uiTexture, SDL_BLENDMODE_BLEND);
 
-	_title = Text("SETTINGS", { s_uiWidth / 2, 35 }, 100, k_gray);
-	_subtitle = Text("enter to apply or esc to leave", { s_uiWidth / 2, 130 }, 70, k_gray);
-	_checkbox = CheckBox(false, { s_uiWidth / 2, 200 }, 70, k_white);
+	_title = Text("SETTINGS", { k_screenWidth / 2, 5 }, 100, k_gray);
+	_subtitle = Text("enter to apply or esc to leave", { k_screenWidth / 2, 30 }, 70, k_gray);
+	_checkbox = CheckBox(false, { k_screenWidth / 2, 40 }, 70, k_white);
 	const std::vector<const char*> options = {
 		"<  320x180  >",
 		"<  640x320  >",
@@ -21,7 +21,7 @@ void SettingsScreen::start()
 		"< 1920x1080 >",
 		"< 2560x1440 >" 
 	};
-	_optionSelector = OptionSelector(options, { s_uiWidth / 2, 300 }, 75, k_white);
+	_optionSelector = OptionSelector(options, { k_screenWidth / 2, 55 }, 75, k_white);
 }
 
 void SettingsScreen::update()
@@ -29,21 +29,7 @@ void SettingsScreen::update()
 	_title.update();
 	_subtitle.update();
 	_checkbox.update();
-
-	if (wasKeyPressedThisFrame(SDL_SCANCODE_DOWN))
-	{
-		_checkbox.onSelected();
-	}
-
-	if (wasKeyPressedThisFrame(SDL_SCANCODE_RIGHT))
-	{
-		_optionSelector.onRightPressed();
-	}
-
-	if (wasKeyPressedThisFrame(SDL_SCANCODE_LEFT))
-	{
-		_optionSelector.onLeftPressed();
-	}
+	_optionSelector.update();
 }
 
 void SettingsScreen::render()

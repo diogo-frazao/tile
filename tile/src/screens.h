@@ -2,8 +2,6 @@
 #include "core/spriteHandler.h"
 #include "core/lib.h"
 #include "core/ui.h"
-#include <vector>
-#include <memory>
 
 struct SDL_Texture;
 

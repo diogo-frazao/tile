@@ -11,30 +11,23 @@ inline const SDL_Color k_white{ 255, 255, 255 };
 inline const SDL_Color k_gray{ 137, 128, 128 };
 inline const SDL_Color k_orange{ 234, 140, 70 };
 
-enum DrawMode
-{
-	TOP_LEFT,
-	TOP_CENTER,
-	TOP_RIGHT,
-};
-
 class Text
 {
 public:
-	Vec2 _position{0,0};
+	Vec2 _worldPosition{0,0};
 	SDL_Texture* _texture = nullptr;
-	Vec2 _bounds{0,0};
+	Vec2 _worldBounds{0,0};
 	uint16_t _size = 0;
 	SDL_Color _color{0,0,0};
-	DrawMode _drawMode = TOP_CENTER;
+	RectCollider _mainCollider;
 	bool _isHovered = false;
 
 	virtual void update();
 	virtual void render(SDL_Texture* targetTexture, SDL_FRect& dest);
-	virtual void onHovered();
+	virtual void onHovered(bool isHovered);
 
 	Text() = default;
-	Text(const char* text, const Vec2& position, uint16_t size, const SDL_Color& color, const DrawMode drawMode = TOP_CENTER);
+	Text(const char* text, const Vec2& worldPosition, uint16_t size, const SDL_Color& color, const bool justify = true);
 };
 
 
@@ -42,9 +35,10 @@ class CheckBox : public Text
 {
 public:
 	bool _isSelected = false;
+	virtual void update() override;
 	void onSelected();
 	CheckBox() = default;
-	CheckBox(bool startEnabled, const Vec2& position, uint16_t size, const SDL_Color& color, const DrawMode drawMode = TOP_CENTER);
+	CheckBox(bool startEnabled, const Vec2& worldPosition, uint16_t size, const SDL_Color& color, const bool justify = true);
 };
 
 class OptionSelector : public Text
@@ -54,11 +48,12 @@ public:
 	int8_t _selectedIndex = 0;
 	bool _allowWrap = true;
 
+	virtual void update() override;
 	void onRightPressed();
 	void onLeftPressed();
 	OptionSelector() = default;
-	OptionSelector(const std::vector<const char*>& options, const Vec2& position, uint16_t size, const SDL_Color& color,
-		const DrawMode drawMode = TOP_CENTER, bool allowWrap = true);
+	OptionSelector(const std::vector<const char*>& options, const Vec2& worldPosition, uint16_t size, const SDL_Color& color,
+		const bool justify = true, bool allowWrap = true);
 };
 
 void destroyWidget(const Text& widget);

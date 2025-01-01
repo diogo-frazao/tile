@@ -17,6 +17,11 @@ void MainScreen::update()
 	{
 		SettingsScreen::s_active = !SettingsScreen::s_active;
 	}
+
+	if (wasKeyPressedThisFrame(SDL_SCANCODE_Q))
+	{
+		s_debugCollidersEnabled = !s_debugCollidersEnabled;
+	}
 }
 
 void MainScreen::render()

@@ -2,10 +2,16 @@
 #include <stdint.h>
 #include "../screens.h"
 
-inline constexpr uint16_t s_screenWidth = 320;
-inline constexpr uint16_t s_screenHeight = 180;
-inline constexpr uint16_t s_uiWidth = 1920;
-inline constexpr uint16_t s_uiHeight = 1080;
+inline bool s_debugCollidersEnabled = false;
+
+// Base game res
+inline constexpr uint16_t k_screenWidth = 320;
+inline constexpr uint16_t k_screenHeight = 180;
+
+// This defines the resolution of the ui texture (used to draw all the ui)
+inline constexpr uint16_t k_uiResolutionWidth = 1920;
+inline constexpr uint16_t k_uiResolutionHeight = 1080;
+
 inline struct SDL_Window* s_window = nullptr;
 inline struct SDL_Renderer* s_renderer = nullptr;
 

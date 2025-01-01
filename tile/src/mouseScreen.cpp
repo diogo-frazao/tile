@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include "core/input.h"
 #include "core/app.h"
+#include "core/log.h"
 
 void PanelScreen::render()
 {

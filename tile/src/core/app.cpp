@@ -28,7 +28,7 @@ void App::initWindow()
 		D_ASSERT(false, "Failed to init TTF text lib. Error: &s\n", TTF_GetError());
 	}
 
-	s_window = SDL_CreateWindow("tile", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, s_screenWidth, s_screenHeight, SDL_WINDOW_SHOWN);
+	s_window = SDL_CreateWindow("tile", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, k_screenWidth, k_screenHeight, SDL_WINDOW_SHOWN);
 
 	if (s_window == nullptr)
 	{
@@ -44,7 +44,7 @@ void App::initWindow()
 		return;
 	}
 
-	SDL_RenderSetLogicalSize(s_renderer, s_screenWidth, s_screenHeight);
+	SDL_RenderSetLogicalSize(s_renderer, k_screenWidth, k_screenHeight);
 	SDL_SetRenderDrawBlendMode(s_renderer, SDL_BLENDMODE_BLEND);
 
 	// Change window size after we set the render size to the original 320x180
@@ -103,6 +103,7 @@ void App::render()
 	_panelScreen.render();
 	_settingsScreen.render();
 	_mouseScreen.render();
+
 	SDL_RenderPresent(s_renderer);
 }
 

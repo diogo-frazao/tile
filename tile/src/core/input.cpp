@@ -6,7 +6,7 @@ IVec2 getMousePosition()
 {
 	int32_t w = 0;
 	SDL_GetWindowSize(s_window, &w, nullptr);
-	uint8_t screenfactor = w / s_screenWidth;
+	uint8_t screenfactor = w / k_screenWidth;
 
 	int32_t mx = 0;
 	int32_t my = 0;
