@@ -12,7 +12,7 @@ void SettingsScreen::start()
 	SDL_SetTextureBlendMode(_uiTexture, SDL_BLENDMODE_BLEND);
 
 	_title = Text("SETTINGS", { k_screenWidth / 2, 5 }, 100, k_gray);
-	_subtitle = Text("enter to apply or esc to leave", { k_screenWidth / 2, 30 }, 70, k_gray);
+	_subtitle = Text("enter to apply or esc to leave", { k_screenWidth / 2, 25 }, 60, k_gray);
 	_checkbox = CheckBox(false, { k_screenWidth / 2, 40 }, 70, k_white);
 	const std::vector<const char*> options = {
 		"<  320x180  >",
@@ -30,6 +30,12 @@ void SettingsScreen::update()
 	_subtitle.update();
 	_checkbox.update();
 	_optionSelector.update();
+
+	_checkbox.tryHover();
+	_checkbox.trySelect();
+
+	_optionSelector.tryHover();
+	_optionSelector.trySwapOption();
 }
 
 void SettingsScreen::render()

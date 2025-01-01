@@ -90,10 +90,8 @@ OptionSelector::OptionSelector(const std::vector<const char*>& options, const Ve
 	}
 }
 
-void OptionSelector::update()
+void OptionSelector::trySwapOption()
 {
-	Text::update();
-
 	IVec2 mousePos = getMousePosition();
 	if (wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT) && _isHovered)
 	{
@@ -177,10 +175,8 @@ CheckBox::CheckBox(bool startEnabled, const Vec2& position, uint16_t size, const
 	}
 }
 
-void CheckBox::update()
+void CheckBox::trySelect()
 {
-	Text::update();
-
 	if (wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT) && _isHovered)
 	{
 		onSelected();
@@ -229,15 +225,6 @@ void Text::update()
 {
 	_mainCollider.centerPoint = _worldPosition;
 	_mainCollider.size = _worldBounds;
-
-	IVec2 mousePos = getMousePosition();
-
-	bool isHovering = pointInRect(mousePos, _mainCollider);
-	if (isHovering != _isHovered)
-	{
-		onHovered(isHovering);
-		_isHovered = isHovering;
-	}
 }
 
 void Text::render(SDL_Texture* targetTexture, SDL_FRect& dest)
@@ -268,6 +255,17 @@ void Text::render(SDL_Texture* targetTexture, SDL_FRect& dest)
 		SDL_FRect debugRect{ _mainCollider.centerPoint.x, _mainCollider.centerPoint.y, _mainCollider.size.x, _mainCollider.size.y };
 		SDL_RenderDrawRectF(s_renderer, &debugRect);
 		SDL_SetRenderDrawColor(s_renderer, 0,0,0,1);
+	}
+}
+
+void Text::tryHover()
+{
+	IVec2 mousePos = getMousePosition();
+	bool isHovering = pointInRect(mousePos, _mainCollider);
+	if (isHovering != _isHovered)
+	{
+		onHovered(isHovering);
+		_isHovered = isHovering;
 	}
 }
 

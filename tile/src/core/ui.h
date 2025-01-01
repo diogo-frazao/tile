@@ -22,6 +22,7 @@ public:
 	RectCollider _mainCollider;
 	bool _isHovered = false;
 
+	void tryHover();
 	virtual void update();
 	virtual void render(SDL_Texture* targetTexture, SDL_FRect& dest);
 	virtual void onHovered(bool isHovered);
@@ -35,7 +36,7 @@ class CheckBox : public Text
 {
 public:
 	bool _isSelected = false;
-	virtual void update() override;
+	void trySelect();
 	void onSelected();
 	CheckBox() = default;
 	CheckBox(bool startEnabled, const Vec2& worldPosition, uint16_t size, const SDL_Color& color, const bool justify = true);
@@ -48,13 +49,14 @@ public:
 	int8_t _selectedIndex = 0;
 	bool _allowWrap = true;
 
-	virtual void update() override;
+	void trySwapOption();
 	void onRightPressed();
 	void onLeftPressed();
 	OptionSelector() = default;
 	OptionSelector(const std::vector<const char*>& options, const Vec2& worldPosition, uint16_t size, const SDL_Color& color,
 		const bool justify = true, bool allowWrap = true);
 };
+
 
 void destroyWidget(const Text& widget);
 void destroyWidget(Text* widget);

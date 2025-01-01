@@ -9,7 +9,6 @@ enum SpriteType
 {
 	CURSOR,
 	MOCKUP,
-	POINT,
 	SPRITES_MAX,
 };
 
