@@ -83,6 +83,7 @@ OptionSelector::OptionSelector(const std::vector<const char*>& options, const Ve
 	this->_selectedIndex = 0;
 	this->_isHovered = false;
 	this->_mainCollider = RectCollider(position, textBounds);
+	this->_widgetType = OPTIONSELECTOR;
 
 	setupDrawMode(drawMode);
 }
@@ -165,6 +166,7 @@ CheckBox::CheckBox(bool startEnabled, const Vec2& position, uint16_t size, const
 	this->_size = size;
 	this->_isHovered = false;
 	this->_mainCollider = RectCollider(position, textBounds);
+	this->_widgetType = CHECKBOX;
 
 	setupDrawMode(drawMode);
 }
@@ -208,6 +210,7 @@ Text::Text(const char* text, const Vec2& position, uint16_t size, const SDL_Colo
 	this->_size = size;
 	this->_isHovered = false;
 	this->_mainCollider = RectCollider(position, textBounds);
+	this->_widgetType = TEXT;
 
 	setupDrawMode(drawMode);
 }

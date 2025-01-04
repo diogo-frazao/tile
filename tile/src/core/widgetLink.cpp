@@ -72,16 +72,24 @@ void WidgetLink::update()
 	for (Text* text : _rightWidgets)
 	{
 		text->update();
-
-		CheckBox* checkbox = dynamic_cast<CheckBox*>(text);
-		OptionSelector* optionSelector = dynamic_cast<OptionSelector*>(text);
-		if (checkbox)
+		switch (text->_widgetType)
 		{
-			checkbox->trySelect();
-		}
-		else if (optionSelector)
-		{
-			optionSelector->trySwapOption();
+			case TEXT:
+			{
+				break;
+			}
+			case CHECKBOX:
+			{
+				CheckBox* checkbox = static_cast<CheckBox*>(text);
+				checkbox->trySelect();
+				break;
+			}
+			case OPTIONSELECTOR:
+			{
+				OptionSelector* optionSelector = static_cast<OptionSelector*>(text);
+				optionSelector->trySwapOption();
+				break;
+			}
 		}
 	}
 
@@ -114,7 +122,6 @@ void WidgetLink::render(SDL_Texture* externaluiTexture)
 	}
 
 	static SDL_FRect dest;
-
 	SDL_Texture* targetUITexture = externaluiTexture == nullptr ? _uiTexture : externaluiTexture;
 
 	for (Text& text : _leftTexts)

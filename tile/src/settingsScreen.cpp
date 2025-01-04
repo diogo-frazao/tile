@@ -5,6 +5,7 @@
 #include "core/input.h"
 #include "core/log.h"
 #include <vector>
+#include <array>
 
 void SettingsScreen::start()
 {
@@ -14,14 +15,14 @@ void SettingsScreen::start()
 	_title = Text("SETTINGS", { k_screenWidth / 2, 5 }, 100, k_gray, CENTER);
 	_subtitle = Text("enter to apply or esc to leave", { k_screenWidth / 2, 25 }, 60, k_gray, CENTER);
 
-	const std::vector<const char*> options {
+	const std::array<const char*, 5> options {
 		"<  320x180  >",
 		"<  640x320  >",
 		"< 1280x720  >",
 		"< 1920x1080 >",
 		"< 2560x1440 >" 
 	};
-	OptionSelector* optionSelector = new OptionSelector(options, { k_screenWidth / 2, 55 }, 65, k_white);
+	OptionSelector* optionSelector = new OptionSelector(std::vector<const char*>(options.begin(), options.end()), {k_screenWidth / 2, 55}, 65, k_white);
 
 	_widgetLink._leftTexts.reserve(2);
 	_widgetLink._rightWidgets.reserve(2);

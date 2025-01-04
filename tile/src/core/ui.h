@@ -12,6 +12,14 @@ inline const SDL_Color k_gray{ 137, 128, 128, 255};
 inline const SDL_Color k_orange{ 234, 140, 70, 255};
 inline const SDL_Color k_red{ 255, 59, 93, 255 };
 
+enum WidgetType
+{
+	TEXT,
+	CHECKBOX,
+	OPTIONSELECTOR,
+	INVALID
+};
+
 enum DrawMode
 {
 	LEFT,
@@ -30,6 +38,7 @@ public:
 	RectCollider _mainCollider;
 	bool _isHovered = false;
 	DrawMode _drawMode = DrawMode::LEFT;
+	WidgetType _widgetType = WidgetType::INVALID;
 
 	void setupDrawMode(DrawMode drawMode);
 	void tryHover();

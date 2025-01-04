@@ -1,7 +1,7 @@
 #pragma once
-#include <vector>
 #include "ui.h"
 #include "lib.h"
+#include <vector>
 
 struct SDL_Texture;
 
