@@ -66,7 +66,7 @@ static void recreateText(Text& text, const char* newText)
 // Option Selector
 
 OptionSelector::OptionSelector(const std::vector<const char*>& options, const Vec2& position, uint16_t size,
-	const SDL_Color& color, const bool justify, bool allowWrap)
+	const SDL_Color& color, const DrawMode drawMode, bool allowWrap)
 {
 	D_ASSERT((options.size() > 0) && (options.size() < 250), "Invalid options array");
 	Vec2 textBounds;
@@ -84,10 +84,7 @@ OptionSelector::OptionSelector(const std::vector<const char*>& options, const Ve
 	this->_isHovered = false;
 	this->_mainCollider = RectCollider(position, textBounds);
 
-	if (justify)
-	{
-		_worldPosition.x -= _worldBounds.x / 2;
-	}
+	setupDrawMode(drawMode);
 }
 
 void OptionSelector::trySwapOption()
@@ -154,7 +151,7 @@ void OptionSelector::onLeftPressed()
 //
 // Checkbox
 
-CheckBox::CheckBox(bool startEnabled, const Vec2& position, uint16_t size, const SDL_Color& color, const bool justify)
+CheckBox::CheckBox(bool startEnabled, const Vec2& position, uint16_t size, const SDL_Color& color, const DrawMode drawMode)
 {
 	const char* text = startEnabled ? k_selectedCharacter : k_notSelectedCharacter;
 	Vec2 textBounds;
@@ -169,10 +166,7 @@ CheckBox::CheckBox(bool startEnabled, const Vec2& position, uint16_t size, const
 	this->_isHovered = false;
 	this->_mainCollider = RectCollider(position, textBounds);
 
-	if (justify)
-	{
-		_worldPosition.x -= _worldBounds.x / 2;
-	}
+	setupDrawMode(drawMode);
 }
 
 void CheckBox::trySelect()
@@ -202,7 +196,7 @@ void CheckBox::onSelected()
 //
 // Text
 
-Text::Text(const char* text, const Vec2& position, uint16_t size, const SDL_Color& color, const bool justify)
+Text::Text(const char* text, const Vec2& position, uint16_t size, const SDL_Color& color, const DrawMode drawMode)
 {
 	Vec2 textBounds;
 	SDL_Texture* textTexture = createText(textBounds, text, size, color);
@@ -215,10 +209,7 @@ Text::Text(const char* text, const Vec2& position, uint16_t size, const SDL_Colo
 	this->_isHovered = false;
 	this->_mainCollider = RectCollider(position, textBounds);
 
-	if (justify)
-	{
-		_worldPosition.x -= _worldBounds.x / 2;
-	}
+	setupDrawMode(drawMode);
 }
 
 void Text::update()
@@ -258,6 +249,29 @@ void Text::render(SDL_Texture* targetTexture, SDL_FRect& dest)
 	}
 }
 
+void Text::setupDrawMode(DrawMode drawMode)
+{
+	if (_drawMode != drawMode)
+	{
+		switch (drawMode)
+		{
+			case LEFT: break;
+			case CENTER:
+			{
+				_worldPosition.x -= _worldBounds.x / 2;
+				break;
+			}
+			case RIGHT:
+			{
+				_worldPosition.x -= _worldBounds.x;
+				break;
+			}
+		}
+	}
+
+	_drawMode = drawMode;
+}
+
 void Text::tryHover()
 {
 	IVec2 mousePos = getMousePosition();
@@ -265,12 +279,12 @@ void Text::tryHover()
 	if (isHovering != _isHovered)
 	{
 		onHovered(isHovering);
-		_isHovered = isHovering;
 	}
 }
 
 void Text::onHovered(bool isHovered)
 {
+	_isHovered = isHovered;
 	SDL_Color targetColor = isHovered ? k_orange : k_white;
 	if (!_texture || SDL_SetTextureColorMod(_texture, targetColor.r, targetColor.g, targetColor.b) < 0)
 	{

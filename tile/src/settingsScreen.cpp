@@ -11,31 +11,41 @@ void SettingsScreen::start()
 	_uiTexture = SDL_CreateTexture(s_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, k_uiResolutionWidth, k_uiResolutionHeight);
 	SDL_SetTextureBlendMode(_uiTexture, SDL_BLENDMODE_BLEND);
 
-	_title = Text("SETTINGS", { k_screenWidth / 2, 5 }, 100, k_gray);
-	_subtitle = Text("enter to apply or esc to leave", { k_screenWidth / 2, 25 }, 60, k_gray);
-	_checkbox = CheckBox(false, { k_screenWidth / 2, 40 }, 70, k_white);
-	const std::vector<const char*> options = {
+	_title = Text("SETTINGS", { k_screenWidth / 2, 5 }, 100, k_gray, CENTER);
+	_subtitle = Text("enter to apply or esc to leave", { k_screenWidth / 2, 25 }, 60, k_gray, CENTER);
+
+	const std::vector<const char*> options {
 		"<  320x180  >",
 		"<  640x320  >",
 		"< 1280x720  >",
 		"< 1920x1080 >",
 		"< 2560x1440 >" 
 	};
-	_optionSelector = OptionSelector(options, { k_screenWidth / 2, 55 }, 75, k_white);
+	OptionSelector* optionSelector = new OptionSelector(options, { k_screenWidth / 2, 55 }, 65, k_white);
+
+	_widgetLink._leftTexts.reserve(2);
+	_widgetLink._rightWidgets.reserve(2);
+
+	_widgetLink._leftTexts.push_back(Text("fullscreen", {0,0}, 65, k_white));
+	_widgetLink._leftTexts.push_back(Text("resolution", {0,0}, 65, k_white));
+
+	_widgetLink._rightWidgets.push_back(new CheckBox(false, { 0,0 }, 65, k_white));
+	_widgetLink._rightWidgets.push_back(optionSelector);
+
+	_widgetLink.setupRules(Vec2(80, 45), 7, 90, LEFT, CENTER);
 }
 
 void SettingsScreen::update()
 {
+	if (wasKeyPressedThisFrame(SDL_SCANCODE_X))
+	{
+		SDL_SetWindowSize(s_window, 1280, 720);
+	}
+
+	_widgetLink.update();
+
 	_title.update();
 	_subtitle.update();
-	_checkbox.update();
-	_optionSelector.update();
-
-	_checkbox.tryHover();
-	_checkbox.trySelect();
-
-	_optionSelector.tryHover();
-	_optionSelector.trySwapOption();
 }
 
 void SettingsScreen::render()
@@ -48,16 +58,15 @@ void SettingsScreen::render()
 		return;
 	}
 
+	_widgetLink.render(_uiTexture);
 	_title.render(_uiTexture, dest);
 	_subtitle.render(_uiTexture, dest);
-	_checkbox.render(_uiTexture, dest);
-	_optionSelector.render(_uiTexture, dest);
 }
 
 void SettingsScreen::destroy()
 {
 	destroyWidget(_title);
 	destroyWidget(_subtitle);
-	destroyWidget(_checkbox);
-	destroyWidget(_optionSelector);
+	_widgetLink.destroy();
+	SDL_DestroyTexture(_uiTexture);
 }

@@ -2,6 +2,8 @@
 #include "core/spriteHandler.h"
 #include "core/lib.h"
 #include "core/ui.h"
+#include "core/widgetLink.h"
+
 
 struct SDL_Texture;
 
@@ -25,8 +27,7 @@ private:
 	SDL_Texture* _uiTexture;
 	Text _title;
 	Text _subtitle;
-	CheckBox _checkbox;
-	OptionSelector _optionSelector;
+	WidgetLink _widgetLink;
 };
 
 class PanelScreen

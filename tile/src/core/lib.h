@@ -30,13 +30,6 @@ struct RectCollider
 	RectCollider(const Vec2& pos, const Vec2& size) : centerPoint(pos), size(size) {};
 };
 
-enum DrawMode
-{
-	TOP_LEFT,
-	TOP_CENTER,
-	TOP_RIGHT
-};
-
 inline float lerp(float a, float b, float t)
 {
 	return a + (b - a) * t;
@@ -50,6 +43,15 @@ inline float lerp(int a, int b, float t)
 }
 
 inline int max(int a, int b)
+{
+	if (a >= b)
+	{
+		return a;
+	}
+	return b;
+}
+
+inline float max(float a, float b)
 {
 	if (a >= b)
 	{
