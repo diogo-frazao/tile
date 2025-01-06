@@ -106,6 +106,16 @@ void WidgetLink::update()
 			_rightWidgets[i]->onHovered(isHovering);
 		}
 	}
+
+	if (wasKeyPressedThisFrame(k_confirmKey))
+	{
+		auto results = getResults();
+	}
+
+	if (wasKeyPressedThisFrame(k_returnKey))
+	{
+		D_LOG(LOG, "Discard settings");
+	}
 }
 
 void WidgetLink::render(SDL_Texture* externaluiTexture)
@@ -150,6 +160,40 @@ void WidgetLink::destroy()
 	}
 
 	SDL_DestroyTexture(_uiTexture);
+}
+
+std::vector<int8_t> WidgetLink::getResults()
+{
+	std::vector<int8_t> results;
+	results.reserve(_rightWidgets.size());
+
+	for (Text* text : _rightWidgets)
+	{
+		switch (text->_widgetType)
+		{
+			case TEXT:
+			{
+				D_ASSERT(false, "We don't support right side widgets as text");
+				break;
+			}
+			case CHECKBOX:
+			{
+				CheckBox* checkbox = static_cast<CheckBox*>(text);
+				int8_t isSelected = checkbox->_isSelected;
+				results.push_back(isSelected);
+				break;
+			}
+			case OPTIONSELECTOR:
+			{
+				OptionSelector* optionSelector = static_cast<OptionSelector*>(text);
+				int8_t selectedIndex = optionSelector->_selectedIndex;
+				results.push_back(selectedIndex);
+				break;
+			}
+		}
+	}
+
+	return results;
 }
 
 Vec2 WidgetLink::calculateHighlightColliderSize(uint8_t i)

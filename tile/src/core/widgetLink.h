@@ -23,6 +23,8 @@ public:
 	void render(SDL_Texture* externaluiTexture = nullptr);
 	void destroy();
 
+	std::vector<int8_t> getResults();
+
 	std::vector<Text> _leftTexts;
 	std::vector<Text*> _rightWidgets;
 	std::vector<RectCollider> _highlightColliders;

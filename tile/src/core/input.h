@@ -1,8 +1,13 @@
 #pragma once
 #include <stdint.h>
 #include <array>
-#include <SDL.h>
 #include "lib.h"
+#include <SDL_events.h>
+#include <SDL_scancode.h>
+
+// Game keys
+inline const SDL_Scancode k_confirmKey = SDL_SCANCODE_RETURN;
+inline const SDL_Scancode k_returnKey = SDL_SCANCODE_ESCAPE;
 
 struct KeyState
 {

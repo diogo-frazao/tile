@@ -54,7 +54,7 @@ public:
 class CheckBox : public Text
 {
 public:
-	bool _isSelected = false;
+	int8_t _isSelected = false;
 	void trySelect();
 	void onSelected();
 	CheckBox() = default;

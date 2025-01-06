@@ -84,8 +84,8 @@ void App::update()
 			handleKeyboardInput(ev);
 			handleMouseInput(ev);
 
-			_mainScreen.update();
 			_settingsScreen.update();
+			_mainScreen.update();
 			_mouseScreen.update();
 			resetKeyboardAndMouseInput();
 			render();

@@ -38,9 +38,9 @@ void SettingsScreen::start()
 
 void SettingsScreen::update()
 {
-	if (wasKeyPressedThisFrame(SDL_SCANCODE_X))
+	if (!s_active)
 	{
-		SDL_SetWindowSize(s_window, 1280, 720);
+		return;
 	}
 
 	_widgetLink.update();
