@@ -15,15 +15,9 @@ void SettingsScreen::start()
 	_title = Text("SETTINGS", { k_screenWidth / 2, 5 }, 100, k_gray, CENTER);
 	_subtitle = Text("enter to apply or esc to leave", { k_screenWidth / 2, 25 }, 60, k_gray, CENTER);
 
-	const std::array<const char*, 5> options {
-		"<  320x180  >",
-		"<  640x320  >",
-		"< 1280x720  >",
-		"< 1920x1080 >",
-		"< 2560x1440 >" 
-	};
-	OptionSelector* optionSelector = new OptionSelector(std::vector<const char*>(options.begin(), options.end()), {k_screenWidth / 2, 55}, 65, k_white);
+	OptionSelector* optionSelector = new OptionSelector(std::vector<const char*>(_resolutionOptions.begin(), _resolutionOptions.end()), {k_screenWidth / 2, 55}, 65, k_white);
 
+	_widgetLink._resultsDelegate = std::bind(&SettingsScreen::onSettingsSaved, this, std::placeholders::_1);
 	_widgetLink._leftTexts.reserve(2);
 	_widgetLink._rightWidgets.reserve(2);
 
@@ -34,6 +28,7 @@ void SettingsScreen::start()
 	_widgetLink._rightWidgets.push_back(optionSelector);
 
 	_widgetLink.setupRules(Vec2(80, 45), 7, 90, LEFT, CENTER);
+
 }
 
 void SettingsScreen::update()
@@ -70,4 +65,46 @@ void SettingsScreen::destroy()
 	destroyWidget(_subtitle);
 	_widgetLink.destroy();
 	SDL_DestroyTexture(_uiTexture);
+}
+
+void SettingsScreen::onSettingsSaved(const std::vector<int8_t>& results)
+{
+	bool areResultsValid = _widgetLink._rightWidgets.size();
+	D_ASSERT(areResultsValid, "Invalid results");
+	D_LOG(LOG, "Settings saved");
+
+	int8_t resolutionIndex = results[1];
+	bool isResolutionIndexValid = resolutionIndex >= 0 && resolutionIndex < _resolutionOptions.size();
+	D_ASSERT(isResolutionIndexValid, "Invlid resolution index");
+	switch (resolutionIndex)
+	{
+		case 0:
+			SDL_SetWindowSize(s_window, 320, 180);
+			break;
+		case 1:
+			SDL_SetWindowSize(s_window, 960, 540);
+			break;
+		case 2:
+			SDL_SetWindowSize(s_window, 1280, 720);
+			break;
+		case 3:
+			SDL_SetWindowSize(s_window, 1920, 1080);
+			break;
+		case 4:
+			D_LOG(ERROR, "This is 1080 because my monitor doesn't support 1440p");
+			SDL_SetWindowSize(s_window, 1920, 1080);
+			break;
+	}
+
+	bool enableFullscreen = results[0];
+	if (enableFullscreen)
+	{
+		SDL_SetWindowFullscreen(s_window, SDL_WINDOW_FULLSCREEN);
+	}
+	else
+	{
+		SDL_SetWindowFullscreen(s_window, 0);
+	}
+
+	s_active = false;
 }

@@ -2,6 +2,7 @@
 #include "ui.h"
 #include "lib.h"
 #include <vector>
+#include <functional>
 
 struct SDL_Texture;
 
@@ -28,6 +29,8 @@ public:
 	std::vector<Text> _leftTexts;
 	std::vector<Text*> _rightWidgets;
 	std::vector<RectCollider> _highlightColliders;
+
+	std::function<void(const std::vector<int8_t>&)> _resultsDelegate;
 
 private:
 	Vec2 calculateHighlightColliderSize(uint8_t i);

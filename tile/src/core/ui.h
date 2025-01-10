@@ -68,6 +68,7 @@ public:
 	int8_t _selectedIndex = 0;
 	bool _allowWrap = true;
 
+	void selectOption(int8_t index);
 	void trySwapOption();
 	void onRightPressed();
 	void onLeftPressed();

@@ -88,6 +88,23 @@ OptionSelector::OptionSelector(const std::vector<const char*>& options, const Ve
 	setupDrawMode(drawMode);
 }
 
+void OptionSelector::selectOption(int8_t index)
+{
+	bool isIndexValid = index <= _options.size() - 1;
+	D_ASSERT(isIndexValid, "Invalid option index to select");
+	_selectedIndex = index;
+
+	SDL_Texture* oldTexture = _texture;
+	Vec2 newBounds;
+	SDL_Texture* newTexture = createText(newBounds, _options[_selectedIndex], _size, _color);
+	_worldBounds = newBounds;
+	_texture = newTexture;
+	onHovered(_isHovered);
+
+	D_ASSERT(oldTexture, "Invalid texture to swap");
+	SDL_DestroyTexture(oldTexture);
+}
+
 void OptionSelector::trySwapOption()
 {
 	IVec2 mousePos = getMousePosition();

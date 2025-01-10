@@ -109,12 +109,44 @@ void WidgetLink::update()
 
 	if (wasKeyPressedThisFrame(k_confirmKey))
 	{
-		auto results = getResults();
+		if (_resultsDelegate != nullptr)
+		{
+			_resultsDelegate(getResults());
+		}
 	}
 
 	if (wasKeyPressedThisFrame(k_returnKey))
 	{
-		D_LOG(LOG, "Discard settings");
+		D_LOG(WARNING, "Discarded settings");
+		for (Text* text : _rightWidgets)
+		{
+			switch (text->_widgetType)
+			{
+				case TEXT:
+				{
+					D_ASSERT(false, "We don't support right side widgets as text");
+					break;
+				}
+				case CHECKBOX:
+				{
+					CheckBox* checkbox = static_cast<CheckBox*>(text);
+					if (checkbox->_isSelected)
+					{
+						checkbox->onSelected();
+					}
+					break;
+				}
+				case OPTIONSELECTOR:
+				{
+					OptionSelector* optionSelector = static_cast<OptionSelector*>(text);
+					if (optionSelector->_selectedIndex != 0)
+					{
+						optionSelector->selectOption(0);
+					}
+					break;
+				}
+			}
+		}
 	}
 }
 
