@@ -66,11 +66,12 @@ static void recreateText(Text& text, const char* newText)
 // Option Selector
 
 OptionSelector::OptionSelector(const std::vector<const char*>& options, const Vec2& position, uint16_t size,
-	const SDL_Color& color, const DrawMode drawMode, bool allowWrap)
+	const SDL_Color& color, const DrawMode drawMode, bool allowWrap, int8_t selectedIndex)
 {
 	D_ASSERT((options.size() > 0) && (options.size() < 250), "Invalid options array");
+	D_ASSERT((selectedIndex < options.size()), "Invalid default index");
 	Vec2 textBounds;
-	SDL_Texture* textTexture = createText(textBounds, options[0], size, color);
+	SDL_Texture* textTexture = createText(textBounds, options[selectedIndex], size, color);
 
 	this->_worldPosition = position;
 	this->_worldBounds = textBounds;
@@ -80,7 +81,7 @@ OptionSelector::OptionSelector(const std::vector<const char*>& options, const Ve
 	this->_isHovered = false;
 	this->_allowWrap = allowWrap;
 	this->_options = options;
-	this->_selectedIndex = 0;
+	this->_selectedIndex = selectedIndex;
 	this->_isHovered = false;
 	this->_mainCollider = RectCollider(position, textBounds);
 	this->_widgetType = OPTIONSELECTOR;

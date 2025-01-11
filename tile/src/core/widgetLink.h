@@ -31,6 +31,7 @@ public:
 	std::vector<RectCollider> _highlightColliders;
 
 	std::function<void(const std::vector<int8_t>&)> _resultsDelegate;
+	std::function<void()> _discardDelegate;
 
 private:
 	Vec2 calculateHighlightColliderSize(uint8_t i);

@@ -118,6 +118,12 @@ void WidgetLink::update()
 	if (wasKeyPressedThisFrame(k_returnKey))
 	{
 		D_LOG(WARNING, "Discarded settings");
+		if (_discardDelegate != nullptr)
+		{
+			_discardDelegate();
+			return;
+		}
+
 		for (Text* text : _rightWidgets)
 		{
 			switch (text->_widgetType)

@@ -6,6 +6,7 @@
 #include "core/log.h"
 #include <vector>
 #include <array>
+#include "userDefaults.h"
 
 void SettingsScreen::start()
 {
@@ -15,9 +16,12 @@ void SettingsScreen::start()
 	_title = Text("SETTINGS", { k_screenWidth / 2, 5 }, 100, k_gray, CENTER);
 	_subtitle = Text("enter to apply or esc to leave", { k_screenWidth / 2, 25 }, 60, k_gray, CENTER);
 
-	OptionSelector* optionSelector = new OptionSelector(std::vector<const char*>(_resolutionOptions.begin(), _resolutionOptions.end()), {k_screenWidth / 2, 55}, 65, k_white);
+	OptionSelector* optionSelector = new OptionSelector(std::vector<const char*>(user_defaults::_resolutions.begin(), 
+		user_defaults::_resolutions.end()), {k_screenWidth / 2, 55}, 65, k_white, LEFT, true, 1);
 
 	_widgetLink._resultsDelegate = std::bind(&SettingsScreen::onSettingsSaved, this, std::placeholders::_1);
+	_widgetLink._discardDelegate = std::bind(&SettingsScreen::onSettingsDiscarded, this);
+
 	_widgetLink._leftTexts.reserve(2);
 	_widgetLink._rightWidgets.reserve(2);
 
@@ -67,15 +71,28 @@ void SettingsScreen::destroy()
 	SDL_DestroyTexture(_uiTexture);
 }
 
+void SettingsScreen::onSettingsDiscarded()
+{
+	CheckBox* checkbox = static_cast<CheckBox*>(_widgetLink._rightWidgets[0]);
+	if (checkbox->_isSelected != user_defaults::_currentSettings.isFullscreen)
+	{
+		checkbox->onSelected();
+	}
+
+	OptionSelector* resolutionSelector = static_cast<OptionSelector*>(_widgetLink._rightWidgets[1]);
+	if (resolutionSelector->_selectedIndex != user_defaults::_currentSettings.resolutionIndex)
+	{
+		resolutionSelector->selectOption(user_defaults::_currentSettings.resolutionIndex);
+	}
+}
+
 void SettingsScreen::onSettingsSaved(const std::vector<int8_t>& results)
 {
-	bool areResultsValid = _widgetLink._rightWidgets.size();
-	D_ASSERT(areResultsValid, "Invalid results");
+	D_ASSERT((_widgetLink._rightWidgets.size() == results.size()), "Invalid results");
 	D_LOG(LOG, "Settings saved");
 
 	int8_t resolutionIndex = results[1];
-	bool isResolutionIndexValid = resolutionIndex >= 0 && resolutionIndex < _resolutionOptions.size();
-	D_ASSERT(isResolutionIndexValid, "Invlid resolution index");
+	D_ASSERT((resolutionIndex >= 0 && resolutionIndex < user_defaults::_resolutions.size()), "Invlid resolution index");
 	switch (resolutionIndex)
 	{
 		case 0:
@@ -106,5 +123,6 @@ void SettingsScreen::onSettingsSaved(const std::vector<int8_t>& results)
 		SDL_SetWindowFullscreen(s_window, 0);
 	}
 
+	user_defaults::applySettings(user_defaults::Settings(resolutionIndex, enableFullscreen));
 	s_active = false;
 }

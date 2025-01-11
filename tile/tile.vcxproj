@@ -182,6 +182,7 @@
     <ClInclude Include="src\core\ui.h" />
     <ClInclude Include="src\core\widgetLink.h" />
     <ClInclude Include="src\screens.h" />
+    <ClInclude Include="src\userDefaults.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
