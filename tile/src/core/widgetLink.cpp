@@ -24,7 +24,7 @@ void WidgetLink::setupRules(const Vec2& startingLeftPos, const float verticalDis
 		}
 		else
 		{
-			Text& previousText = _leftTexts[i - 1];
+			InteractableText& previousText = _leftTexts[i - 1];
 			_leftTexts[i]._worldPosition.x = startingLeftPos.x;
 			_leftTexts[i]._worldPosition.y = previousText._worldPosition.y + previousText._worldBounds.y + verticalDistance;
 		}
@@ -35,7 +35,7 @@ void WidgetLink::setupRules(const Vec2& startingLeftPos, const float verticalDis
 	// Setup right widgets
 	for (uint8_t i = 0; i < _rightWidgets.size(); ++i)
 	{
-		Text* text = _rightWidgets[i];
+		InteractableText* text = _rightWidgets[i];
 		text->_worldPosition.x = startingLeftPos.x + _leftTexts[0]._worldBounds.x + horizontalDistance;
 
 		if (i == 0)
@@ -44,7 +44,7 @@ void WidgetLink::setupRules(const Vec2& startingLeftPos, const float verticalDis
 		}
 		else
 		{
-			Text* previousText = _rightWidgets[i - 1];
+			InteractableText* previousText = _rightWidgets[i - 1];
 			text->_worldPosition.y = previousText->_worldPosition.y + previousText->_worldBounds.y + verticalDistance;
 		}
 
@@ -64,12 +64,12 @@ void WidgetLink::setupRules(const Vec2& startingLeftPos, const float verticalDis
 
 void WidgetLink::update()
 {
-	for (Text& text : _leftTexts)
+	for (InteractableText& text : _leftTexts)
 	{
 		text.update();
 	}
 
-	for (Text* text : _rightWidgets)
+	for (InteractableText* text : _rightWidgets)
 	{
 		text->update();
 		switch (text->_widgetType)
@@ -115,42 +115,43 @@ void WidgetLink::update()
 		}
 	}
 
-	if (wasKeyPressedThisFrame(k_returnKey))
+	if (!wasKeyPressedThisFrame(k_returnKey))
 	{
-		D_LOG(WARNING, "Discarded settings");
-		if (_discardDelegate != nullptr)
-		{
-			_discardDelegate();
-			return;
-		}
+		return;
+	}
 
-		for (Text* text : _rightWidgets)
+	if (_discardDelegate != nullptr)
+	{
+		_discardDelegate();
+		return;
+	}
+
+	for (InteractableText* text : _rightWidgets)
+	{
+		switch (text->_widgetType)
 		{
-			switch (text->_widgetType)
+			case TEXT:
 			{
-				case TEXT:
+				D_ASSERT(false, "We don't support right side widgets as text");
+				break;
+			}
+			case CHECKBOX:
+			{
+				CheckBox* checkbox = static_cast<CheckBox*>(text);
+				if (checkbox->_isSelected)
 				{
-					D_ASSERT(false, "We don't support right side widgets as text");
-					break;
+					checkbox->onSelected();
 				}
-				case CHECKBOX:
+				break;
+			}
+			case OPTIONSELECTOR:
+			{
+				OptionSelector* optionSelector = static_cast<OptionSelector*>(text);
+				if (optionSelector->_selectedIndex != 0)
 				{
-					CheckBox* checkbox = static_cast<CheckBox*>(text);
-					if (checkbox->_isSelected)
-					{
-						checkbox->onSelected();
-					}
-					break;
+					optionSelector->selectOption(0);
 				}
-				case OPTIONSELECTOR:
-				{
-					OptionSelector* optionSelector = static_cast<OptionSelector*>(text);
-					if (optionSelector->_selectedIndex != 0)
-					{
-						optionSelector->selectOption(0);
-					}
-					break;
-				}
+				break;
 			}
 		}
 	}
@@ -172,12 +173,12 @@ void WidgetLink::render(SDL_Texture* externaluiTexture)
 	static SDL_FRect dest;
 	SDL_Texture* targetUITexture = externaluiTexture == nullptr ? _uiTexture : externaluiTexture;
 
-	for (Text& text : _leftTexts)
+	for (InteractableText& text : _leftTexts)
 	{
 		text.render(targetUITexture, dest);
 	}
 
-	for (Text* text : _rightWidgets)
+	for (InteractableText* text : _rightWidgets)
 	{
 		text->render(targetUITexture, dest);
 	}
@@ -187,13 +188,13 @@ void WidgetLink::destroy()
 {
 	for (uint8_t i = 0; i < _leftTexts.size(); ++i)
 	{
-		Text& text = _leftTexts[i];
+		InteractableText& text = _leftTexts[i];
 		destroyWidget(text);
 	}
 
 	for (uint8_t i = 0; i < _rightWidgets.size(); ++i)
 	{
-		Text* text = _rightWidgets[i];
+		InteractableText* text = _rightWidgets[i];
 		destroyWidget(text);
 	}
 
@@ -205,7 +206,7 @@ std::vector<int8_t> WidgetLink::getResults()
 	std::vector<int8_t> results;
 	results.reserve(_rightWidgets.size());
 
-	for (Text* text : _rightWidgets)
+	for (InteractableText* text : _rightWidgets)
 	{
 		switch (text->_widgetType)
 		{

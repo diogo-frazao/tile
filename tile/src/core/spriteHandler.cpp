@@ -29,23 +29,36 @@ namespace textures
 		switch (type)
 		{
 			case CURSOR:
-			{
 				sprite.offset = { 0 ,0 };
 				sprite.size = { 7, 10 };
 				break;
-			}
 			case MOCKUP:
-			{
-				sprite.offset = { 7, 0 };
+				sprite.offset = { 8, 0 };
 				sprite.size = { 320, 180 };
 				break;
-			}
+			case BUTTON:
+				sprite.offset = { 328, 0 };
+				sprite.size = { 10, 9 };
+				break;
 			default:
-			{
 				D_ASSERT(false, "Invalid texture to load");
-			}
 		}
 
 		return sprite;
 	}
+}
+
+void renderSprite(const Sprite& sprite, SDL_Rect& src, SDL_FRect& dest)
+{
+	src.x = sprite.offset.x;
+	src.y = sprite.offset.y;
+	src.w = sprite.size.x;
+	src.h = sprite.size.y;
+
+	dest.x = sprite.position.x;
+	dest.y = sprite.position.y;
+	dest.w = (float)sprite.size.x;
+	dest.h = (float)sprite.size.y;
+
+	SDL_RenderCopyExF(s_renderer, s_atlasTexture, &src, &dest, 0, nullptr, SDL_FLIP_NONE);
 }

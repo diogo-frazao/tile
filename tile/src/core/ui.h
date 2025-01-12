@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <SDL_pixels.h>
 #include <vector>
+#include "spriteHandler.h"
 
 struct SDL_Texture;
 struct SDL_FRect;
@@ -27,7 +28,7 @@ enum DrawMode
 	RIGHT
 };
 
-class Text
+class InteractableText
 {
 public:
 	Vec2 _worldPosition{0,0};
@@ -46,12 +47,12 @@ public:
 	virtual void render(SDL_Texture* targetTexture, SDL_FRect& dest);
 	virtual void onHovered(bool isHovered);
 
-	Text() = default;
-	Text(const char* text, const Vec2& worldPosition, uint16_t size, const SDL_Color& color, const DrawMode drawMode = LEFT);
+	InteractableText() = default;
+	InteractableText(const char* text, const Vec2& worldPosition, uint16_t size, const SDL_Color& color, const DrawMode drawMode = LEFT);
 };
 
 
-class CheckBox : public Text
+class CheckBox : public InteractableText
 {
 public:
 	int8_t _isSelected = false;
@@ -61,7 +62,7 @@ public:
 	CheckBox(bool startEnabled, const Vec2& worldPosition, uint16_t size, const SDL_Color& color, const DrawMode drawMode = LEFT);
 };
 
-class OptionSelector : public Text
+class OptionSelector : public InteractableText
 {
 public:
 	std::vector<const char*> _options;
@@ -77,6 +78,20 @@ public:
 		const DrawMode drawMode = LEFT, bool allowWrap = true, int8_t selectedIndex = 0);
 };
 
+class Button
+{
+public:
+	Sprite _sprite;
+	InteractableText _text;
 
-void destroyWidget(const Text& widget);
-void destroyWidget(Text* widget);
+	void render(SDL_Texture* targetTexture, SDL_Rect& src, SDL_FRect& dest);
+	bool tryPress();
+
+	Button() = default;
+	Button(const char* buttonText, const SpriteType buttonSprite, const Vec2& position, uint8_t buttonSize = 40);
+};
+
+
+void destroyWidget(const InteractableText& widget);
+void destroyWidget(InteractableText* widget);
+SDL_Texture* createUITexture();

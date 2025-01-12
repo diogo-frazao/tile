@@ -63,34 +63,24 @@ void _log(const LogType logType, const char* msg, Args... args)
     switch (logType)
     {
         case MINI:
-        {
             prefix = "MINI:";
             textColor = TEXT_COLOR_WHITE;
             break;
-        }
         case LOG:
-        {
             prefix = "LOG:";
             textColor = TEXT_COLOR_GREEN;
             break;
-        }
         case WARNING:
-        {
             prefix = "WARNING:";
             textColor = TEXT_COLOR_YELLOW;
             break;
-        }
         case ERROR:
-        {
             prefix = "ERROR";
             textColor = TEXT_COLOR_RED;
             break;
-        }
         default:
-        {
             __debugbreak();
             return;
-        }
     }
 
     // Init color, prefix, message and close color

@@ -16,7 +16,7 @@ void PanelScreen::render()
 
 void MouseScreen::start()
 {
-	SDL_ShowCursor(SDL_DISABLE);
+	SDL_ShowCursor(0);
 	_mouseSprite = textures::getSprite(CURSOR);
 }
 

@@ -15,6 +15,13 @@ public:
 	void start();
 	void update();
 	void render();
+	void destroy();
+private:
+	SDL_Texture* _uiTexture;
+	Button _addSpriteButton;
+	Button _backgroundButton;
+	Button _middlegroundButton;
+	Button _foregroundButton;
 };
 
 class SettingsScreen
@@ -29,8 +36,8 @@ public:
 	void onSettingsDiscarded();
 private:
 	SDL_Texture* _uiTexture;
-	Text _title;
-	Text _subtitle;
+	InteractableText _title;
+	InteractableText _subtitle;
 	WidgetLink _widgetLink;
 };
 

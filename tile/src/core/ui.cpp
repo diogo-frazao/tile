@@ -50,7 +50,7 @@ static SDL_Texture* createText(Vec2& outWorldBounds, const char* text, uint16_t 
 	return textTexture;
 }
 
-static void recreateText(Text& text, const char* newText)
+static void recreateText(InteractableText& text, const char* newText)
 {
 	SDL_Texture* oldTexture = text._texture;
 	Vec2 newBounds;
@@ -216,7 +216,7 @@ void CheckBox::onSelected()
 //
 // Text
 
-Text::Text(const char* text, const Vec2& position, uint16_t size, const SDL_Color& color, const DrawMode drawMode)
+InteractableText::InteractableText(const char* text, const Vec2& position, uint16_t size, const SDL_Color& color, const DrawMode drawMode)
 {
 	Vec2 textBounds;
 	SDL_Texture* textTexture = createText(textBounds, text, size, color);
@@ -233,13 +233,13 @@ Text::Text(const char* text, const Vec2& position, uint16_t size, const SDL_Colo
 	setupDrawMode(drawMode);
 }
 
-void Text::update()
+void InteractableText::update()
 {
 	_mainCollider.centerPoint = _worldPosition;
 	_mainCollider.size = _worldBounds;
 }
 
-void Text::render(SDL_Texture* targetTexture, SDL_FRect& dest)
+void InteractableText::render(SDL_Texture* targetTexture, SDL_FRect& dest)
 {
 	SDL_SetRenderTarget(s_renderer, targetTexture);
 
@@ -270,30 +270,27 @@ void Text::render(SDL_Texture* targetTexture, SDL_FRect& dest)
 	}
 }
 
-void Text::setupDrawMode(DrawMode drawMode)
+void InteractableText::setupDrawMode(DrawMode drawMode)
 {
 	if (_drawMode != drawMode)
 	{
 		switch (drawMode)
 		{
-			case LEFT: break;
+			case LEFT: 
+				break;
 			case CENTER:
-			{
 				_worldPosition.x -= _worldBounds.x / 2;
 				break;
-			}
 			case RIGHT:
-			{
 				_worldPosition.x -= _worldBounds.x;
 				break;
-			}
 		}
 	}
 
 	_drawMode = drawMode;
 }
 
-void Text::tryHover()
+void InteractableText::tryHover()
 {
 	IVec2 mousePos = getMousePosition();
 	bool isHovering = pointInRect(mousePos, _mainCollider);
@@ -303,7 +300,7 @@ void Text::tryHover()
 	}
 }
 
-void Text::onHovered(bool isHovered)
+void InteractableText::onHovered(bool isHovered)
 {
 	_isHovered = isHovered;
 	SDL_Color targetColor = isHovered ? k_orange : k_white;
@@ -315,9 +312,40 @@ void Text::onHovered(bool isHovered)
 }
 
 //
+// Button
+
+Button::Button(const char* buttonText, const SpriteType buttonSprite, const Vec2& position, uint8_t buttonSize)
+{
+	_sprite = textures::getSprite(buttonSprite);
+	_sprite.position = position;
+
+	// Create and center text on sprite
+	_text = InteractableText(buttonText, position, buttonSize, k_white);
+	Vec2 buttonCenter{ _sprite.position.x + (_sprite.size.x / 2), _sprite.position.y + (_sprite.size.y / 2) };
+	Vec2 textPos{ buttonCenter.x - (_text._worldBounds.x / 2), buttonCenter.y - (_text._worldBounds.y / 2) };
+	Vec2 finalTextPos{ textPos.x - 1.f, textPos.y + 0.5f};
+	_text._worldPosition = finalTextPos;
+
+	// Change text collider to cover the whole sprite
+	_text._mainCollider.centerPoint = _sprite.position;
+	_text._mainCollider.size = _sprite.size;
+}
+
+void Button::render(SDL_Texture* targetTexture, SDL_Rect& src, SDL_FRect& dest)
+{
+	renderSprite(_sprite, src, dest);
+	_text.render(targetTexture, dest);
+}
+
+bool Button::tryPress()
+{
+	return wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT) && _text._isHovered;
+}
+
+//
 // Global helper functions
 
-void destroyWidget(const Text& widget)
+void destroyWidget(const InteractableText& widget)
 {
 	if (widget._texture != nullptr)
 	{
@@ -325,7 +353,7 @@ void destroyWidget(const Text& widget)
 	}
 }
 
-void destroyWidget(Text* widget)
+void destroyWidget(InteractableText* widget)
 {
 	if (!widget)
 	{
@@ -341,4 +369,9 @@ void destroyWidget(Text* widget)
 	widget = nullptr;
 }
 
-//
+SDL_Texture* createUITexture()
+{
+	SDL_Texture* uiTexture = SDL_CreateTexture(s_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, k_uiResolutionWidth, k_uiResolutionHeight);
+	SDL_SetTextureBlendMode(uiTexture, SDL_BLENDMODE_BLEND);
+	return uiTexture;
+}

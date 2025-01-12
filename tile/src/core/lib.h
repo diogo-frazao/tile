@@ -2,15 +2,6 @@
 #include <stdint.h>
 #include <SDL_pixels.h>
 
-struct Vec2
-{
-	float x = 0;
-	float y = 0;
-
-	Vec2() = default;
-	Vec2(float x, float y) : x(x), y(y) {};
-};
-
 struct IVec2
 {
 	int32_t x = 0;
@@ -18,6 +9,16 @@ struct IVec2
 
 	IVec2() = default;
 	IVec2(int x, int y) : x(x), y(y) {};
+};
+
+struct Vec2
+{
+	float x = 0;
+	float y = 0;
+
+	Vec2() = default;
+	Vec2(float x, float y) : x(x), y(y) {};
+	Vec2(const IVec2& vec) : x(static_cast<float>(vec.x)), y(static_cast<float>(vec.y)) {};
 };
 
 struct RectCollider

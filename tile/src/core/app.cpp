@@ -109,6 +109,7 @@ void App::render()
 
 void App::killWindow()
 {
+	_mainScreen.destroy();
 	_settingsScreen.destroy();
 
 	SDL_DestroyRenderer(s_renderer);

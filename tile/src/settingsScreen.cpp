@@ -10,11 +10,10 @@
 
 void SettingsScreen::start()
 {
-	_uiTexture = SDL_CreateTexture(s_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, k_uiResolutionWidth, k_uiResolutionHeight);
-	SDL_SetTextureBlendMode(_uiTexture, SDL_BLENDMODE_BLEND);
+	_uiTexture = createUITexture();
 
-	_title = Text("SETTINGS", { k_screenWidth / 2, 5 }, 100, k_gray, CENTER);
-	_subtitle = Text("enter to apply or esc to leave", { k_screenWidth / 2, 25 }, 60, k_gray, CENTER);
+	_title = InteractableText("SETTINGS", { k_screenWidth / 2, 5 }, 100, k_gray, CENTER);
+	_subtitle = InteractableText("enter to apply or esc to leave", { k_screenWidth / 2, 25 }, 60, k_gray, CENTER);
 
 	OptionSelector* optionSelector = new OptionSelector(std::vector<const char*>(user_defaults::_resolutions.begin(), 
 		user_defaults::_resolutions.end()), {k_screenWidth / 2, 55}, 65, k_white, LEFT, true, 1);
@@ -25,8 +24,8 @@ void SettingsScreen::start()
 	_widgetLink._leftTexts.reserve(2);
 	_widgetLink._rightWidgets.reserve(2);
 
-	_widgetLink._leftTexts.push_back(Text("fullscreen", {0,0}, 65, k_white));
-	_widgetLink._leftTexts.push_back(Text("resolution", {0,0}, 65, k_white));
+	_widgetLink._leftTexts.push_back(InteractableText("fullscreen", {0,0}, 65, k_white));
+	_widgetLink._leftTexts.push_back(InteractableText("resolution", {0,0}, 65, k_white));
 
 	_widgetLink._rightWidgets.push_back(new CheckBox(false, { 0,0 }, 65, k_white));
 	_widgetLink._rightWidgets.push_back(optionSelector);

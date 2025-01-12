@@ -26,8 +26,8 @@ public:
 
 	std::vector<int8_t> getResults();
 
-	std::vector<Text> _leftTexts;
-	std::vector<Text*> _rightWidgets;
+	std::vector<InteractableText> _leftTexts;
+	std::vector<InteractableText*> _rightWidgets;
 	std::vector<RectCollider> _highlightColliders;
 
 	std::function<void(const std::vector<int8_t>&)> _resultsDelegate;

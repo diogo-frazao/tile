@@ -9,10 +9,20 @@
 
 void MainScreen::start()
 {
+	_uiTexture = createUITexture();
+	_addSpriteButton = Button("+", BUTTON, Vec2(0, 5), 62);
+	_backgroundButton = Button("0", BUTTON, Vec2(0, _addSpriteButton._sprite.position.y + _addSpriteButton._sprite.size.y + 1.f));
+	_middlegroundButton = Button("1", BUTTON, Vec2(0, _backgroundButton._sprite.position.y + _backgroundButton._sprite.size.y + 1.f));
+	_foregroundButton = Button("2", BUTTON, Vec2(0, _middlegroundButton._sprite.position.y + _middlegroundButton._sprite.size.y + 1.f));
 }
 
 void MainScreen::update()
 {
+	_addSpriteButton._text.tryHover();
+	_backgroundButton._text.tryHover();
+	_middlegroundButton._text.tryHover();
+	_foregroundButton._text.tryHover();
+
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_ESCAPE))
 	{
 		SettingsScreen::s_active = !SettingsScreen::s_active;
@@ -29,18 +39,18 @@ void MainScreen::render()
 	static SDL_Rect src{};
 	static SDL_FRect dest{};
 
+	// TODO remove later
 	static Sprite mockup = textures::getSprite(MOCKUP);
 	mockup.position = { 0,0 };
+	renderSprite(mockup, src, dest);
 
-	src.x = mockup.offset.x;
-	src.y = mockup.offset.y;
-	src.w = mockup.size.x;
-	src.h = mockup.size.y;
+	_addSpriteButton.render(_uiTexture, src, dest);
+	_backgroundButton.render(_uiTexture, src, dest);
+	_middlegroundButton.render(_uiTexture, src, dest);
+	_foregroundButton.render(_uiTexture, src, dest);
+}
 
-	dest.x = mockup.position.x;
-	dest.y = mockup.position.y;
-	dest.w = (float)mockup.size.x;
-	dest.h = (float)mockup.size.y;
-
-	SDL_RenderCopyExF(s_renderer, s_atlasTexture, &src, &dest, 0, nullptr, SDL_FLIP_NONE);
+void MainScreen::destroy()
+{
+	SDL_DestroyTexture(_uiTexture);
 }
