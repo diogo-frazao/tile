@@ -18,19 +18,23 @@ void MainScreen::start()
 
 void MainScreen::update()
 {
-	_addSpriteButton._text.tryHover();
-	_backgroundButton._text.tryHover();
-	_middlegroundButton._text.tryHover();
-	_foregroundButton._text.tryHover();
-
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_ESCAPE))
 	{
 		SettingsScreen::s_active = !SettingsScreen::s_active;
+		s_active = !SettingsScreen::s_active;
 	}
 
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_Q))
 	{
 		s_debugCollidersEnabled = !s_debugCollidersEnabled;
+	}
+
+	if (s_active)
+	{
+		_addSpriteButton._text.tryHover();
+		_backgroundButton._text.tryHover();
+		_middlegroundButton._text.tryHover();
+		_foregroundButton._text.tryHover();
 	}
 }
 
