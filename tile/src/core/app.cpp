@@ -57,6 +57,7 @@ void App::start()
 {
 	_mainScreen.start();
 	_settingsScreen.start();
+	_addSpritesScreen.start();
 	_mouseScreen.start();
 }
 
@@ -72,21 +73,24 @@ void App::update()
 		const uint64_t millisecondsSinceLastFrame = SDL_GetTicks64() - lastFrameTimeStamp;
 		if (millisecondsSinceLastFrame >= s_millisecondsBetweenFrames)
 		{
-			//D_LOG(MINI, "FPS: %i", 1000 / millisecondsSinceLastFrame);
 			lastFrameTimeStamp = SDL_GetTicks64();
-
-			SDL_PollEvent(&ev);
-			if (ev.type == SDL_QUIT)
+			//D_LOG(MINI, "FPS: %i", 1000 / millisecondsSinceLastFrame);
+			while (SDL_PollEvent(&ev))
 			{
-				return;
+				if (ev.type == SDL_QUIT)
+				{
+					return;
+				}
+
+				handleKeyboardInput(ev);
+				handleMouseInput(ev);
 			}
 
-			handleKeyboardInput(ev);
-			handleMouseInput(ev);
-
 			_settingsScreen.update();
+			_addSpritesScreen.update();
 			_mainScreen.update();
 			_mouseScreen.update();
+
 			resetKeyboardAndMouseInput();
 			render();
 		}
@@ -102,6 +106,7 @@ void App::render()
 	// Update panel between main screen and ui screens
 	_panelScreen.render();
 	_settingsScreen.render();
+	_addSpritesScreen.render();
 	_mouseScreen.render();
 
 	SDL_RenderPresent(s_renderer);
@@ -111,6 +116,7 @@ void App::killWindow()
 {
 	_mainScreen.destroy();
 	_settingsScreen.destroy();
+	_addSpritesScreen.destroy();
 
 	SDL_DestroyRenderer(s_renderer);
 	SDL_DestroyWindow(s_window);
