@@ -21,7 +21,7 @@ public:
 		const DrawMode leftDrawMode, const DrawMode rightDrawMode);
 
 	void update();
-	void render(SDL_Texture* externaluiTexture = nullptr);
+	void render(SDL_Texture* externaluiTexture);
 	void destroy();
 
 	std::vector<int8_t> getResults();
@@ -35,5 +35,4 @@ public:
 
 private:
 	Vec2 calculateHighlightColliderSize(uint8_t i);
-	SDL_Texture* _uiTexture;
 };

@@ -42,6 +42,21 @@ private:
 	WidgetLink _widgetLink;
 };
 
+class AddSpritesScreen
+{
+public:
+	void start();
+	void update();
+	void render();
+	void destroy();
+	inline static bool s_active = false;
+private:
+	SDL_Texture* _uiTexture;
+	InteractableText _title;
+	InteractableText _subtitle;
+	WidgetLink _widgetLink;
+};
+
 class PanelScreen
 {
 public:

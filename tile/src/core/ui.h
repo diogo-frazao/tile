@@ -43,9 +43,9 @@ public:
 
 	void setupDrawMode(DrawMode drawMode);
 	void tryHover();
-	virtual void update();
-	virtual void render(SDL_Texture* targetTexture, SDL_FRect& dest);
-	virtual void onHovered(bool isHovered);
+	void update();
+	void render(SDL_Texture* targetTexture, SDL_FRect& dest);
+	void onHovered(bool isHovered);
 
 	InteractableText() = default;
 	InteractableText(const char* text, const Vec2& worldPosition, uint16_t size, const SDL_Color& color, const DrawMode drawMode = LEFT);

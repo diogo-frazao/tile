@@ -29,5 +29,6 @@ private:
 	MouseScreen _mouseScreen;
 	PanelScreen _panelScreen;
 	SettingsScreen _settingsScreen;
+	AddSpritesScreen _addSpritesScreen;
 	MainScreen _mainScreen;
 };

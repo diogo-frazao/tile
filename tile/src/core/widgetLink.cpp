@@ -9,12 +9,6 @@ void WidgetLink::setupRules(const Vec2& startingLeftPos, const float verticalDis
 {
 	D_ASSERT(!_leftTexts.empty() && !_rightWidgets.empty(), "_leftTexts and/or _rightWidgets need to be populated before calling this function");
 
-	if (_uiTexture == nullptr)
-	{
-		_uiTexture = SDL_CreateTexture(s_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, k_uiResolutionWidth, k_uiResolutionHeight);
-		SDL_SetTextureBlendMode(_uiTexture, SDL_BLENDMODE_BLEND);
-	}
-
 	// Setup left texts
 	for (uint8_t i = 0; i < _leftTexts.size(); ++i)
 	{
@@ -171,16 +165,15 @@ void WidgetLink::render(SDL_Texture* externaluiTexture)
 	}
 
 	static SDL_FRect dest;
-	SDL_Texture* targetUITexture = externaluiTexture == nullptr ? _uiTexture : externaluiTexture;
 
 	for (InteractableText& text : _leftTexts)
 	{
-		text.render(targetUITexture, dest);
+		text.render(externaluiTexture, dest);
 	}
 
 	for (InteractableText* text : _rightWidgets)
 	{
-		text->render(targetUITexture, dest);
+		text->render(externaluiTexture, dest);
 	}
 }
 
@@ -197,8 +190,6 @@ void WidgetLink::destroy()
 		InteractableText* text = _rightWidgets[i];
 		destroyWidget(text);
 	}
-
-	SDL_DestroyTexture(_uiTexture);
 }
 
 std::vector<int8_t> WidgetLink::getResults()

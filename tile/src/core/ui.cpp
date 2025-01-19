@@ -288,6 +288,7 @@ void InteractableText::setupDrawMode(DrawMode drawMode)
 	}
 
 	_drawMode = drawMode;
+	_mainCollider.centerPoint = _worldPosition;
 }
 
 void InteractableText::tryHover()

@@ -31,7 +31,6 @@ void SettingsScreen::start()
 	_widgetLink._rightWidgets.push_back(optionSelector);
 
 	_widgetLink.setupRules(Vec2(80, 45), 7, 90, LEFT, CENTER);
-
 }
 
 void SettingsScreen::update()
@@ -42,15 +41,11 @@ void SettingsScreen::update()
 	}
 
 	_widgetLink.update();
-
-	_title.update();
-	_subtitle.update();
 }
 
 void SettingsScreen::render()
 {
 	static SDL_FRect dest{};
-	PanelScreen::s_isPanelActive = s_active;
 
 	if (!s_active)
 	{

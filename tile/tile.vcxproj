@@ -163,6 +163,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\addSpritesScreen.cpp" />
     <ClCompile Include="src\core\app.cpp" />
     <ClCompile Include="src\core\input.cpp" />
     <ClCompile Include="src\core\widgetLink.cpp" />

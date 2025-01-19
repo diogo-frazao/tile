@@ -18,10 +18,18 @@ void MainScreen::start()
 
 void MainScreen::update()
 {
-	if (wasKeyPressedThisFrame(SDL_SCANCODE_ESCAPE))
+	if (wasKeyPressedThisFrame(SDL_SCANCODE_ESCAPE) && !AddSpritesScreen::s_active)
 	{
 		SettingsScreen::s_active = !SettingsScreen::s_active;
 		s_active = !SettingsScreen::s_active;
+		PanelScreen::s_isPanelActive = SettingsScreen::s_active;
+	}
+
+	if (wasKeyPressedThisFrame(SDL_SCANCODE_P) && !SettingsScreen::s_active)
+	{
+		AddSpritesScreen::s_active = !AddSpritesScreen::s_active;
+		s_active = !AddSpritesScreen::s_active;
+		PanelScreen::s_isPanelActive = AddSpritesScreen::s_active;
 	}
 
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_Q))
