@@ -239,7 +239,7 @@ void InteractableText::update()
 	_mainCollider.size = _worldBounds;
 }
 
-void InteractableText::render(SDL_Texture* targetTexture, SDL_FRect& dest)
+void InteractableText::render(SDL_Texture* targetTexture)
 {
 	SDL_SetRenderTarget(s_renderer, targetTexture);
 
@@ -247,16 +247,16 @@ void InteractableText::render(SDL_Texture* targetTexture, SDL_FRect& dest)
 	Vec2 screenPosition = worldToScreen(_worldPosition);
 	Vec2 screenBounds = worldToScreen(_worldBounds);
 
-	dest.x = screenPosition.x;
-	dest.y = screenPosition.y;
-	dest.w = screenBounds.x;
-	dest.h = screenBounds.y;
+	s_dest.x = screenPosition.x;
+	s_dest.y = screenPosition.y;
+	s_dest.w = screenBounds.x;
+	s_dest.h = screenBounds.y;
 
 	// Prevent artifacts/leftovers on this new texture. This will not clear the whole renderer, just the new target it points to (aka target texture)
 	// This way we can have a "new" draw per frame like we have with game sprites
 	SDL_RenderClear(s_renderer);
 
-	SDL_RenderCopyExF(s_renderer, _texture, nullptr, &dest, 0, nullptr, SDL_FLIP_NONE);
+	SDL_RenderCopyExF(s_renderer, _texture, nullptr, &s_dest, 0, nullptr, SDL_FLIP_NONE);
 	SDL_SetRenderTarget(s_renderer, nullptr);
 	SDL_RenderCopy(s_renderer, targetTexture, nullptr, nullptr);
 
@@ -332,10 +332,10 @@ Button::Button(const char* buttonText, const SpriteType buttonSprite, const Vec2
 	_text._mainCollider.size = _sprite.size;
 }
 
-void Button::render(SDL_Texture* targetTexture, SDL_Rect& src, SDL_FRect& dest)
+void Button::render(SDL_Texture* targetTexture)
 {
-	renderSprite(_sprite, src, dest);
-	_text.render(targetTexture, dest);
+	renderSprite(_sprite);
+	_text.render(targetTexture);
 }
 
 bool Button::tryPress()

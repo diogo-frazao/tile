@@ -1,6 +1,10 @@
 #pragma once
 #include <stdint.h>
 #include <SDL_pixels.h>
+#include <SDL_rect.h>
+
+inline SDL_Rect s_src{};
+inline SDL_FRect s_dest{};
 
 struct IVec2
 {

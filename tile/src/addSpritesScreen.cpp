@@ -55,9 +55,8 @@ void AddSpritesScreen::render()
 		return;
 	}
 
-	static SDL_FRect dest;
-	_title.render(_uiTexture, dest);
-	_subtitle.render(_uiTexture, dest);
+	_title.render(_uiTexture);
+	_subtitle.render(_uiTexture);
 	_widgetLink.render(_uiTexture);
 }
 

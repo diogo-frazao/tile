@@ -48,17 +48,17 @@ namespace textures
 	}
 }
 
-void renderSprite(const Sprite& sprite, SDL_Rect& src, SDL_FRect& dest)
+void renderSprite(const Sprite& sprite)
 {
-	src.x = sprite.offset.x;
-	src.y = sprite.offset.y;
-	src.w = sprite.size.x;
-	src.h = sprite.size.y;
+	s_src.x = sprite.offset.x;
+	s_src.y = sprite.offset.y;
+	s_src.w = sprite.size.x;
+	s_src.h = sprite.size.y;
 
-	dest.x = sprite.position.x;
-	dest.y = sprite.position.y;
-	dest.w = (float)sprite.size.x;
-	dest.h = (float)sprite.size.y;
+	s_dest.x = sprite.position.x;
+	s_dest.y = sprite.position.y;
+	s_dest.w = (float)sprite.size.x;
+	s_dest.h = (float)sprite.size.y;
 
-	SDL_RenderCopyExF(s_renderer, s_atlasTexture, &src, &dest, 0, nullptr, SDL_FLIP_NONE);
+	SDL_RenderCopyExF(s_renderer, s_atlasTexture, &s_src, &s_dest, 0, nullptr, SDL_FLIP_NONE);
 }

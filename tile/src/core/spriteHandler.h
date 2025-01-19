@@ -28,4 +28,4 @@ namespace textures
 	Sprite getSprite(SpriteType type);
 }
 
-void renderSprite(const Sprite& sprite, SDL_Rect& src, SDL_FRect& dest);
+void renderSprite(const Sprite& sprite);

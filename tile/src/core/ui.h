@@ -44,7 +44,7 @@ public:
 	void setupDrawMode(DrawMode drawMode);
 	void tryHover();
 	void update();
-	void render(SDL_Texture* targetTexture, SDL_FRect& dest);
+	void render(SDL_Texture* targetTexture);
 	void onHovered(bool isHovered);
 
 	InteractableText() = default;
@@ -84,7 +84,7 @@ public:
 	Sprite _sprite;
 	InteractableText _text;
 
-	void render(SDL_Texture* targetTexture, SDL_Rect& src, SDL_FRect& dest);
+	void render(SDL_Texture* targetTexture);
 	bool tryPress();
 
 	Button() = default;

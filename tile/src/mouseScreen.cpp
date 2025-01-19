@@ -32,19 +32,6 @@ void MouseScreen::update()
 
 void MouseScreen::render()
 {
-	static SDL_Rect src{};
-	static SDL_FRect dest{};
-
-	src.x = _mouseSprite.offset.x;
-	src.y = _mouseSprite.offset.y;
-	src.w = _mouseSprite.size.x;
-	src.h = _mouseSprite.size.y;
-
-	dest.x = _mouseSprite.position.x;
-	dest.y = _mouseSprite.position.y;
-	dest.w = (float)_mouseSprite.size.x;
-	dest.h = (float)_mouseSprite.size.y;
-
-	SDL_RenderCopyExF(s_renderer, s_atlasTexture, &src, &dest, 0, nullptr, SDL_FLIP_NONE);
+	renderSprite(_mouseSprite);
 }
 

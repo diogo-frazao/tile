@@ -9,6 +9,7 @@
 
 void MainScreen::start()
 {
+	s_active = true;
 	_uiTexture = createUITexture();
 	_addSpriteButton = Button("+", BUTTON, Vec2(0, 5), 62);
 	_backgroundButton = Button("0", BUTTON, Vec2(0, _addSpriteButton._sprite.position.y + _addSpriteButton._sprite.size.y + 1.f));
@@ -48,18 +49,15 @@ void MainScreen::update()
 
 void MainScreen::render()
 {
-	static SDL_Rect src{};
-	static SDL_FRect dest{};
-
 	// TODO remove later
 	static Sprite mockup = textures::getSprite(MOCKUP);
 	mockup.position = { 0,0 };
-	renderSprite(mockup, src, dest);
+	renderSprite(mockup);
 
-	_addSpriteButton.render(_uiTexture, src, dest);
-	_backgroundButton.render(_uiTexture, src, dest);
-	_middlegroundButton.render(_uiTexture, src, dest);
-	_foregroundButton.render(_uiTexture, src, dest);
+	_addSpriteButton.render(_uiTexture);
+	_backgroundButton.render(_uiTexture);
+	_middlegroundButton.render(_uiTexture);
+	_foregroundButton.render(_uiTexture);
 }
 
 void MainScreen::destroy()

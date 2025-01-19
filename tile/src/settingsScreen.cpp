@@ -45,16 +45,14 @@ void SettingsScreen::update()
 
 void SettingsScreen::render()
 {
-	static SDL_FRect dest{};
-
 	if (!s_active)
 	{
 		return;
 	}
 
 	_widgetLink.render(_uiTexture);
-	_title.render(_uiTexture, dest);
-	_subtitle.render(_uiTexture, dest);
+	_title.render(_uiTexture);
+	_subtitle.render(_uiTexture);
 }
 
 void SettingsScreen::destroy()

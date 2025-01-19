@@ -164,16 +164,14 @@ void WidgetLink::render(SDL_Texture* externaluiTexture)
 		}
 	}
 
-	static SDL_FRect dest;
-
 	for (InteractableText& text : _leftTexts)
 	{
-		text.render(externaluiTexture, dest);
+		text.render(externaluiTexture);
 	}
 
 	for (InteractableText* text : _rightWidgets)
 	{
-		text->render(externaluiTexture, dest);
+		text->render(externaluiTexture);
 	}
 }
 
