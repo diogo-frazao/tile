@@ -38,3 +38,4 @@ IVec2 getMousePosition();
 
 inline std::array<KeyState, 290> s_keyboardInputState;
 inline MouseState s_mouseInputState;
+inline SDL_Scancode s_keyPressedThisFrame = SDL_SCANCODE_UNKNOWN;

@@ -117,4 +117,6 @@ void SettingsScreen::onSettingsSaved(const std::vector<int8_t>& results)
 
 	user_defaults::applySettings(user_defaults::Settings(resolutionIndex, enableFullscreen));
 	s_active = false;
+	PanelScreen::s_isPanelActive = false;
+	MainScreen::s_active = true;
 }

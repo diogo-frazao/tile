@@ -84,6 +84,12 @@ void WidgetLink::update()
 				optionSelector->trySwapOption();
 				break;
 			}
+			case INPUT_WIDGET:
+			{
+				InputWidget* inputWidget = static_cast<InputWidget*>(text);
+				inputWidget->tryEditText();
+				break;
+			}
 		}
 	}
 
@@ -96,8 +102,21 @@ void WidgetLink::update()
 		bool isRowHighlighted = _leftTexts[i]._isHovered && _rightWidgets[i]->_isHovered;
 		if (isHovering != isRowHighlighted)
 		{
-			_leftTexts[i].onHovered(isHovering);
-			_rightWidgets[i]->onHovered(isHovering);
+			bool preventHover = false;
+			if (_rightWidgets[i]->_widgetType == INPUT_WIDGET)
+			{
+				InputWidget* inputWidget = static_cast<InputWidget*>(_rightWidgets[i]);
+				if (inputWidget->_isEditingText)
+				{
+					preventHover = true;
+				}
+			}
+
+			if (!preventHover)
+			{
+				_leftTexts[i].onHovered(isHovering);
+				_rightWidgets[i]->onHovered(isHovering);
+			}
 		}
 	}
 

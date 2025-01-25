@@ -4,6 +4,7 @@
 #include <SDL_pixels.h>
 #include <vector>
 #include "spriteHandler.h"
+#include <string>
 
 struct SDL_Texture;
 struct SDL_FRect;
@@ -18,6 +19,7 @@ enum WidgetType
 	TEXT,
 	CHECKBOX,
 	OPTIONSELECTOR,
+	INPUT_WIDGET,
 	INVALID
 };
 
@@ -76,6 +78,17 @@ public:
 	OptionSelector() = default;
 	OptionSelector(const std::vector<const char*>& options, const Vec2& worldPosition, uint16_t size, const SDL_Color& color,
 		const DrawMode drawMode = LEFT, bool allowWrap = true, int8_t selectedIndex = 0);
+};
+
+class InputWidget : public InteractableText
+{
+public:
+	bool _isEditingText = false;
+	std::string _currentText;
+
+	void tryEditText();
+	InputWidget() = default;
+	InputWidget(const Vec2& worldPosition, uint16_t size, const SDL_Color& color, const DrawMode drawMode = LEFT);
 };
 
 class Button

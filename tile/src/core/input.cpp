@@ -38,6 +38,10 @@ void handleKeyboardInput(SDL_Event& ev)
 		keyState.isDown = true;
 		keyState.pressedCounter++;
 		keyState.justPressed = keyState.pressedCounter == 1;
+		if (keyState.justPressed)
+		{
+			s_keyPressedThisFrame = key;
+		}
 	}
 	else if (ev.type == SDL_KEYUP)
 	{
@@ -91,6 +95,7 @@ void resetKeyboardAndMouseInput()
 		keyState.justReleased = 0;
 	}
 
+	s_keyPressedThisFrame = SDL_SCANCODE_UNKNOWN;
 	s_mouseInputState.mouseWheelScroll = 0;
 }
 

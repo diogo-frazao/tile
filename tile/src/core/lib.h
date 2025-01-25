@@ -74,6 +74,26 @@ inline int min(int a, int b)
 	return b;
 }
 
+inline int clamp(int a, int min, int max)
+{
+	if (a < min)
+	{
+		return min;
+	}
+	else if (a > max)
+	{
+		return max;
+	}
+
+	return a;
+}
+
+inline float mapZeroToOne(int value, float min, float max)
+{
+	int clampedValue = clamp(value, (int)min, (int)max);
+	return (clampedValue - min) / (max - min);
+}
+
 inline bool pointInRect(const IVec2& point, const RectCollider& rect)
 {
 	return point.x >= rect.centerPoint.x &&

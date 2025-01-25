@@ -16,8 +16,8 @@ public:
 	void update();
 	void render();
 	void destroy();
+	inline static bool s_active = false;
 private:
-	bool s_active = false;
 	SDL_Texture* _uiTexture;
 	Button _addSpriteButton;
 	Button _backgroundButton;

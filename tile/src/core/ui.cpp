@@ -7,6 +7,7 @@
 
 static const char* k_selectedCharacter = "x";
 static const char* k_notSelectedCharacter = "_";
+static const char k_notSelectedChar = '_';
 
 // Local helper functions
 
@@ -52,11 +53,13 @@ static SDL_Texture* createText(Vec2& outWorldBounds, const char* text, uint16_t 
 
 static void recreateText(InteractableText& text, const char* newText)
 {
+	D_ASSERT(newText[0] != '\0', "Invalid text to create");
 	SDL_Texture* oldTexture = text._texture;
 	Vec2 newBounds;
 	SDL_Texture* newTexture = createText(newBounds, newText, text._size, text._color);
 	text._worldBounds = newBounds;
 	text._texture = newTexture;
+	text.onHovered(text._isHovered);
 
 	D_ASSERT(oldTexture, "Invalid texture to swap");
 	SDL_DestroyTexture(oldTexture);
@@ -94,16 +97,7 @@ void OptionSelector::selectOption(int8_t index)
 	bool isIndexValid = index <= _options.size() - 1;
 	D_ASSERT(isIndexValid, "Invalid option index to select");
 	_selectedIndex = index;
-
-	SDL_Texture* oldTexture = _texture;
-	Vec2 newBounds;
-	SDL_Texture* newTexture = createText(newBounds, _options[_selectedIndex], _size, _color);
-	_worldBounds = newBounds;
-	_texture = newTexture;
-	onHovered(_isHovered);
-
-	D_ASSERT(oldTexture, "Invalid texture to swap");
-	SDL_DestroyTexture(oldTexture);
+	recreateText(*this, _options[_selectedIndex]);
 }
 
 void OptionSelector::trySwapOption()
@@ -111,8 +105,8 @@ void OptionSelector::trySwapOption()
 	IVec2 mousePos = getMousePosition();
 	if (wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT) && _isHovered)
 	{
-		float mouseXPerc = mousePos.x / (_worldPosition.x + _worldBounds.x);
-		if (mouseXPerc >= 0.8f)
+		float mouseXPerc = mapZeroToOne(mousePos.x, _worldPosition.x, _worldPosition.x + _worldBounds.x);
+		if (mouseXPerc >= 0.5f)
 		{
 			onRightPressed();
 		}
@@ -134,15 +128,7 @@ void OptionSelector::onRightPressed()
 		_selectedIndex = min(++_selectedIndex, static_cast<int>(_options.size() - 1));
 	}
 
-	SDL_Texture* oldTexture = _texture;
-	Vec2 newBounds;
-	SDL_Texture* newTexture = createText(newBounds, _options[_selectedIndex], _size, _color);
-	_worldBounds = newBounds;
-	_texture = newTexture;
-	onHovered(_isHovered);
-
-	D_ASSERT(oldTexture, "Invalid texture to swap");
-	SDL_DestroyTexture(oldTexture);
+	recreateText(*this, _options[_selectedIndex]);
 }
 
 void OptionSelector::onLeftPressed()
@@ -156,15 +142,7 @@ void OptionSelector::onLeftPressed()
 		_selectedIndex = max(--_selectedIndex, 0);
 	}
 
-	SDL_Texture* oldTexture = _texture;
-	Vec2 newBounds;
-	SDL_Texture* newTexture = createText(newBounds, _options[_selectedIndex], _size, _color);
-	_worldBounds = newBounds;
-	_texture = newTexture;
-	onHovered(_isHovered);
-
-	D_ASSERT(oldTexture, "Invalid texture to swap");
-	SDL_DestroyTexture(oldTexture);
+	recreateText(*this, _options[_selectedIndex]);
 }
 
 //
@@ -201,16 +179,7 @@ void CheckBox::onSelected()
 {
 	_isSelected = !_isSelected;
 	const char* newCheckboxText = _isSelected ? k_selectedCharacter : k_notSelectedCharacter;
-
-	SDL_Texture* oldTexture = _texture;
-	Vec2 newBounds;
-	SDL_Texture* newTexture = createText(newBounds, newCheckboxText, _size, _color);
-	_worldBounds = newBounds;
-	_texture = newTexture;
-	onHovered(_isHovered);
-
-	D_ASSERT(oldTexture, "Invalid texture to swap");
-	SDL_DestroyTexture(oldTexture);
+	recreateText(*this, newCheckboxText);
 }
 
 //
@@ -341,6 +310,76 @@ void Button::render(SDL_Texture* targetTexture)
 bool Button::tryPress()
 {
 	return wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT) && _text._isHovered;
+}
+
+//
+// Input Widget
+
+InputWidget::InputWidget(const Vec2& worldPosition, uint16_t size, const SDL_Color& color, const DrawMode drawMode)
+{
+	Vec2 textBounds;
+	SDL_Texture* textTexture = createText(textBounds, k_notSelectedCharacter, size, color);
+
+	this->_worldPosition = worldPosition;
+	this->_worldBounds = textBounds;
+	this->_texture = textTexture;
+	this->_color = color;
+	this->_size = size;
+	this->_isHovered = false;
+	this->_mainCollider = RectCollider(worldPosition, textBounds);
+	this->_widgetType = INPUT_WIDGET;
+
+	setupDrawMode(drawMode);
+}
+
+void InputWidget::tryEditText()
+{
+	if (wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT) && _isHovered)
+	{
+		_isEditingText = !_isEditingText;
+	}
+
+	if (!_isEditingText)
+	{
+		return;
+	}
+
+	if (!_isHovered)
+	{
+		onHovered(true);
+	}
+
+	if (wasKeyPressedThisFrame(k_returnKey) || wasKeyPressedThisFrame(k_confirmKey))
+	{
+		_isEditingText = false;
+	}
+
+	if (s_keyPressedThisFrame != SDL_SCANCODE_UNKNOWN)
+	{
+		if (s_keyPressedThisFrame == SDL_SCANCODE_BACKSPACE && _currentText.size() > 0)
+		{
+			_currentText.pop_back();
+			if (_currentText.empty())
+			{
+				_currentText = k_notSelectedCharacter;
+			}
+
+			recreateText(*this, _currentText.c_str());
+		}
+
+		SDL_Keycode keyPressed = SDL_GetKeyFromScancode(s_keyPressedThisFrame);
+		if (keyPressed >= 32 && keyPressed <= 126) // Inside Printable ASCII Range
+		{
+			if (_currentText.size() == 1 && _currentText[0] == k_notSelectedChar)
+			{
+				_currentText.pop_back();
+			}
+
+			const char pressedChar = static_cast<char>(keyPressed);
+			_currentText = _currentText + pressedChar;
+			recreateText(*this, _currentText.c_str());
+		}
+	}
 }
 
 //
