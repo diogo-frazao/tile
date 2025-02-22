@@ -173,6 +173,7 @@
     <ClCompile Include="src\core\ui.cpp" />
     <ClCompile Include="src\mouseScreen.cpp" />
     <ClCompile Include="src\settingsScreen.cpp" />
+    <ClCompile Include="src\spritePreviewer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\app.h" />
@@ -183,6 +184,7 @@
     <ClInclude Include="src\core\ui.h" />
     <ClInclude Include="src\core\widgetLink.h" />
     <ClInclude Include="src\screens.h" />
+    <ClInclude Include="src\spritePreviewer.h" />
     <ClInclude Include="src\userDefaults.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

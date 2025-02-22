@@ -45,6 +45,9 @@
     <ClCompile Include="src\addSpritesScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\spritePreviewer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\app.h">
@@ -72,6 +75,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\userDefaults.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\spritePreviewer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

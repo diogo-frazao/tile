@@ -15,6 +15,10 @@ void MainScreen::start()
 	_backgroundButton = Button("0", BUTTON, Vec2(0, _addSpriteButton._sprite.position.y + _addSpriteButton._sprite.size.y + 1.f));
 	_middlegroundButton = Button("1", BUTTON, Vec2(0, _backgroundButton._sprite.position.y + _backgroundButton._sprite.size.y + 1.f));
 	_foregroundButton = Button("2", BUTTON, Vec2(0, _middlegroundButton._sprite.position.y + _middlegroundButton._sprite.size.y + 1.f));
+
+	_backgroundSpritePreviewer.start();
+	_middlegroundSpritePreviewer.start();
+	_foregroundSpritePreviewer.start();
 }
 
 void MainScreen::update()
@@ -38,12 +42,23 @@ void MainScreen::update()
 		s_debugCollidersEnabled = !s_debugCollidersEnabled;
 	}
 
+	if (wasKeyPressedThisFrame(SDL_SCANCODE_X))
+	{
+		static Sprite testSprite = textures::getSprite(PREVIEWER_BG);
+		_backgroundSpritePreviewer._spritesToPreview.push_back(testSprite);
+	}
+
 	if (s_active)
 	{
 		_addSpriteButton._text.tryHover();
 		_backgroundButton._text.tryHover();
 		_middlegroundButton._text.tryHover();
 		_foregroundButton._text.tryHover();
+
+		if (_backgroundButton.tryPress())
+		{
+			_backgroundSpritePreviewer.s_isActive = !_backgroundSpritePreviewer.s_isActive;
+		}
 	}
 }
 
@@ -58,6 +73,10 @@ void MainScreen::render()
 	_backgroundButton.render(_uiTexture);
 	_middlegroundButton.render(_uiTexture);
 	_foregroundButton.render(_uiTexture);
+
+	_backgroundSpritePreviewer.render();
+	_middlegroundSpritePreviewer.render();
+	_foregroundSpritePreviewer.render();
 }
 
 void MainScreen::destroy()

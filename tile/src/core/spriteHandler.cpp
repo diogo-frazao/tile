@@ -40,6 +40,10 @@ namespace textures
 				sprite.offset = { 328, 0 };
 				sprite.size = { 10, 9 };
 				break;
+			case PREVIEWER_BG:
+				sprite.offset = { 338, 0 };
+				sprite.size = { 9,9 };
+				break;
 			default:
 				D_ASSERT(false, "Invalid texture to load");
 		}

@@ -6,6 +6,7 @@
 #include <vector>
 #include <stdint.h>
 #include <array>
+#include "spritePreviewer.h"
 
 struct SDL_Texture;
 
@@ -21,8 +22,11 @@ private:
 	SDL_Texture* _uiTexture;
 	Button _addSpriteButton;
 	Button _backgroundButton;
+	SpritePreviewer _backgroundSpritePreviewer;
 	Button _middlegroundButton;
+	SpritePreviewer _middlegroundSpritePreviewer;
 	Button _foregroundButton;
+	SpritePreviewer _foregroundSpritePreviewer;
 };
 
 class SettingsScreen

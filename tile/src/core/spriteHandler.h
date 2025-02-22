@@ -12,6 +12,7 @@ enum SpriteType
 	CURSOR,
 	MOCKUP,
 	BUTTON,
+	PREVIEWER_BG,
 	SPRITES_MAX,
 };
 
