@@ -21,6 +21,9 @@ struct Sprite
 	Vec2 position;
 	IVec2 size;
 	IVec2 offset;
+
+	Sprite() = default;
+	Sprite(const IVec2& size, const IVec2& offset) : size(size), offset(offset) {};
 };
 
 namespace textures
@@ -30,3 +33,4 @@ namespace textures
 }
 
 void renderSprite(const Sprite& sprite);
+void renderSpriteInsideRect(const Sprite& sprite, const Vec2& targetRect);

@@ -66,3 +66,20 @@ void renderSprite(const Sprite& sprite)
 
 	SDL_RenderCopyExF(s_renderer, s_atlasTexture, &s_src, &s_dest, 0, nullptr, SDL_FLIP_NONE);
 }
+
+void renderSpriteInsideRect(const Sprite& sprite, const Vec2& targetRect)
+{
+	bool shouldScaleSprite = ((float)sprite.size.x > targetRect.x) || ((float)sprite.size.y > targetRect.y);
+
+	s_src.x = sprite.offset.x;
+	s_src.y = sprite.offset.y;
+	s_src.w = sprite.size.x;
+	s_src.h = sprite.size.y;
+
+	s_dest.x = sprite.position.x;
+	s_dest.y = sprite.position.y;
+	s_dest.w = shouldScaleSprite ? targetRect.x : (float)sprite.size.x;
+	s_dest.h = shouldScaleSprite ? targetRect.y : (float)sprite.size.y;
+
+	SDL_RenderCopyExF(s_renderer, s_atlasTexture, &s_src, &s_dest, 0, nullptr, SDL_FLIP_NONE);
+}

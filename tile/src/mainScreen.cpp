@@ -42,10 +42,35 @@ void MainScreen::update()
 		s_debugCollidersEnabled = !s_debugCollidersEnabled;
 	}
 
-	if (wasKeyPressedThisFrame(SDL_SCANCODE_X))
+	// debug add sprites previewer
+	if (wasKeyPressedThisFrame(SDL_SCANCODE_1))
 	{
-		static Sprite testSprite = textures::getSprite(PREVIEWER_BG);
-		_backgroundSpritePreviewer._spritesToPreview.push_back(testSprite);
+		Sprite sign{{10,16}, {328, 9}};
+		_backgroundSpritePreviewer._spritesToPreview.push_back(sign);
+	}
+
+	if (wasKeyPressedThisFrame(SDL_SCANCODE_2))
+	{
+		Sprite rock{{8,5}, {347, 0}};
+		_backgroundSpritePreviewer._spritesToPreview.push_back(rock);
+	}
+
+	if (wasKeyPressedThisFrame(SDL_SCANCODE_3))
+	{
+		Sprite bush{{24,13}, {338, 9}};
+		_backgroundSpritePreviewer._spritesToPreview.push_back(bush);
+	}
+
+	if (wasKeyPressedThisFrame(SDL_SCANCODE_4))
+	{
+		Sprite tree{{35,48}, {328, 25}};
+		_backgroundSpritePreviewer._spritesToPreview.push_back(tree);
+	}
+
+	if (wasKeyPressedThisFrame(SDL_SCANCODE_5))
+	{
+		Sprite miniRock{{7,3}, {355, 0}};
+		_backgroundSpritePreviewer._spritesToPreview.push_back(miniRock);
 	}
 
 	if (s_active)
