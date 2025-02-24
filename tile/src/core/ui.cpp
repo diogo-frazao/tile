@@ -309,7 +309,7 @@ void Button::render(SDL_Texture* targetTexture)
 
 bool Button::tryPress()
 {
-	return wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT) && _text._isHovered;
+	return wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT) && pointInRect(getMousePosition(), _text._mainCollider);
 }
 
 //

@@ -22,7 +22,7 @@ struct Sprite
 	IVec2 size;
 	IVec2 offset;
 
-	Sprite() = default;
+	Sprite() : position(0.f, 0.f), size(0, 0), offset(0, 0) {};
 	Sprite(const IVec2& size, const IVec2& offset) : size(size), offset(offset) {};
 };
 

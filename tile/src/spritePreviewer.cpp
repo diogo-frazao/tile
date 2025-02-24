@@ -1,7 +1,8 @@
 #include "spritePreviewer.h"
 
-void SpritePreviewer::start()
+void SpritePreviewer::start(const Vec2& startLocation)
 {
+	_locationToStartGrid = startLocation;
 	_spritesToPreview.reserve(5);
 	_backgroundSprite = textures::getSprite(PREVIEWER_BG);
 }
@@ -13,12 +14,12 @@ void SpritePreviewer::render()
 		return;
 	}
 
-	uint8_t k_maxSpritesPerRow = 6;
-	uint8_t offset = 9;
-	int spritesThisRow = 0;
-	int numColumns = 0;
-	Vec2 startingLocation{ 50, 50 };
-	Vec2 targetRect{ 8,8 };
+	static const uint8_t offset = _backgroundSprite.size.x;
+	static Vec2 targetRect = { _backgroundSprite.size.x - 1.f, _backgroundSprite.size.y - 1.f };
+
+	uint8_t k_maxSpritesPerRow = 4;
+	uint8_t spritesThisRow = 0;
+	uint8_t numColumns = 0;
 
 	for (Sprite& sprite : _spritesToPreview)
 	{
@@ -33,7 +34,7 @@ void SpritePreviewer::render()
 		}
 
 		// Position sprite at top left of background sprite
-		sprite.position = startingLocation;
+		sprite.position = _locationToStartGrid;
 		sprite.position.x += spritesThisRow * offset;
 		sprite.position.y += numColumns * offset;
 

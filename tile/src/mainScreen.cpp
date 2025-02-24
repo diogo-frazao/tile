@@ -16,14 +16,22 @@ void MainScreen::start()
 	_middlegroundButton = Button("1", BUTTON, Vec2(0, _backgroundButton._sprite.position.y + _backgroundButton._sprite.size.y + 1.f));
 	_foregroundButton = Button("2", BUTTON, Vec2(0, _middlegroundButton._sprite.position.y + _middlegroundButton._sprite.size.y + 1.f));
 
-	_backgroundSpritePreviewer.start();
+	_backgroundSpritePreviewer.start(_backgroundButton._sprite.position);
 	_middlegroundSpritePreviewer.start();
 	_foregroundSpritePreviewer.start();
 }
 
 void MainScreen::update()
 {
-	if (wasKeyPressedThisFrame(SDL_SCANCODE_ESCAPE) && !AddSpritesScreen::s_active)
+	if (wasKeyPressedThisFrame(SDL_SCANCODE_ESCAPE))
+	{
+		SettingsScreen::s_active = false;
+		AddSpritesScreen::s_active = false;
+		PanelScreen::s_isPanelActive = false;
+		s_active = true;
+	}
+
+	if (wasKeyPressedThisFrame(SDL_SCANCODE_TAB) && !AddSpritesScreen::s_active)
 	{
 		SettingsScreen::s_active = !SettingsScreen::s_active;
 		s_active = !SettingsScreen::s_active;
@@ -76,13 +84,26 @@ void MainScreen::update()
 	if (s_active)
 	{
 		_addSpriteButton._text.tryHover();
-		_backgroundButton._text.tryHover();
+
+		if (!_backgroundSpritePreviewer.s_isActive)
+		{
+			_backgroundButton._text.tryHover();
+		}
+
 		_middlegroundButton._text.tryHover();
 		_foregroundButton._text.tryHover();
+
+		if (_addSpriteButton.tryPress())
+		{
+			AddSpritesScreen::s_active = true;
+			PanelScreen::s_isPanelActive = true;
+			s_active = false;
+		}
 
 		if (_backgroundButton.tryPress())
 		{
 			_backgroundSpritePreviewer.s_isActive = !_backgroundSpritePreviewer.s_isActive;
+			_backgroundButton._text.onHovered(true);
 		}
 	}
 }
@@ -94,14 +115,14 @@ void MainScreen::render()
 	mockup.position = { 0,0 };
 	renderSprite(mockup);
 
+	_backgroundSpritePreviewer.render();
+	_middlegroundSpritePreviewer.render();
+	_foregroundSpritePreviewer.render();
+
 	_addSpriteButton.render(_uiTexture);
 	_backgroundButton.render(_uiTexture);
 	_middlegroundButton.render(_uiTexture);
 	_foregroundButton.render(_uiTexture);
-
-	_backgroundSpritePreviewer.render();
-	_middlegroundSpritePreviewer.render();
-	_foregroundSpritePreviewer.render();
 }
 
 void MainScreen::destroy()
