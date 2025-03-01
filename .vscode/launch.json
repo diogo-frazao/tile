@@ -2,10 +2,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug SDL2 App",
+            "name": "Debug tile",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/main.exe",
+            "program": "${workspaceFolder}/tile.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

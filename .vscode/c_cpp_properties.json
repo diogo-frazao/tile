@@ -3,9 +3,7 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/bin/dependencies/SDL2_vscode/include",
-                "${workspaceFolder}/bin/dependencies/SDL2_ttf_vscode/include",
-                "${workspaceFolder}/bin/dependencies/SDL2_image_vscode/include"
+                "${workspaceFolder}/bin/dependencies/SDL2/include",
             ],
             "defines": [],
             "compilerPath": "C:/msys64/ucrt64/bin/g++.exe",

@@ -1,7 +1,5 @@
-- Ter makefile
-- Não usar windows subsystem e usar console
-- Conseguir fazer debug
 - Tentar fazer share dos mesmos includes e lib
+- Compilar só o que falta e não ter de compilar sempre todos
 
 - Add sprite no + em vez de p X
 - Esc para sair de qualquer menu X
@@ -11,6 +9,8 @@
 
 
 NTH:
+- Ter makefile (isso seria outra coisa que iria dar mais trabalho)
+- Não usar windows subsystem e usar console X (não é preciso porque estou a ver os prints no terminal)
 - Settings e Add Sprite partilharem a mesma textura porque nunca vão estar em cima um do outro.
 - Ter um único dest rect para tudo. X
 - Ter general mouse position para o current frame em vez de ir buscar em tantos sítios. ACHEI QUE JA TINHA FEITO ONDE É QUE ISTO ESTA AAAAAAAAAAAAA

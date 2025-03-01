@@ -1,4 +1,5 @@
 #include "spritePreviewer.h"
+#include "core/log.h"
 
 void SpritePreviewer::start(const Vec2& startLocation)
 {
