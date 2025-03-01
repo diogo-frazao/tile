@@ -25,7 +25,7 @@ static Vec2 screenToWorld(const Vec2& screenPos)
 
 static SDL_Texture* createText(Vec2& outWorldBounds, const char* text, uint16_t size, const SDL_Color& color)
 {
-	static const char* fontPath = "font/Renogare.ttf";
+	static const char* fontPath = "tile/font/Renogare.ttf";
 
 	TTF_Font* const font = TTF_OpenFont(fontPath, size);
 	if (font == nullptr)

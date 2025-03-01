@@ -1,0 +1,17 @@
+- Ter makefile
+- Não usar windows subsystem e usar console
+- Conseguir fazer debug
+- Tentar fazer share dos mesmos includes e lib
+
+- Add sprite no + em vez de p X
+- Esc para sair de qualquer menu X
+- Quando carrega no enter, cria background sprite na layer coorespondente.
+- Criar sprite (scaled down 8x8) no enter
+- Collider (e expandir sprite struct) para interagir com a sprite e criar uma a full size a seguir o rato.
+
+
+NTH:
+- Settings e Add Sprite partilharem a mesma textura porque nunca vão estar em cima um do outro.
+- Ter um único dest rect para tudo. X
+- Ter general mouse position para o current frame em vez de ir buscar em tantos sítios. ACHEI QUE JA TINHA FEITO ONDE É QUE ISTO ESTA AAAAAAAAAAAAA
+- Mouse over para fechar automaticamente layer

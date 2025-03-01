@@ -9,7 +9,7 @@ namespace textures
 {
 	SDL_Texture* loadAtlas()
 	{
-		static const char* path = "graphics/atlas.png";
+		static const char* path = "tile/graphics/atlas.png";
 		SDL_Texture* const texture = IMG_LoadTexture(s_renderer, path);
 		if (texture == nullptr)
 		{

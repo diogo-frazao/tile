@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/bin/dependencies/SDL2_vscode/include",
+                "${workspaceFolder}/bin/dependencies/SDL2_ttf_vscode/include",
+                "${workspaceFolder}/bin/dependencies/SDL2_image_vscode/include"
+            ],
+            "defines": [],
+            "compilerPath": "C:/msys64/ucrt64/bin/g++.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-gcc-x64"
+        }
+    ],
+    "version": 4
+}
