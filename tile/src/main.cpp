@@ -9,11 +9,9 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 	return 0;
 }
 
-/*
 int main(int argc, char* args[])
 {
 	App app;
 	app.runApp();
 	return 0;
 }
-*/
