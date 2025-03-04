@@ -6,7 +6,7 @@
 class SpritePreviewer
 {
 public:
-	void start(const Vec2& startLocation = Vec2());
+	SpritePreviewer(const Vec2& startLocation = Vec2());
 	void render();
 	bool s_isActive = false;
 	std::vector<Sprite> _spritesToPreview;

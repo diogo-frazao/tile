@@ -1,7 +1,7 @@
 #include "spritePreviewer.h"
 #include "core/log.h"
 
-void SpritePreviewer::start(const Vec2& startLocation)
+SpritePreviewer::SpritePreviewer(const Vec2& startLocation)
 {
 	_locationToStartGrid = startLocation;
 	_spritesToPreview.reserve(5);

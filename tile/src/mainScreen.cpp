@@ -16,9 +16,9 @@ void MainScreen::start()
 	_middlegroundButton = Button("1", BUTTON, Vec2(0, _backgroundButton._sprite.position.y + _backgroundButton._sprite.size.y + 1.f));
 	_foregroundButton = Button("2", BUTTON, Vec2(0, _middlegroundButton._sprite.position.y + _middlegroundButton._sprite.size.y + 1.f));
 
-	_backgroundSpritePreviewer.start(_backgroundButton._sprite.position);
-	_middlegroundSpritePreviewer.start();
-	_foregroundSpritePreviewer.start();
+	_spritePreviewers[0] = SpritePreviewer(_backgroundButton._sprite.position);
+	_spritePreviewers[1] = SpritePreviewer(_middlegroundButton._sprite.position);
+	_spritePreviewers[2] = SpritePreviewer(_foregroundButton._sprite.position);
 }
 
 void MainScreen::update()
@@ -54,44 +54,51 @@ void MainScreen::update()
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_1))
 	{
 		Sprite sign{{10,16}, {328, 9}};
-		_backgroundSpritePreviewer._spritesToPreview.push_back(sign);
+		_spritePreviewers[0]._spritesToPreview.push_back(sign);
 	}
 
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_2))
 	{
 		Sprite rock{{8,5}, {347, 0}};
-		_backgroundSpritePreviewer._spritesToPreview.push_back(rock);
+		_spritePreviewers[0]._spritesToPreview.push_back(rock);
 	}
 
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_3))
 	{
 		Sprite bush{{24,13}, {338, 9}};
-		_backgroundSpritePreviewer._spritesToPreview.push_back(bush);
+		_spritePreviewers[0]._spritesToPreview.push_back(bush);
 	}
 
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_4))
 	{
 		Sprite tree{{35,48}, {328, 25}};
-		_backgroundSpritePreviewer._spritesToPreview.push_back(tree);
+		_spritePreviewers[0]._spritesToPreview.push_back(tree);
 	}
 
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_5))
 	{
 		Sprite miniRock{{7,3}, {355, 0}};
-		_backgroundSpritePreviewer._spritesToPreview.push_back(miniRock);
+		_spritePreviewers[0]._spritesToPreview.push_back(miniRock);
 	}
 
 	if (s_active)
 	{
 		_addSpriteButton._text.tryHover();
-
-		if (!_backgroundSpritePreviewer.s_isActive)
+		
+		if (!_spritePreviewers[0].s_isActive)
 		{
 			_backgroundButton._text.tryHover();
 		}
 
-		_middlegroundButton._text.tryHover();
-		_foregroundButton._text.tryHover();
+		if (!_spritePreviewers[1].s_isActive)
+		{
+			_middlegroundButton._text.tryHover();
+		}
+
+		if (!_spritePreviewers[2].s_isActive)
+		{
+			_foregroundButton._text.tryHover();
+		}
 
 		if (_addSpriteButton.tryPress())
 		{
@@ -102,8 +109,20 @@ void MainScreen::update()
 
 		if (_backgroundButton.tryPress())
 		{
-			_backgroundSpritePreviewer.s_isActive = !_backgroundSpritePreviewer.s_isActive;
+			_spritePreviewers[0].s_isActive = !_spritePreviewers[0].s_isActive;
 			_backgroundButton._text.onHovered(true);
+		}
+
+		if (_middlegroundButton.tryPress())
+		{
+			_spritePreviewers[1].s_isActive = !_spritePreviewers[1].s_isActive;
+			_middlegroundButton._text.onHovered(true);
+		}
+
+		if (_foregroundButton.tryPress())
+		{
+			_spritePreviewers[2].s_isActive = !_spritePreviewers[2].s_isActive;
+			_foregroundButton._text.onHovered(true);
 		}
 	}
 }
@@ -115,9 +134,9 @@ void MainScreen::render()
 	mockup.position = { 0,0 };
 	renderSprite(mockup);
 
-	_backgroundSpritePreviewer.render();
-	_middlegroundSpritePreviewer.render();
-	_foregroundSpritePreviewer.render();
+	_spritePreviewers[0].render();
+	_spritePreviewers[1].render();
+	_spritePreviewers[2].render();
 
 	_addSpriteButton.render(_uiTexture);
 	_backgroundButton.render(_uiTexture);

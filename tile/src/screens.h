@@ -18,15 +18,13 @@ public:
 	void render();
 	void destroy();
 	inline static bool s_active = false;
+	inline static std::array<SpritePreviewer, 3> _spritePreviewers;
 private:
 	SDL_Texture* _uiTexture;
 	Button _addSpriteButton;
 	Button _backgroundButton;
-	SpritePreviewer _backgroundSpritePreviewer;
 	Button _middlegroundButton;
-	SpritePreviewer _middlegroundSpritePreviewer;
 	Button _foregroundButton;
-	SpritePreviewer _foregroundSpritePreviewer;
 };
 
 class SettingsScreen

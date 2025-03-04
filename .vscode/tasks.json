@@ -6,6 +6,7 @@
             "type": "shell",
             "command": "g++",
             "args": [
+		"-g",
                 "-I", "bin/dependencies/SDL2/include",
                 "-L", "bin/dependencies/SDL2_gcc/lib",
                 "tile/src/addSpritesScreen.cpp",
