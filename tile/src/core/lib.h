@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include <SDL_pixels.h>
 #include <SDL_rect.h>
+#include <string>
+#include "log.h"
 
 inline SDL_Rect s_src{};
 inline SDL_FRect s_dest{};
@@ -100,4 +102,23 @@ inline bool pointInRect(const IVec2& point, const RectCollider& rect)
 		point.x <= rect.centerPoint.x + rect.size.x &&
 		point.y >= rect.centerPoint.y &&
 		point.y <= rect.centerPoint.y + rect.size.y;
+}
+
+inline int convertStringToInt(std::string_view word)
+{
+	int result = 0;
+	for (auto c : word)
+	{
+		if (c >= '0' && c <= '9')
+		{
+			result = result * 10 + (c - '0');
+		}
+	}
+
+	if (result == 0)
+	{
+		D_LOG(ERROR, "Invalid string to convert to int");
+	}
+
+	return result; 
 }

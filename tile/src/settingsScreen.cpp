@@ -78,7 +78,7 @@ void SettingsScreen::onSettingsDiscarded()
 	}
 }
 
-void SettingsScreen::onSettingsSaved(const std::vector<int8_t>& results)
+void SettingsScreen::onSettingsSaved(const std::vector<int16_t>& results)
 {
 	D_ASSERT((_widgetLink._rightWidgets.size() == results.size()), "Invalid results");
 	D_LOG(LOG, "Settings saved");

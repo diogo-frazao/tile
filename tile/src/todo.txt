@@ -1,14 +1,11 @@
-- Tentar fazer share dos mesmos includes e lib
-- Compilar só o que falta e não ter de compilar sempre todos
-
-- Add sprite no + em vez de p X
-- Esc para sair de qualquer menu X
-- Quando carrega no enter, cria background sprite na layer coorespondente.
-- Criar sprite (scaled down 8x8) no enter
-- Collider (e expandir sprite struct) para interagir com a sprite e criar uma a full size a seguir o rato.
-
+- Quando estou a editar um input widget, carregar no enter não fecha o menu, apenas para o input
+- Tentar ter um atalho para abrir o atlas e ver as sprites
+- Fechar add sprite quando se adiciona uma nova sprite
+- Não poder abrir uma layer por cima da outra
 
 NTH:
+- Tentar fazer share dos mesmos includes e lib
+- Compilar só o que falta e não ter de compilar sempre todos
 - Ter makefile (isso seria outra coisa que iria dar mais trabalho)
 - Não usar windows subsystem e usar console X (não é preciso porque estou a ver os prints no terminal)
 - Settings e Add Sprite partilharem a mesma textura porque nunca vão estar em cima um do outro.

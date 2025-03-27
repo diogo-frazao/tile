@@ -35,7 +35,7 @@ public:
 	void render();
 	void destroy();
 	inline static bool s_active = false;
-	void onSettingsSaved(const std::vector<int8_t>& results);
+	void onSettingsSaved(const std::vector<int16_t>& results);
 	void onSettingsDiscarded();
 private:
 	SDL_Texture* _uiTexture;

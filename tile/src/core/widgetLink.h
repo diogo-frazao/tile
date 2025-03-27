@@ -24,15 +24,15 @@ public:
 	void render(SDL_Texture* externaluiTexture);
 	void destroy();
 
-	std::vector<int8_t> getResults();
+	std::vector<int16_t> getResults();
 
 	std::vector<InteractableText> _leftTexts;
 	std::vector<InteractableText*> _rightWidgets;
 	std::vector<RectCollider> _highlightColliders;
 
-	std::function<void(const std::vector<int8_t>&)> _resultsDelegate;
+	std::function<void(const std::vector<int16_t>&)> _resultsDelegate;
 	std::function<void()> _discardDelegate;
 
 private:
-	Vec2 calculateHighlightColliderSize(uint8_t i);
+	Vec2 calculateHighlightColliderSize(uint16_t i);
 };

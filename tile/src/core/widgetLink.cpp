@@ -133,6 +133,9 @@ void WidgetLink::update()
 		return;
 	}
 
+
+	// On return key pressed
+
 	if (_discardDelegate != nullptr)
 	{
 		_discardDelegate();
@@ -209,9 +212,9 @@ void WidgetLink::destroy()
 	}
 }
 
-std::vector<int8_t> WidgetLink::getResults()
+std::vector<int16_t> WidgetLink::getResults()
 {
-	std::vector<int8_t> results;
+	std::vector<int16_t> results;
 	results.reserve(_rightWidgets.size());
 
 	for (InteractableText* text : _rightWidgets)
@@ -237,13 +240,25 @@ std::vector<int8_t> WidgetLink::getResults()
 				results.push_back(selectedIndex);
 				break;
 			}
+			case INPUT_WIDGET:
+			{
+				InputWidget* inputWidget = static_cast<InputWidget*>(text);				
+				int textAsInt = convertStringToInt(inputWidget->_currentText);
+				results.push_back(textAsInt);
+				break;
+			}
+			default:
+			{
+				D_ASSERT(false, "this type of widget is not supported by the widget link");
+				break;
+			}
 		}
 	}
 
 	return results;
 }
 
-Vec2 WidgetLink::calculateHighlightColliderSize(uint8_t i)
+Vec2 WidgetLink::calculateHighlightColliderSize(uint16_t i)
 {
 	D_ASSERT(_rightWidgets[i], "Right widget doesn't exist at index: %i", i);
 	Vec2 rightWidgetFurthestPoint;

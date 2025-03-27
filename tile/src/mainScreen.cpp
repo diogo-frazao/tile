@@ -50,6 +50,7 @@ void MainScreen::update()
 		s_debugCollidersEnabled = !s_debugCollidersEnabled;
 	}
 
+	/*
 	// debug add sprites previewer
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_1))
 	{
@@ -80,6 +81,7 @@ void MainScreen::update()
 		Sprite miniRock{{7,3}, {355, 0}};
 		_spritePreviewers[0]._spritesToPreview.push_back(miniRock);
 	}
+	*/
 
 	if (s_active)
 	{

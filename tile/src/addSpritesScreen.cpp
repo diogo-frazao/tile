@@ -3,11 +3,26 @@
 #include "core/app.h"
 #include "core/log.h"
 
-void createSpriteFromResults(const std::vector<int8_t>& results)
+void createSpriteFromResults(const std::vector<int16_t>& results)
 {
-	uint8_t layerToAddSprite = results[0];
-	Sprite sign{{10,16}, {328, 9}};
-	MainScreen::_spritePreviewers[layerToAddSprite]._spritesToPreview.emplace_back(std::move(sign));
+	int16_t layerToAddSprite = results[0];
+	int16_t startX = results[2];
+	int16_t startY = results[3];
+	int16_t endX = results[4];
+	int16_t endY = results[5];
+	D_ASSERT((endX >= startX) && (endY >= startY), "Trying to add invalid sprite. Size is wrong");
+
+	// Ignore empty sprites results
+	if (startX == 0 && startY == 0 && endX == 0 && endY ==0)
+	{
+		return;
+	}
+
+	Sprite sprite{{endX - startX, endY - startY}, {startX, startY}};
+	MainScreen::_spritePreviewers[layerToAddSprite]._spritesToPreview.emplace_back(std::move(sprite));
+
+	D_LOG(MINI, "Added sprite with offset %i,%i size %i,%i for layer %i", 
+		sprite.offset.x, sprite.offset.y, sprite.size.x, sprite.size.y, layerToAddSprite);
 }
 
 void AddSpritesScreen::start()
