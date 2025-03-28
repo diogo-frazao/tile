@@ -49,10 +49,10 @@ void WidgetLink::setupRules(const Vec2& startingLeftPos, const float verticalDis
 	_highlightColliders.reserve(_leftTexts.size());
 	for (uint8_t i = 0; i < _leftTexts.size(); ++i)
 	{
-		Vec2 size = calculateHighlightColliderSize(i);
+		Vec2 size {calculateHighlightColliderSize(i)};
 		RectCollider col(_leftTexts[i]._worldPosition, size);
 		col.debugColor = k_red;
-		_highlightColliders.push_back(col);
+		_highlightColliders.emplace_back(std::move(col));
 	}
 }
 
@@ -63,6 +63,7 @@ void WidgetLink::update()
 		text.update();
 	}
 
+	bool areConfirmResultsBlocked = false;
 	for (InteractableText* text : _rightWidgets)
 	{
 		text->update();
@@ -87,6 +88,13 @@ void WidgetLink::update()
 			case INPUT_WIDGET:
 			{
 				InputWidget* inputWidget = static_cast<InputWidget*>(text);
+				// This needs to be done before tryEditText since it changes _isEditingText
+				// We're essentially reading the last frame's state
+				if(inputWidget->_isEditingText)
+				{
+					areConfirmResultsBlocked = true;
+				}
+
 				inputWidget->tryEditText();
 				break;
 			}
@@ -120,7 +128,7 @@ void WidgetLink::update()
 		}
 	}
 
-	if (wasKeyPressedThisFrame(k_confirmKey))
+	if (wasKeyPressedThisFrame(k_confirmKey) && !areConfirmResultsBlocked)
 	{
 		if (_resultsDelegate != nullptr)
 		{
@@ -133,8 +141,8 @@ void WidgetLink::update()
 		return;
 	}
 
-
 	// On return key pressed
+	// Code below is only called on the same frame as return key is pressed
 
 	if (_discardDelegate != nullptr)
 	{
@@ -229,22 +237,19 @@ std::vector<int16_t> WidgetLink::getResults()
 			case CHECKBOX:
 			{
 				CheckBox* checkbox = static_cast<CheckBox*>(text);
-				int8_t isSelected = checkbox->_isSelected;
-				results.push_back(isSelected);
+				results.emplace_back(checkbox->_isSelected);
 				break;
 			}
 			case OPTIONSELECTOR:
 			{
 				OptionSelector* optionSelector = static_cast<OptionSelector*>(text);
-				int8_t selectedIndex = optionSelector->_selectedIndex;
-				results.push_back(selectedIndex);
+				results.emplace_back(optionSelector->_selectedIndex);
 				break;
 			}
 			case INPUT_WIDGET:
 			{
 				InputWidget* inputWidget = static_cast<InputWidget*>(text);				
-				int textAsInt = convertStringToInt(inputWidget->_currentText);
-				results.push_back(textAsInt);
+				results.emplace_back(convertStringToInt(inputWidget->_currentText));
 				break;
 			}
 			default:
