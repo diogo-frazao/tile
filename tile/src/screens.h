@@ -20,6 +20,7 @@ public:
 	inline static bool s_active = false;
 	inline static std::array<SpritePreviewer, 3> _spritePreviewers;
 private:
+	void toggleSpritePreviewerAtIndex(uint8_t spritePreviewerIndex);
 	SDL_Texture* _uiTexture;
 	Button _addSpriteButton;
 	Button _backgroundButton;
@@ -53,6 +54,7 @@ public:
 	void destroy();
 	inline static bool s_active = false;
 private:
+	void createSpriteFromResults(const std::vector<int16_t>& results);
 	SDL_Texture* _uiTexture;
 	InteractableText _title;
 	InteractableText _subtitle;

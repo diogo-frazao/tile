@@ -111,20 +111,35 @@ void MainScreen::update()
 
 		if (_backgroundButton.tryPress())
 		{
-			_spritePreviewers[0].s_isActive = !_spritePreviewers[0].s_isActive;
+			toggleSpritePreviewerAtIndex(0);
 			_backgroundButton._text.onHovered(true);
 		}
 
 		if (_middlegroundButton.tryPress())
 		{
-			_spritePreviewers[1].s_isActive = !_spritePreviewers[1].s_isActive;
+			toggleSpritePreviewerAtIndex(1);
 			_middlegroundButton._text.onHovered(true);
 		}
 
 		if (_foregroundButton.tryPress())
 		{
-			_spritePreviewers[2].s_isActive = !_spritePreviewers[2].s_isActive;
+			toggleSpritePreviewerAtIndex(2);
 			_foregroundButton._text.onHovered(true);
+		}
+	}
+}
+
+void MainScreen::toggleSpritePreviewerAtIndex(uint8_t spritePreviewerIndex)
+{
+	for (uint8_t i = 0; i < _spritePreviewers.size(); ++i)
+	{
+		if (i == spritePreviewerIndex)
+		{
+			_spritePreviewers[i].s_isActive = !_spritePreviewers[i].s_isActive;
+		}
+		else
+		{
+			_spritePreviewers[i].s_isActive = false;
 		}
 	}
 }

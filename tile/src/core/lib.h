@@ -107,6 +107,12 @@ inline bool pointInRect(const IVec2& point, const RectCollider& rect)
 inline int convertStringToInt(std::string_view word)
 {
 	int result = 0;
+	
+	if(word.length() == 0)
+	{
+		return result;
+	}
+	
 	for (auto c : word)
 	{
 		if (c >= '0' && c <= '9')

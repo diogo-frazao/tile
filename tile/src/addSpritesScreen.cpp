@@ -3,7 +3,7 @@
 #include "core/app.h"
 #include "core/log.h"
 
-void createSpriteFromResults(const std::vector<int16_t>& results)
+void AddSpritesScreen::createSpriteFromResults(const std::vector<int16_t>& results)
 {
 	int16_t layerToAddSprite = results[0];
 	int16_t startX = results[2];
@@ -23,6 +23,10 @@ void createSpriteFromResults(const std::vector<int16_t>& results)
 
 	D_LOG(MINI, "Added sprite with offset %i,%i size %i,%i for layer %i", 
 		sprite.offset.x, sprite.offset.y, sprite.size.x, sprite.size.y, layerToAddSprite);
+
+	s_active = false;
+	PanelScreen::s_isPanelActive = false;
+	MainScreen::s_active = true;
 }
 
 void AddSpritesScreen::start()
@@ -32,7 +36,7 @@ void AddSpritesScreen::start()
 	_title = InteractableText("ADD IMAGE", { k_screenWidth / 2, 5 }, 100, k_gray, CENTER);
 	_subtitle = InteractableText("enter to add or esc to leave", { k_screenWidth / 2, 25 }, 60, k_gray, CENTER);
 
-	_widgetLink._resultsDelegate = createSpriteFromResults;
+	_widgetLink._resultsDelegate = std::bind(&AddSpritesScreen::createSpriteFromResults, this, std::placeholders::_1);
 	_widgetLink._leftTexts.reserve(9);
 	_widgetLink._rightWidgets.reserve(9);
 
