@@ -4,6 +4,7 @@
 #include "log.h"
 #include "app.h"
 #include "input.h"
+#include "debugUtils.h"
 
 static const char* k_selectedCharacter = "x";
 static const char* k_notSelectedCharacter = "_";
@@ -230,13 +231,7 @@ void InteractableText::render(SDL_Texture* targetTexture)
 	SDL_RenderCopy(s_renderer, targetTexture, nullptr, nullptr);
 
 	// Draw debug collider
-	if (s_debugCollidersEnabled)
-	{
-		SDL_SetRenderDrawColor(s_renderer, _mainCollider.debugColor.r, _mainCollider.debugColor.g, _mainCollider.debugColor.b, _mainCollider.debugColor.a);
-		SDL_FRect debugRect{ _mainCollider.centerPoint.x, _mainCollider.centerPoint.y, _mainCollider.size.x, _mainCollider.size.y };
-		SDL_RenderDrawRectF(s_renderer, &debugRect);
-		SDL_SetRenderDrawColor(s_renderer, 0,0,0,1);
-	}
+	debugDrawRect(_mainCollider);
 }
 
 void InteractableText::setupDrawMode(DrawMode drawMode)

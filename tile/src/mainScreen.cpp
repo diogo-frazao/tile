@@ -50,38 +50,36 @@ void MainScreen::update()
 		s_debugCollidersEnabled = !s_debugCollidersEnabled;
 	}
 
-	/*
-	// debug add sprites previewer
+	
+	// TODO: remove debug add sprites previewer
+	static std::array<Sprite, 5> debugSprites = {
+		Sprite({10,16}, {328, 9}), // sign
+		Sprite({8,5}, {347, 0}), // rock
+		Sprite({24,13}, {338, 9}), // bush
+		Sprite({35,48}, {328, 25}), // tree
+		Sprite({7,3}, {355, 0}) // mini rock
+	};
+
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_1))
 	{
-		Sprite sign{{10,16}, {328, 9}};
-		_spritePreviewers[0]._spritesToPreview.push_back(sign);
+		int randomSpriteIndex = rand() % 5;
+		Sprite spriteToAdd = debugSprites[randomSpriteIndex];
+		_spritePreviewers[0]._spritesToPreview.push_back(spriteToAdd);
 	}
 
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_2))
 	{
-		Sprite rock{{8,5}, {347, 0}};
-		_spritePreviewers[0]._spritesToPreview.push_back(rock);
+		int randomSpriteIndex = rand() % 5;
+		Sprite spriteToAdd = debugSprites[randomSpriteIndex];
+		_spritePreviewers[1]._spritesToPreview.push_back(spriteToAdd);
 	}
 
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_3))
 	{
-		Sprite bush{{24,13}, {338, 9}};
-		_spritePreviewers[0]._spritesToPreview.push_back(bush);
+		int randomSpriteIndex = rand() % 5;
+		Sprite spriteToAdd = debugSprites[randomSpriteIndex];
+		_spritePreviewers[2]._spritesToPreview.push_back(spriteToAdd);
 	}
-
-	if (wasKeyPressedThisFrame(SDL_SCANCODE_4))
-	{
-		Sprite tree{{35,48}, {328, 25}};
-		_spritePreviewers[0]._spritesToPreview.push_back(tree);
-	}
-
-	if (wasKeyPressedThisFrame(SDL_SCANCODE_5))
-	{
-		Sprite miniRock{{7,3}, {355, 0}};
-		_spritePreviewers[0]._spritesToPreview.push_back(miniRock);
-	}
-	*/
 
 	if (s_active)
 	{

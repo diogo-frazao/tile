@@ -50,6 +50,8 @@ void SpritePreviewer::render()
 			sprite.position.y += (targetRect.y - sprite.size.y) / 2;
 		}
 
+		
+
 		renderSpriteInsideRect(sprite, targetRect);
 	}
 }

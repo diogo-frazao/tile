@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include "app.h"
 #include "input.h"
+#include "debugUtils.h"
 
 void WidgetLink::setupRules(const Vec2& startingLeftPos, const float verticalDistance, const float horizontalDistance, 
 	const DrawMode leftDrawMode, const DrawMode rightDrawMode)
@@ -187,10 +188,7 @@ void WidgetLink::render(SDL_Texture* externaluiTexture)
 	{
 		for (RectCollider& collider : _highlightColliders)
 		{
-			SDL_SetRenderDrawColor(s_renderer, collider.debugColor.r, collider.debugColor.g, collider.debugColor.b, collider.debugColor.a);
-			SDL_FRect debugRect{ collider.centerPoint.x, collider.centerPoint.y, collider.size.x, collider.size.y };
-			SDL_RenderDrawRectF(s_renderer, &debugRect);
-			SDL_SetRenderDrawColor(s_renderer, 0, 0, 0, 1);
+			debugDrawRect(collider);
 		}
 	}
 
