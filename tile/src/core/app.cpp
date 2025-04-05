@@ -91,8 +91,8 @@ void App::update()
 			_mainScreen.update();
 			_mouseScreen.update();
 
-			resetKeyboardAndMouseInput();
 			render();
+			resetKeyboardAndMouseInput();
 		}
 	}
 }

@@ -17,7 +17,8 @@ void PanelScreen::render()
 void MouseScreen::start()
 {
 	SDL_ShowCursor(0);
-	_mouseSprite = textures::getSprite(CURSOR);
+	_mouseSprite = textures::getSprite(CURSOR_DRAGGING);
+	_mouseSpriteState = MouseSpriteState::DRAGGING;
 }
 
 void MouseScreen::update()
@@ -33,5 +34,22 @@ void MouseScreen::update()
 void MouseScreen::render()
 {
 	renderSprite(_mouseSprite);
+}
+
+void MouseScreen::setMouseState(MouseSpriteState state)
+{
+	_mouseSpriteState = state;
+	Vec2 previousPos = _mouseSprite.position;
+	switch (state)
+	{
+		case MouseSpriteState::NORMAL:
+			_mouseSprite = textures::getSprite(CURSOR);
+			break;
+		case MouseSpriteState::DRAGGING:
+			_mouseSprite = textures::getSprite(CURSOR_DRAGGING);
+			break;
+	}
+
+	_mouseSprite.position = previousPos;
 }
 

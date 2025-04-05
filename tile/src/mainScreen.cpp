@@ -124,6 +124,11 @@ void MainScreen::update()
 			toggleSpritePreviewerAtIndex(2);
 			_foregroundButton._text.onHovered(true);
 		}
+
+		if (_spriteInHand.isValid())
+		{
+			_spriteInHand.position = getMousePosition();
+		}
 	}
 }
 
@@ -149,10 +154,16 @@ void MainScreen::render()
 	mockup.position = { 0,0 };
 	renderSprite(mockup);
 
-	_spritePreviewers[0].render();
-	_spritePreviewers[1].render();
-	_spritePreviewers[2].render();
+	if (_spriteInHand.isValid())
+	{
+		renderSprite(_spriteInHand);
+	}
 
+	for (SpritePreviewer& previewer : _spritePreviewers)
+	{
+		previewer.render();
+	}
+	
 	_addSpriteButton.render(_uiTexture);
 	_backgroundButton.render(_uiTexture);
 	_middlegroundButton.render(_uiTexture);
