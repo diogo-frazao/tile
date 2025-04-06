@@ -58,7 +58,7 @@ void App::start()
 	_mainScreen.start();
 	_settingsScreen.start();
 	_addSpritesScreen.start();
-	_mouseScreen.start();
+	MouseScreen::instance().start();
 }
 
 void App::update()
@@ -89,7 +89,7 @@ void App::update()
 			_settingsScreen.update();
 			_addSpritesScreen.update();
 			_mainScreen.update();
-			_mouseScreen.update();
+			MouseScreen::instance().update();
 
 			render();
 			resetKeyboardAndMouseInput();
@@ -107,7 +107,7 @@ void App::render()
 	_panelScreen.render();
 	_settingsScreen.render();
 	_addSpritesScreen.render();
-	_mouseScreen.render();
+	MouseScreen::instance().render();
 
 	SDL_RenderPresent(s_renderer);
 }

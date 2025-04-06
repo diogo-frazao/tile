@@ -8,7 +8,7 @@ class SpritePreviewer
 public:
 	SpritePreviewer(const Vec2& startLocation = Vec2());
 	void render();
-	bool s_isActive = false;
+	bool _isVisible = false;
 	std::vector<Sprite> _spritesToPreview;
 private:
 	Sprite _backgroundSprite;

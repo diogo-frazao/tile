@@ -26,7 +26,6 @@ private:
 	void render();
 	void killWindow();
 
-	MouseScreen _mouseScreen;
 	PanelScreen _panelScreen;
 	SettingsScreen _settingsScreen;
 	AddSpritesScreen _addSpritesScreen;

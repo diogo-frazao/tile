@@ -6,6 +6,7 @@
 #include "core/input.h"
 #include "core/log.h"
 #include "core/ui.h"
+#include <cmath>
 
 void MainScreen::start()
 {
@@ -21,37 +22,31 @@ void MainScreen::start()
 	_spritePreviewers[2] = SpritePreviewer(_foregroundButton._sprite.position);
 }
 
-void MainScreen::update()
+void closeOpenScreenAndEnableMainScreen()
 {
-	if (wasKeyPressedThisFrame(SDL_SCANCODE_ESCAPE))
-	{
-		SettingsScreen::s_active = false;
-		AddSpritesScreen::s_active = false;
-		PanelScreen::s_isPanelActive = false;
-		s_active = true;
-	}
+	SettingsScreen::s_active = false;
+	AddSpritesScreen::s_active = false;
+	PanelScreen::s_isPanelActive = false;
+	MainScreen::s_active = true;
+}
 
-	if (wasKeyPressedThisFrame(SDL_SCANCODE_TAB) && !AddSpritesScreen::s_active)
-	{
-		SettingsScreen::s_active = !SettingsScreen::s_active;
-		s_active = !SettingsScreen::s_active;
-		PanelScreen::s_isPanelActive = SettingsScreen::s_active;
-	}
+void toggleSettingsScreen()
+{
+	SettingsScreen::s_active = !SettingsScreen::s_active;
+	MainScreen::s_active = !SettingsScreen::s_active;
+	PanelScreen::s_isPanelActive = SettingsScreen::s_active;
+}
 
-	if (wasKeyPressedThisFrame(SDL_SCANCODE_P) && !SettingsScreen::s_active)
-	{
-		AddSpritesScreen::s_active = !AddSpritesScreen::s_active;
-		s_active = !AddSpritesScreen::s_active;
-		PanelScreen::s_isPanelActive = AddSpritesScreen::s_active;
-	}
+void toggleAddSpritesScreen()
+{
+	AddSpritesScreen::s_active = !AddSpritesScreen::s_active;
+	MainScreen::s_active = !AddSpritesScreen::s_active;
+	PanelScreen::s_isPanelActive = AddSpritesScreen::s_active;
+}
 
-	if (wasKeyPressedThisFrame(SDL_SCANCODE_Q))
-	{
-		s_debugCollidersEnabled = !s_debugCollidersEnabled;
-	}
-
-	
-	// TODO: remove debug add sprites previewer
+void MainScreen::handleAddSpritesToLayersDebug()
+{
+#if DEBUG_ENABLED == 1
 	static std::array<Sprite, 5> debugSprites = {
 		Sprite({10,16}, {328, 9}), // sign
 		Sprite({8,5}, {347, 0}), // rock
@@ -80,54 +75,89 @@ void MainScreen::update()
 		Sprite spriteToAdd = debugSprites[randomSpriteIndex];
 		_spritePreviewers[2]._spritesToPreview.push_back(spriteToAdd);
 	}
+#endif
+}
 
-	if (s_active)
+void MainScreen::update()
+{
+	if (wasKeyPressedThisFrame(SDL_SCANCODE_ESCAPE))
 	{
-		_addSpriteButton._text.tryHover();
-		
-		if (!_spritePreviewers[0].s_isActive)
-		{
-			_backgroundButton._text.tryHover();
-		}
+		closeOpenScreenAndEnableMainScreen();
+	}
 
-		if (!_spritePreviewers[1].s_isActive)
-		{
-			_middlegroundButton._text.tryHover();
-		}
+	if (wasKeyPressedThisFrame(SDL_SCANCODE_TAB) && !AddSpritesScreen::s_active)
+	{
+		toggleSettingsScreen();
+	}
 
-		if (!_spritePreviewers[2].s_isActive)
-		{
-			_foregroundButton._text.tryHover();
-		}
+	if (wasKeyPressedThisFrame(SDL_SCANCODE_P) && !SettingsScreen::s_active)
+	{
+		toggleAddSpritesScreen();
+	}
 
-		if (_addSpriteButton.tryPress())
-		{
-			AddSpritesScreen::s_active = true;
-			PanelScreen::s_isPanelActive = true;
-			s_active = false;
-		}
+	if (wasKeyPressedThisFrame(SDL_SCANCODE_Q))
+	{
+		s_debugCollidersEnabled = !s_debugCollidersEnabled;
+	}
 
-		if (_backgroundButton.tryPress())
-		{
-			toggleSpritePreviewerAtIndex(0);
-			_backgroundButton._text.onHovered(true);
-		}
+	if (!s_active)
+	{
+		return;
+	}
 
-		if (_middlegroundButton.tryPress())
-		{
-			toggleSpritePreviewerAtIndex(1);
-			_middlegroundButton._text.onHovered(true);
-		}
+	handleAddSpritesToLayersDebug();
 
-		if (_foregroundButton.tryPress())
-		{
-			toggleSpritePreviewerAtIndex(2);
-			_foregroundButton._text.onHovered(true);
-		}
+	_addSpriteButton._text.tryHover();
+	
+	if (!_spritePreviewers[0]._isVisible)
+	{
+		_backgroundButton._text.tryHover();
+	}
 
-		if (_spriteInHand.isValid())
+	if (!_spritePreviewers[1]._isVisible)
+	{
+		_middlegroundButton._text.tryHover();
+	}
+
+	if (!_spritePreviewers[2]._isVisible)
+	{
+		_foregroundButton._text.tryHover();
+	}
+
+	if (_addSpriteButton.tryPress())
+	{
+		toggleAddSpritesScreen();
+	}
+
+	if (_backgroundButton.tryPress())
+	{
+		toggleSpritePreviewerAtIndex(0);
+		_backgroundButton._text.onHovered(true);
+	}
+
+	if (_middlegroundButton.tryPress())
+	{
+		toggleSpritePreviewerAtIndex(1);
+		_middlegroundButton._text.onHovered(true);
+	}
+
+	if (_foregroundButton.tryPress())
+	{
+		toggleSpritePreviewerAtIndex(2);
+		_foregroundButton._text.onHovered(true);
+	}
+
+	if (_spriteInHand.isValid())
+	{
+		MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::DRAGGING);
+		IVec2 mousePos = getMousePosition();
+		_spriteInHand.position = mousePos;
+
+		if (wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT))
 		{
-			_spriteInHand.position = getMousePosition();
+			// TODO add sprite to corresponding layer
+			_spriteInHand.invalidate();
+			MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::NORMAL);
 		}
 	}
 }
@@ -138,11 +168,11 @@ void MainScreen::toggleSpritePreviewerAtIndex(uint8_t spritePreviewerIndex)
 	{
 		if (i == spritePreviewerIndex)
 		{
-			_spritePreviewers[i].s_isActive = !_spritePreviewers[i].s_isActive;
+			_spritePreviewers[i]._isVisible = !_spritePreviewers[i]._isVisible;
 		}
 		else
 		{
-			_spritePreviewers[i].s_isActive = false;
+			_spritePreviewers[i]._isVisible = false;
 		}
 	}
 }

@@ -28,7 +28,7 @@ struct Sprite
 		return size.x > 0 && size.y > 0;
 	}
 
-	void clear()
+	void invalidate()
 	{
 		position = Vec2();
 		size = IVec2();

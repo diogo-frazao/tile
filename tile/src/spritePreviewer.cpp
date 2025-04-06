@@ -23,7 +23,7 @@ bool didPressSpriteButton(const RectCollider& rect)
 
 void SpritePreviewer::render()
 {
-	if (!s_isActive)
+	if (!_isVisible)
 	{
 		return;
 	}

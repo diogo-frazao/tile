@@ -21,6 +21,7 @@ public:
 	inline static std::array<SpritePreviewer, 3> _spritePreviewers;
 	inline static Sprite _spriteInHand;
 private:
+	void handleAddSpritesToLayersDebug();
 	void toggleSpritePreviewerAtIndex(uint8_t spritePreviewerIndex);
 	SDL_Texture* _uiTexture;
 	Button _addSpriteButton;
@@ -75,11 +76,12 @@ class MouseScreen
 public:
 	enum class MouseSpriteState
 	{
+		INVALID,
 		NORMAL,
 		DRAGGING
 	};
 
-	MouseScreen& instance()
+	static MouseScreen& instance()
 	{
 		static MouseScreen mouseScreen;
 		return mouseScreen;
@@ -90,7 +92,7 @@ public:
 	void render();
 	void setMouseState(MouseSpriteState state);
 private:
-	MouseSpriteState _mouseSpriteState;
+	MouseSpriteState _mouseSpriteState = MouseSpriteState::INVALID;
 	Sprite _mouseSprite;
 	IVec2 _lastMousePosition;
 };
