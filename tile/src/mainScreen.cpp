@@ -13,13 +13,20 @@ void MainScreen::start()
 	s_active = true;
 	_uiTexture = createUITexture();
 	_addSpriteButton = Button("+", BUTTON, Vec2(0, 5), 62);
-	_backgroundButton = Button("0", BUTTON, Vec2(0, _addSpriteButton._sprite.position.y + _addSpriteButton._sprite.size.y + 1.f));
-	_middlegroundButton = Button("1", BUTTON, Vec2(0, _backgroundButton._sprite.position.y + _backgroundButton._sprite.size.y + 1.f));
-	_foregroundButton = Button("2", BUTTON, Vec2(0, _middlegroundButton._sprite.position.y + _middlegroundButton._sprite.size.y + 1.f));
 
-	_spritePreviewers[0] = SpritePreviewer(_backgroundButton._sprite.position);
-	_spritePreviewers[1] = SpritePreviewer(_middlegroundButton._sprite.position);
-	_spritePreviewers[2] = SpritePreviewer(_foregroundButton._sprite.position);
+	Button backgroundButton {"0", BUTTON, Vec2(0, _addSpriteButton._sprite.position.y + _addSpriteButton._sprite.size.y + 1.f)};
+	Button middlegroundButton {"1", BUTTON, Vec2(0, backgroundButton._sprite.position.y + backgroundButton._sprite.size.y + 1.f)};
+	Button foregroundButton {"2", BUTTON, Vec2(0, middlegroundButton._sprite.position.y + middlegroundButton._sprite.size.y + 1.f)};
+
+	SpritePreviewer backgroundLayerSpritePreviewer {backgroundButton._sprite.position};
+	SpritePreviewer middleLayerSpritePreviewer {middlegroundButton._sprite.position};
+	SpritePreviewer foregroundLayerSpritePreviewer {foregroundButton._sprite.position};
+
+	_spritePreviewerButtons = {
+		std::pair{std::move(backgroundLayerSpritePreviewer), std::move(backgroundButton)},
+		std::pair{std::move(middleLayerSpritePreviewer), std::move(middlegroundButton)},
+		std::pair{std::move(foregroundLayerSpritePreviewer), std::move(foregroundButton)}
+	};
 }
 
 void closeOpenScreenAndEnableMainScreen()
@@ -59,21 +66,21 @@ void MainScreen::handleAddSpritesToLayersDebug()
 	{
 		int randomSpriteIndex = rand() % 5;
 		Sprite spriteToAdd = debugSprites[randomSpriteIndex];
-		_spritePreviewers[0]._spritesToPreview.push_back(spriteToAdd);
+		_spritePreviewerButtons[BACKGROUND].first._spritesToPreview.emplace_back(spriteToAdd);
 	}
 
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_2))
 	{
 		int randomSpriteIndex = rand() % 5;
 		Sprite spriteToAdd = debugSprites[randomSpriteIndex];
-		_spritePreviewers[1]._spritesToPreview.push_back(spriteToAdd);
+		_spritePreviewerButtons[MIDDLEGROUND].first._spritesToPreview.emplace_back(spriteToAdd);
 	}
 
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_3))
 	{
 		int randomSpriteIndex = rand() % 5;
 		Sprite spriteToAdd = debugSprites[randomSpriteIndex];
-		_spritePreviewers[2]._spritesToPreview.push_back(spriteToAdd);
+		_spritePreviewerButtons[FOREGROUND].first._spritesToPreview.emplace_back(spriteToAdd);
 	}
 #endif
 }
@@ -107,44 +114,26 @@ void MainScreen::update()
 
 	handleAddSpritesToLayersDebug();
 
+	for (SpritePreviewerButtonPair& pair : _spritePreviewerButtons)
+	{
+		// Only allow hovering text if the spritePreviewer isn't expanded/visible
+		// When exapended, it's always hovered
+		if (!pair.first._isVisible)
+		{
+			pair.second._text.tryHover();
+		}
+
+		if (pair.second.tryPress())
+		{
+			toggleSpritePreviewerAndDisableOthers(pair.first);
+			pair.second._text.onHovered(true);
+		}
+	}
+
 	_addSpriteButton._text.tryHover();
-	
-	if (!_spritePreviewers[0]._isVisible)
-	{
-		_backgroundButton._text.tryHover();
-	}
-
-	if (!_spritePreviewers[1]._isVisible)
-	{
-		_middlegroundButton._text.tryHover();
-	}
-
-	if (!_spritePreviewers[2]._isVisible)
-	{
-		_foregroundButton._text.tryHover();
-	}
-
 	if (_addSpriteButton.tryPress())
 	{
 		toggleAddSpritesScreen();
-	}
-
-	if (_backgroundButton.tryPress())
-	{
-		toggleSpritePreviewerAtIndex(0);
-		_backgroundButton._text.onHovered(true);
-	}
-
-	if (_middlegroundButton.tryPress())
-	{
-		toggleSpritePreviewerAtIndex(1);
-		_middlegroundButton._text.onHovered(true);
-	}
-
-	if (_foregroundButton.tryPress())
-	{
-		toggleSpritePreviewerAtIndex(2);
-		_foregroundButton._text.onHovered(true);
 	}
 
 	if (_spriteInHand.isValid())
@@ -162,17 +151,17 @@ void MainScreen::update()
 	}
 }
 
-void MainScreen::toggleSpritePreviewerAtIndex(uint8_t spritePreviewerIndex)
+void MainScreen::toggleSpritePreviewerAndDisableOthers(SpritePreviewer& spritePreviewer)
 {
-	for (uint8_t i = 0; i < _spritePreviewers.size(); ++i)
+	for (uint8_t i = 0; i < _spritePreviewerButtons.size(); ++i)
 	{
-		if (i == spritePreviewerIndex)
+		if (_spritePreviewerButtons[i].first == spritePreviewer)
 		{
-			_spritePreviewers[i]._isVisible = !_spritePreviewers[i]._isVisible;
+			_spritePreviewerButtons[i].first._isVisible = !_spritePreviewerButtons[i].first._isVisible;
 		}
 		else
 		{
-			_spritePreviewers[i]._isVisible = false;
+			_spritePreviewerButtons[i].first._isVisible = false;
 		}
 	}
 }
@@ -184,20 +173,18 @@ void MainScreen::render()
 	mockup.position = { 0,0 };
 	renderSprite(mockup);
 
+	_addSpriteButton.render(_uiTexture);
+
 	if (_spriteInHand.isValid())
 	{
 		renderSprite(_spriteInHand);
 	}
 
-	for (SpritePreviewer& previewer : _spritePreviewers)
+	for (SpritePreviewerButtonPair& pair : _spritePreviewerButtons)
 	{
-		previewer.render();
+		pair.first.render();
+		pair.second.render(_uiTexture);
 	}
-	
-	_addSpriteButton.render(_uiTexture);
-	_backgroundButton.render(_uiTexture);
-	_middlegroundButton.render(_uiTexture);
-	_foregroundButton.render(_uiTexture);
 }
 
 void MainScreen::destroy()

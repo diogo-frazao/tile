@@ -10,6 +10,12 @@ public:
 	void render();
 	bool _isVisible = false;
 	std::vector<Sprite> _spritesToPreview;
+
+	bool operator==(const SpritePreviewer& other) const
+	{
+		return this == &other;
+	}
+
 private:
 	Sprite _backgroundSprite;
 	Vec2 _locationToStartGrid;

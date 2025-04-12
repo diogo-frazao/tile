@@ -7,8 +7,18 @@
 #include <stdint.h>
 #include <array>
 #include "spritePreviewer.h"
+#include <utility>
+
+typedef std::pair<SpritePreviewer, Button> SpritePreviewerButtonPair;
 
 struct SDL_Texture;
+
+enum LayerType
+{
+	BACKGROUND,
+	MIDDLEGROUND,
+	FOREGROUND
+};
 
 class MainScreen
 {
@@ -18,17 +28,13 @@ public:
 	void render();
 	void destroy();
 	inline static bool s_active = false;
-	inline static std::array<SpritePreviewer, 3> _spritePreviewers;
+	inline static std::array<SpritePreviewerButtonPair, 3> _spritePreviewerButtons;
 	inline static Sprite _spriteInHand;
 private:
 	void handleAddSpritesToLayersDebug();
-	void toggleSpritePreviewerAtIndex(uint8_t spritePreviewerIndex);
+	void toggleSpritePreviewerAndDisableOthers(SpritePreviewer& spritePreviewer);
 	SDL_Texture* _uiTexture;
 	Button _addSpriteButton;
-	Button _backgroundButton;
-	Button _middlegroundButton;
-	Button _foregroundButton;
-
 };
 
 class SettingsScreen
