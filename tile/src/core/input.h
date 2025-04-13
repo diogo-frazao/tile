@@ -36,6 +36,7 @@ bool wasMouseButtonPressedThisFrame(uint8_t mouseButtonIndex);
 bool wasMouseButtonReleasedThisFrame(uint8_t mouseButtonIndex);
 IVec2 getMousePosition();
 
+inline IVec2 s_mousePositionThisFrame;
 inline std::array<KeyState, 290> s_keyboardInputState;
 inline MouseState s_mouseInputState;
 inline SDL_Scancode s_keyPressedThisFrame = SDL_SCANCODE_UNKNOWN;

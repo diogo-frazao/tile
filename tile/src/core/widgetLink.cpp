@@ -106,8 +106,7 @@ void WidgetLink::update()
 	{
 		_highlightColliders[i].size = calculateHighlightColliderSize(i);
 
-		IVec2 mousePos = getMousePosition();
-		bool isHovering = pointInRect(mousePos, _highlightColliders[i]);
+		bool isHovering = pointInRect(s_mousePositionThisFrame, _highlightColliders[i]);
 		bool isRowHighlighted = _leftTexts[i]._isHovered && _rightWidgets[i]->_isHovered;
 		if (isHovering != isRowHighlighted)
 		{

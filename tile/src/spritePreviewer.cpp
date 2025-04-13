@@ -15,7 +15,7 @@ bool didPressSpriteButton(const RectCollider& rect)
 {
 	if (wasMouseButtonReleasedThisFrame(SDL_BUTTON_LEFT))
 	{
-		return pointInRect(getMousePosition(), rect);
+		return pointInRect(s_mousePositionThisFrame, rect);
 	}
 
 	return false;

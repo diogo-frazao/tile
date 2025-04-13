@@ -22,12 +22,11 @@ void MouseScreen::start()
 
 void MouseScreen::update()
 {
-	IVec2 mousePos = getMousePosition();
-	_mouseSprite.position.x = lerp(_lastMousePosition.x, mousePos.x, 0.6f);
-	_mouseSprite.position.y = lerp(_lastMousePosition.y, mousePos.y, 0.6f);
+	_mouseSprite.position.x = lerp(_lastMousePosition.x, s_mousePositionThisFrame.x, 0.6f);
+	_mouseSprite.position.y = lerp(_lastMousePosition.y, s_mousePositionThisFrame.y, 0.6f);
 
-	_lastMousePosition.x = mousePos.x;
-	_lastMousePosition.y = mousePos.y;
+	_lastMousePosition.x = s_mousePositionThisFrame.x;
+	_lastMousePosition.y = s_mousePositionThisFrame.y;
 }
 
 void MouseScreen::render()

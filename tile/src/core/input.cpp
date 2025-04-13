@@ -2,6 +2,11 @@
 #include "log.h"
 #include "app.h"
 
+void calculateMousePositionThisFrame()
+{
+	s_mousePositionThisFrame = getMousePosition();
+}
+
 IVec2 getMousePosition()
 {
 	int32_t w = 0;
@@ -53,6 +58,8 @@ void handleKeyboardInput(SDL_Event& ev)
 
 void handleMouseInput(SDL_Event& ev)
 {
+	calculateMousePositionThisFrame();
+
 	if (ev.type == SDL_MOUSEWHEEL)
 	{
 		s_mouseInputState.mouseWheelScroll = static_cast<float>(ev.wheel.y);

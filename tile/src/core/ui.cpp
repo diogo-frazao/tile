@@ -103,10 +103,9 @@ void OptionSelector::selectOption(int8_t index)
 
 void OptionSelector::trySwapOption()
 {
-	IVec2 mousePos = getMousePosition();
 	if (wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT) && _isHovered)
 	{
-		float mouseXPerc = mapZeroToOne(mousePos.x, _worldPosition.x, _worldPosition.x + _worldBounds.x);
+		float mouseXPerc = mapZeroToOne(s_mousePositionThisFrame.x, _worldPosition.x, _worldPosition.x + _worldBounds.x);
 		if (mouseXPerc >= 0.5f)
 		{
 			onRightPressed();
@@ -257,8 +256,7 @@ void InteractableText::setupDrawMode(DrawMode drawMode)
 
 void InteractableText::tryHover()
 {
-	IVec2 mousePos = getMousePosition();
-	bool isHovering = pointInRect(mousePos, _mainCollider);
+	bool isHovering = pointInRect(s_mousePositionThisFrame, _mainCollider);
 	if (isHovering != _isHovered)
 	{
 		onHovered(isHovering);
@@ -304,7 +302,7 @@ void Button::render(SDL_Texture* targetTexture)
 
 bool Button::tryPress()
 {
-	return wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT) && pointInRect(getMousePosition(), _text._mainCollider);
+	return wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT) && pointInRect(s_mousePositionThisFrame, _text._mainCollider);
 }
 
 //

@@ -139,8 +139,7 @@ void MainScreen::update()
 	if (_spriteInHand.isValid())
 	{
 		MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::DRAGGING);
-		IVec2 mousePos = getMousePosition();
-		_spriteInHand.position = mousePos;
+		_spriteInHand.position = s_mousePositionThisFrame;
 
 		if (wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT))
 		{
