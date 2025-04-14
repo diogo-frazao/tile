@@ -33,6 +33,7 @@ public:
 private:
 	void handleAddSpritesToLayersDebug();
 	void toggleSpritePreviewerAndDisableOthers(SpritePreviewer& spritePreviewer);
+	bool shouldReleaseSpriteInHand();
 	SDL_Texture* _uiTexture;
 	Button _addSpriteButton;
 };

@@ -141,13 +141,27 @@ void MainScreen::update()
 		MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::DRAGGING);
 		_spriteInHand.position = s_mousePositionThisFrame;
 
-		if (wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT))
+		if (shouldReleaseSpriteInHand())
 		{
 			// TODO add sprite to corresponding layer
 			_spriteInHand.invalidate();
 			MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::NORMAL);
 		}
 	}
+}
+
+bool MainScreen::shouldReleaseSpriteInHand()
+{
+	bool wantsToChangeOrCollapseLayer = false;
+	for (const SpritePreviewerButtonPair& pair : _spritePreviewerButtons)
+	{
+		if (pointInRect(s_mousePositionThisFrame, pair.second._text._mainCollider))
+		{
+			wantsToChangeOrCollapseLayer = true;
+		}
+	}
+
+	return wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT) && !wantsToChangeOrCollapseLayer;
 }
 
 void MainScreen::toggleSpritePreviewerAndDisableOthers(SpritePreviewer& spritePreviewer)

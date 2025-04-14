@@ -59,7 +59,7 @@ void SpritePreviewer::render()
 		debugDrawRect(backgroundSpriteRect);
 		if (didPressSpriteButton(backgroundSpriteRect))
 		{
-			MainScreen::_spriteInHand = Sprite(sprite);
+			MainScreen::_spriteInHand = Sprite{sprite};
 		}
 
 		// Center sprite inside the background if smaller than background
