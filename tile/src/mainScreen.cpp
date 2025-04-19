@@ -18,11 +18,11 @@ void MainScreen::start()
 	Button middlegroundButton {"1", BUTTON, Vec2(0, backgroundButton._sprite.position.y + backgroundButton._sprite.size.y + 1.f)};
 	Button foregroundButton {"2", BUTTON, Vec2(0, middlegroundButton._sprite.position.y + middlegroundButton._sprite.size.y + 1.f)};
 
-	SpritePreviewer backgroundLayerSpritePreviewer {backgroundButton._sprite.position};
-	SpritePreviewer middleLayerSpritePreviewer {middlegroundButton._sprite.position};
-	SpritePreviewer foregroundLayerSpritePreviewer {foregroundButton._sprite.position};
+	SpritePreviewer backgroundLayerSpritePreviewer {backgroundButton._sprite.position, BACKGROUND};
+	SpritePreviewer middleLayerSpritePreviewer {middlegroundButton._sprite.position, MIDDLEGROUND};
+	SpritePreviewer foregroundLayerSpritePreviewer {foregroundButton._sprite.position, FOREGROUND};
 
-	_spritePreviewerButtons = {
+	s_spritePreviewerButtons = {
 		std::pair{std::move(backgroundLayerSpritePreviewer), std::move(backgroundButton)},
 		std::pair{std::move(middleLayerSpritePreviewer), std::move(middlegroundButton)},
 		std::pair{std::move(foregroundLayerSpritePreviewer), std::move(foregroundButton)}
@@ -66,21 +66,21 @@ void MainScreen::handleAddSpritesToLayersDebug()
 	{
 		int randomSpriteIndex = rand() % 5;
 		Sprite spriteToAdd = debugSprites[randomSpriteIndex];
-		_spritePreviewerButtons[BACKGROUND].first._spritesToPreview.emplace_back(spriteToAdd);
+		s_spritePreviewerButtons[BACKGROUND].first._spritesToPreview.emplace_back(spriteToAdd);
 	}
 
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_2))
 	{
 		int randomSpriteIndex = rand() % 5;
 		Sprite spriteToAdd = debugSprites[randomSpriteIndex];
-		_spritePreviewerButtons[MIDDLEGROUND].first._spritesToPreview.emplace_back(spriteToAdd);
+		s_spritePreviewerButtons[MIDDLEGROUND].first._spritesToPreview.emplace_back(spriteToAdd);
 	}
 
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_3))
 	{
 		int randomSpriteIndex = rand() % 5;
 		Sprite spriteToAdd = debugSprites[randomSpriteIndex];
-		_spritePreviewerButtons[FOREGROUND].first._spritesToPreview.emplace_back(spriteToAdd);
+		s_spritePreviewerButtons[FOREGROUND].first._spritesToPreview.emplace_back(spriteToAdd);
 	}
 #endif
 }
@@ -114,7 +114,7 @@ void MainScreen::update()
 
 	handleAddSpritesToLayersDebug();
 
-	for (SpritePreviewerButtonPair& pair : _spritePreviewerButtons)
+	for (SpritePreviewerButtonPair& pair : s_spritePreviewerButtons)
 	{
 		// Only allow hovering text if the spritePreviewer isn't expanded/visible
 		// When exapended, it's always hovered
@@ -136,15 +136,14 @@ void MainScreen::update()
 		toggleAddSpritesScreen();
 	}
 
-	if (_spriteInHand.isValid())
+	if (s_tilePlayground.getSpriteInHand().isValid())
 	{
 		MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::DRAGGING);
-		_spriteInHand.position = s_mousePositionThisFrame;
+		s_tilePlayground.getSpriteInHand().position = s_mousePositionThisFrame;
 
 		if (shouldReleaseSpriteInHand())
 		{
-			// TODO add sprite to corresponding layer
-			_spriteInHand.invalidate();
+			s_tilePlayground.addSpriteInHandToRnder();
 			MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::NORMAL);
 		}
 	}
@@ -153,7 +152,7 @@ void MainScreen::update()
 bool MainScreen::shouldReleaseSpriteInHand()
 {
 	bool wantsToChangeOrCollapseLayer = false;
-	for (const SpritePreviewerButtonPair& pair : _spritePreviewerButtons)
+	for (const SpritePreviewerButtonPair& pair : s_spritePreviewerButtons)
 	{
 		if (pointInRect(s_mousePositionThisFrame, pair.second._text._mainCollider))
 		{
@@ -166,15 +165,15 @@ bool MainScreen::shouldReleaseSpriteInHand()
 
 void MainScreen::toggleSpritePreviewerAndDisableOthers(SpritePreviewer& spritePreviewer)
 {
-	for (uint8_t i = 0; i < _spritePreviewerButtons.size(); ++i)
+	for (uint8_t i = 0; i < s_spritePreviewerButtons.size(); ++i)
 	{
-		if (_spritePreviewerButtons[i].first == spritePreviewer)
+		if (s_spritePreviewerButtons[i].first == spritePreviewer)
 		{
-			_spritePreviewerButtons[i].first._isVisible = !_spritePreviewerButtons[i].first._isVisible;
+			s_spritePreviewerButtons[i].first._isVisible = !s_spritePreviewerButtons[i].first._isVisible;
 		}
 		else
 		{
-			_spritePreviewerButtons[i].first._isVisible = false;
+			s_spritePreviewerButtons[i].first._isVisible = false;
 		}
 	}
 }
@@ -188,15 +187,20 @@ void MainScreen::render()
 
 	_addSpriteButton.render(_uiTexture);
 
-	if (_spriteInHand.isValid())
+	if (s_tilePlayground.getSpriteInHand().isValid())
 	{
-		renderSprite(_spriteInHand);
+		renderSprite(s_tilePlayground.getSpriteInHand());
 	}
 
-	for (SpritePreviewerButtonPair& pair : _spritePreviewerButtons)
+	for (SpritePreviewerButtonPair& pair : s_spritePreviewerButtons)
 	{
 		pair.first.render();
 		pair.second.render(_uiTexture);
+	}
+
+	for (TilePlayground::PlaceableSprite& placeableSprite : s_tilePlayground._placedSprites)
+	{
+		renderSprite(placeableSprite.sprite);
 	}
 }
 

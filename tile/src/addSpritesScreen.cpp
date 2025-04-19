@@ -19,7 +19,7 @@ void AddSpritesScreen::createSpriteFromResults(const std::vector<int16_t>& resul
 	}
 
 	Sprite sprite{{endX - startX, endY - startY}, {startX, startY}};
-	MainScreen::_spritePreviewerButtons[layerToAddSprite].first._spritesToPreview.emplace_back(std::move(sprite));
+	MainScreen::s_spritePreviewerButtons[layerToAddSprite].first._spritesToPreview.emplace_back(std::move(sprite));
 
 	D_LOG(MINI, "Added sprite with offset %i,%i size %i,%i for layer %i", 
 		sprite.offset.x, sprite.offset.y, sprite.size.x, sprite.size.y, layerToAddSprite);

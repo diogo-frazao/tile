@@ -13,11 +13,60 @@ typedef std::pair<SpritePreviewer, Button> SpritePreviewerButtonPair;
 
 struct SDL_Texture;
 
-enum LayerType
+class TilePlayground
 {
-	BACKGROUND,
-	MIDDLEGROUND,
-	FOREGROUND
+public:
+	TilePlayground()
+	{
+		_placedSprites.reserve(50);
+	}
+
+	struct PlaceableSprite
+	{
+		Sprite sprite;
+		LayerType layer;
+	};
+
+	inline Sprite& getSpriteInHand() { return _spriteInHand.sprite; }
+	inline LayerType getSpriteInHandLayer() { return _spriteInHand.layer; }
+	inline void setSpriteInHand(const Sprite& other) { _spriteInHand.sprite = other; }
+	inline void setSpriteInHandLayer(LayerType layer) { _spriteInHand.layer = layer; }
+
+	inline void addSpriteInHandToRnder()
+	{
+		if (_placedSprites.size() == 0)
+		{
+			_placedSprites.emplace_back(_spriteInHand);
+			_spriteInHand.sprite.invalidate();
+			return;
+		}
+
+		uint16_t indexToPlaceSpriteInHand = -1;
+		for (uint16_t i = 0; i < _placedSprites.size(); ++i)
+		{
+			if (_placedSprites[i].layer <= _spriteInHand.layer)
+			{
+				indexToPlaceSpriteInHand++;
+				continue;
+			}
+			else
+			{
+				_placedSprites.insert(_placedSprites.begin() + indexToPlaceSpriteInHand, _spriteInHand);
+				_spriteInHand.sprite.invalidate();
+				return;
+			}
+		}
+
+		if (indexToPlaceSpriteInHand == (_placedSprites.size() - 1))
+		{
+			_placedSprites.emplace_back(_spriteInHand);
+			_spriteInHand.sprite.invalidate();
+			return;
+		}
+	}
+
+	PlaceableSprite _spriteInHand;
+	std::vector<PlaceableSprite> _placedSprites;
 };
 
 class MainScreen
@@ -28,8 +77,8 @@ public:
 	void render();
 	void destroy();
 	inline static bool s_active = false;
-	inline static std::array<SpritePreviewerButtonPair, 3> _spritePreviewerButtons;
-	inline static Sprite _spriteInHand;
+	inline static std::array<SpritePreviewerButtonPair, 3> s_spritePreviewerButtons;
+	inline static TilePlayground s_tilePlayground;
 private:
 	void handleAddSpritesToLayersDebug();
 	void toggleSpritePreviewerAndDisableOthers(SpritePreviewer& spritePreviewer);

@@ -6,7 +6,7 @@
 class SpritePreviewer
 {
 public:
-	SpritePreviewer(const Vec2& startLocation = Vec2());
+	SpritePreviewer(const Vec2& startLocation = Vec2(), LayerType layer = EMPTY);
 	void render();
 	bool _isVisible = false;
 	std::vector<Sprite> _spritesToPreview;
@@ -17,6 +17,7 @@ public:
 	}
 
 private:
+	LayerType _layer;
 	Sprite _backgroundSprite;
 	Vec2 _locationToStartGrid;
 };

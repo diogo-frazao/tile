@@ -4,11 +4,12 @@
 #include "core/input.h"
 #include "screens.h"
 
-SpritePreviewer::SpritePreviewer(const Vec2& startLocation)
+SpritePreviewer::SpritePreviewer(const Vec2& startLocation, LayerType layer)
 {
 	_locationToStartGrid = startLocation;
 	_spritesToPreview.reserve(5);
 	_backgroundSprite = textures::getSprite(PREVIEWER_BG);
+	_layer = layer;
 }
 
 bool didPressSpriteButton(const RectCollider& rect)
@@ -59,7 +60,8 @@ void SpritePreviewer::render()
 		debugDrawRect(backgroundSpriteRect);
 		if (didPressSpriteButton(backgroundSpriteRect))
 		{
-			MainScreen::_spriteInHand = Sprite{sprite};
+			MainScreen::s_tilePlayground.setSpriteInHand(sprite);
+			MainScreen::s_tilePlayground.setSpriteInHandLayer(_layer);
 		}
 
 		// Center sprite inside the background if smaller than background

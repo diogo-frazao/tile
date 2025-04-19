@@ -37,6 +37,14 @@ struct RectCollider
 	RectCollider(const Vec2& pos, const Vec2& size) : centerPoint(pos), size(size) {};
 };
 
+enum LayerType
+{
+	EMPTY = -1,
+	BACKGROUND,
+	MIDDLEGROUND,
+	FOREGROUND
+};
+
 inline float lerp(float a, float b, float t)
 {
 	return a + (b - a) * t;
