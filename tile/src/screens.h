@@ -19,53 +19,58 @@ public:
 	TilePlayground()
 	{
 		_placedSprites.reserve(50);
+		_spriteInHandIndex = -1;
 	}
 
 	struct PlaceableSprite
 	{
 		Sprite sprite;
 		LayerType layer;
+
+		PlaceableSprite(const Sprite& sprite, const LayerType layer) : sprite(sprite), layer(layer) {};
 	};
 
-	inline Sprite& getSpriteInHand() { return _spriteInHand.sprite; }
-	inline LayerType getSpriteInHandLayer() { return _spriteInHand.layer; }
-	inline void setSpriteInHand(const Sprite& other) { _spriteInHand.sprite = other; }
-	inline void setSpriteInHandLayer(LayerType layer) { _spriteInHand.layer = layer; }
+	inline Sprite& getSpriteInHand()
+	{
+		D_ASSERT((_spriteInHandIndex > -1), "Can't access invalid sprite in hand");
+		return _placedSprites[_spriteInHandIndex].sprite;
+	}
 
-	inline void addSpriteInHandToRnder()
+	inline void addSpriteToRender(const PlaceableSprite& placeableSprite)
 	{
 		if (_placedSprites.size() == 0)
 		{
-			_placedSprites.emplace_back(_spriteInHand);
-			_spriteInHand.sprite.invalidate();
+			_placedSprites.emplace_back(placeableSprite);
+			_spriteInHandIndex = 0;
 			return;
 		}
 
-		uint16_t indexToPlaceSpriteInHand = -1;
+		int16_t indexToPlaceSprite = -1;
 		for (uint16_t i = 0; i < _placedSprites.size(); ++i)
 		{
-			if (_placedSprites[i].layer <= _spriteInHand.layer)
+			if (_placedSprites[i].layer <= placeableSprite.layer)
 			{
-				indexToPlaceSpriteInHand++;
+				indexToPlaceSprite++;
 				continue;
 			}
 			else
 			{
-				_placedSprites.insert(_placedSprites.begin() + indexToPlaceSpriteInHand, _spriteInHand);
-				_spriteInHand.sprite.invalidate();
+				indexToPlaceSprite = (indexToPlaceSprite == -1) ? 0 : indexToPlaceSprite;
+				_placedSprites.insert(_placedSprites.begin() + indexToPlaceSprite, placeableSprite);
+				_spriteInHandIndex = indexToPlaceSprite;
 				return;
 			}
 		}
 
-		if (indexToPlaceSpriteInHand == (_placedSprites.size() - 1))
+		if (indexToPlaceSprite == (_placedSprites.size() - 1))
 		{
-			_placedSprites.emplace_back(_spriteInHand);
-			_spriteInHand.sprite.invalidate();
+			_placedSprites.emplace_back(placeableSprite);
+			_spriteInHandIndex = _placedSprites.size() - 1;
 			return;
 		}
 	}
 
-	PlaceableSprite _spriteInHand;
+	int16_t _spriteInHandIndex;
 	std::vector<PlaceableSprite> _placedSprites;
 };
 

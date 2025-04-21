@@ -22,6 +22,12 @@ bool didPressSpriteButton(const RectCollider& rect)
 	return false;
 }
 
+void centerSpriteInsideBackground(Sprite& sprite, const Vec2& targetRect) 
+{
+	sprite.position.x += (targetRect.x - sprite.size.x) / 2;
+	sprite.position.y += (targetRect.y - sprite.size.y) / 2;
+}
+
 void SpritePreviewer::render()
 {
 	if (!_isVisible)
@@ -60,16 +66,13 @@ void SpritePreviewer::render()
 		debugDrawRect(backgroundSpriteRect);
 		if (didPressSpriteButton(backgroundSpriteRect))
 		{
-			MainScreen::s_tilePlayground.setSpriteInHand(sprite);
-			MainScreen::s_tilePlayground.setSpriteInHandLayer(_layer);
+			MainScreen::s_tilePlayground.addSpriteToRender({sprite, _layer});
 		}
 
-		// Center sprite inside the background if smaller than background
-		bool willScaleSprite = ((float)sprite.size.x > targetRect.x) || ((float)sprite.size.y > targetRect.y);
-		if (!willScaleSprite)
+		bool isSpriteBiggerThanBackground = ((float)sprite.size.x > targetRect.x) || ((float)sprite.size.y > targetRect.y);
+		if (!isSpriteBiggerThanBackground)
 		{
-			sprite.position.x += (targetRect.x - sprite.size.x) / 2;
-			sprite.position.y += (targetRect.y - sprite.size.y) / 2;
+			centerSpriteInsideBackground(sprite, targetRect);
 		}
 
 		renderSpriteInsideRect(sprite, targetRect);

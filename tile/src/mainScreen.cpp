@@ -136,14 +136,14 @@ void MainScreen::update()
 		toggleAddSpritesScreen();
 	}
 
-	if (s_tilePlayground.getSpriteInHand().isValid())
+	if (s_tilePlayground._spriteInHandIndex > -1)
 	{
 		MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::DRAGGING);
 		s_tilePlayground.getSpriteInHand().position = s_mousePositionThisFrame;
 
 		if (shouldReleaseSpriteInHand())
 		{
-			s_tilePlayground.addSpriteInHandToRnder();
+			s_tilePlayground._spriteInHandIndex = -1;
 			MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::NORMAL);
 		}
 	}
@@ -187,7 +187,7 @@ void MainScreen::render()
 
 	_addSpriteButton.render(_uiTexture);
 
-	if (s_tilePlayground.getSpriteInHand().isValid())
+	if (s_tilePlayground._spriteInHandIndex > -1)
 	{
 		renderSprite(s_tilePlayground.getSpriteInHand());
 	}
