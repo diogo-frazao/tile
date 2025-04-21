@@ -1,14 +1,19 @@
-- Quando estou a editar um input widget, carregar no enter não fecha o menu, apenas para o input
-- Tentar ter um atalho para abrir o atlas e ver as sprites
-- Fechar add sprite quando se adiciona uma nova sprite
-- Não poder abrir uma layer por cima da outra
+- Acertar precisão da mouse sprite
+- Não largar sprite se quiser trocar
+- Esc para cancelar por a sprite
+- Control z para desfazer a última coisa
+- Poder pintar tiles
+- Ter camera system com panning e zoom
+- Parar de ter coisas random inline dentro da classe. Ou uso singletons para tudo, ou para nada.
+- Panel à direita como se fosse layer inspector (lista do que está em cada layer, poder esconder cada um e poder modificar a posição)
+- UI para aumentar a grid com que se move as coisas (atualmente é 1 em 1 pixel)
 
 NTH:
-- Tentar fazer share dos mesmos includes e lib
+- Ter general mouse position para o current frame em vez de ir buscar em tantos sítios.
+- Melhorar sistema de push/pop menus
+- Tentar ter um atalho para abrir o atlas e ver as sprites
 - Compilar só o que falta e não ter de compilar sempre todos
 - Ter makefile (isso seria outra coisa que iria dar mais trabalho)
 - Não usar windows subsystem e usar console X (não é preciso porque estou a ver os prints no terminal)
 - Settings e Add Sprite partilharem a mesma textura porque nunca vão estar em cima um do outro.
-- Ter um único dest rect para tudo. X
-- Ter general mouse position para o current frame em vez de ir buscar em tantos sítios. ACHEI QUE JA TINHA FEITO ONDE É QUE ISTO ESTA AAAAAAAAAAAAA
 - Mouse over para fechar automaticamente layer

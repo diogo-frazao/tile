@@ -3,6 +3,7 @@
 #include "core/input.h"
 #include "core/app.h"
 #include "core/log.h"
+#include "core/debugUtils.h"
 
 void PanelScreen::render()
 {
@@ -31,6 +32,7 @@ void MouseScreen::update()
 
 void MouseScreen::render()
 {
+	debugDrawPoint(s_mousePositionThisFrame);
 	renderSprite(_mouseSprite);
 }
 
