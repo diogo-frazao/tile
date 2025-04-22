@@ -9,6 +9,9 @@
 inline const SDL_Scancode k_confirmKey = SDL_SCANCODE_RETURN;
 inline const SDL_Scancode k_returnKey = SDL_SCANCODE_ESCAPE;
 
+inline const int k_createSpriteOnSpritePreviewerClickMouseButton = SDL_BUTTON_LEFT;
+inline const int k_deleteSpriteOnSpritePreviewerClickMouseButton = SDL_BUTTON_RIGHT;
+
 struct KeyState
 {
 	bool isDown = false;

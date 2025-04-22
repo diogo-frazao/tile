@@ -14,7 +14,17 @@ SpritePreviewer::SpritePreviewer(const Vec2& startLocation, LayerType layer)
 
 bool didPressSpriteButton(const RectCollider& rect)
 {
-	if (wasMouseButtonReleasedThisFrame(SDL_BUTTON_LEFT))
+	if (wasMouseButtonReleasedThisFrame(k_createSpriteOnSpritePreviewerClickMouseButton))
+	{
+		return pointInRect(s_mousePositionThisFrame, rect);
+	}
+
+	return false;
+}
+
+bool didPressDeleteSpriteButton(const RectCollider& rect)
+{
+	if (wasMouseButtonReleasedThisFrame(k_deleteSpriteOnSpritePreviewerClickMouseButton))
 	{
 		return pointInRect(s_mousePositionThisFrame, rect);
 	}
@@ -35,15 +45,17 @@ void SpritePreviewer::render()
 		return;
 	}
 
-	static const uint8_t offset = _backgroundSprite.size.x;
+	static const uint8_t offsetBetweenSprites = _backgroundSprite.size.x;
 	static Vec2 targetRect = { _backgroundSprite.size.x - 1.f, _backgroundSprite.size.y - 1.f };
 
-	uint8_t k_maxSpritesPerRow = 4;
+	constexpr uint8_t k_maxSpritesPerRow = 4;
 	uint8_t spritesThisRow = 0;
 	uint8_t numColumns = 0;
 
-	for (Sprite& sprite : _spritesToPreview)
+	for (int16_t i = 0; i < _spritesToPreview.size(); ++i)
 	{
+		Sprite& sprite = _spritesToPreview[i];
+
 		if (spritesThisRow < k_maxSpritesPerRow)
 		{
 			spritesThisRow++;
@@ -56,18 +68,27 @@ void SpritePreviewer::render()
 
 		// Position sprite at top left of background sprite
 		sprite.position = _locationToStartGrid;
-		sprite.position.x += spritesThisRow * offset;
-		sprite.position.y += numColumns * offset;
+		sprite.position.x += spritesThisRow * offsetBetweenSprites;
+		sprite.position.y += numColumns * offsetBetweenSprites;
 
 		_backgroundSprite.position = sprite.position;
-		renderSprite(_backgroundSprite);
-
 		RectCollider backgroundSpriteRect{_backgroundSprite.position, _backgroundSprite.size};
-		debugDrawRect(backgroundSpriteRect);
+
 		if (didPressSpriteButton(backgroundSpriteRect))
 		{
+			// Since the sprite will be follwing the mouse, make it match already to avoid flickering
+			sprite.position = s_mousePositionThisFrame;
+			
 			MainScreen::s_tilePlayground.addSpriteToRender({sprite, _layer});
 		}
+		else if (didPressDeleteSpriteButton(backgroundSpriteRect))
+		{
+			_spritesToPreview.erase(_spritesToPreview.begin() + i);
+			return;
+		}
+
+		renderSprite(_backgroundSprite);
+		debugDrawRect(backgroundSpriteRect);
 
 		bool isSpriteBiggerThanBackground = ((float)sprite.size.x > targetRect.x) || ((float)sprite.size.y > targetRect.y);
 		if (!isSpriteBiggerThanBackground)

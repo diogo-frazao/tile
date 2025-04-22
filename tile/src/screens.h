@@ -36,6 +36,16 @@ public:
 		return _placedSprites[_spriteInHandIndex].sprite;
 	}
 
+	inline bool hasSpriteInHand()
+	{
+		return _spriteInHandIndex > -1;
+	}
+
+	inline void clearSpriteInHand()
+	{
+		_spriteInHandIndex = -1;
+	}
+
 	inline void addSpriteToRender(const PlaceableSprite& placeableSprite)
 	{
 		if (_placedSprites.size() == 0)
