@@ -7,14 +7,14 @@
 SpritePreviewer::SpritePreviewer(const Vec2& startLocation, LayerType layer)
 {
 	_locationToStartGrid = startLocation;
-	_spritesToPreview.reserve(5);
+	_spritesToPreview.reserve(10);
 	_backgroundSprite = textures::getSprite(PREVIEWER_BG);
 	_layer = layer;
 }
 
 bool didPressSpriteButton(const RectCollider& rect)
 {
-	if (wasMouseButtonReleasedThisFrame(k_createSpriteOnSpritePreviewerClickMouseButton))
+	if (wasMouseButtonPressedThisFrame(k_createSpriteOnSpritePreviewerClickMouseButton))
 	{
 		return pointInRect(s_mousePositionThisFrame, rect);
 	}
@@ -54,7 +54,7 @@ void SpritePreviewer::render()
 
 	for (int16_t i = 0; i < _spritesToPreview.size(); ++i)
 	{
-		Sprite& sprite = _spritesToPreview[i];
+		Sprite& sprite = _spritesToPreview[i].sprite;
 
 		if (spritesThisRow < k_maxSpritesPerRow)
 		{
@@ -73,6 +73,7 @@ void SpritePreviewer::render()
 
 		_backgroundSprite.position = sprite.position;
 		RectCollider backgroundSpriteRect{_backgroundSprite.position, _backgroundSprite.size};
+		_spritesToPreview[i].rect = backgroundSpriteRect;
 
 		if (didPressSpriteButton(backgroundSpriteRect))
 		{

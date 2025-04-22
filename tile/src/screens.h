@@ -8,6 +8,7 @@
 #include <array>
 #include "spritePreviewer.h"
 #include <utility>
+#include <optional>
 
 typedef std::pair<SpritePreviewer, Button> SpritePreviewerButtonPair;
 
@@ -46,8 +47,32 @@ public:
 		_spriteInHandIndex = -1;
 	}
 
+	inline void replaceSpriteInHand(const PlaceableSprite& sprite)
+	{
+		D_ASSERT((_spriteInHandIndex > -1), "Can't access invalid sprite in hand");
+
+		if (sprite.layer == _placedSprites[_spriteInHandIndex].layer)
+		{
+			_placedSprites[_spriteInHandIndex] = sprite;
+		}
+		else
+		{
+			// If the layers are different, we have to delete the old item and create a new one
+			// Since the rendering order will change
+			_placedSprites.erase(_placedSprites.begin() + _spriteInHandIndex);
+			clearSpriteInHand();
+			addSpriteToRender(sprite);
+		}
+		
+	}
+
 	inline void addSpriteToRender(const PlaceableSprite& placeableSprite)
 	{
+		if (hasSpriteInHand())
+		{
+			return;
+		}
+
 		if (_placedSprites.size() == 0)
 		{
 			_placedSprites.emplace_back(placeableSprite);
@@ -97,6 +122,7 @@ public:
 private:
 	void handleAddSpritesToLayersDebug();
 	void toggleSpritePreviewerAndDisableOthers(SpritePreviewer& spritePreviewer);
+	std::optional<TilePlayground::PlaceableSprite> shouldReplaceSpriteInHand();
 	bool shouldReleaseSpriteInHand();
 	SDL_Texture* _uiTexture;
 	Button _addSpriteButton;

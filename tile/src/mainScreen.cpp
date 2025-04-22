@@ -141,26 +141,54 @@ void MainScreen::update()
 		MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::DRAGGING);
 		s_tilePlayground.getSpriteInHand().position = s_mousePositionThisFrame;
 
-		if (shouldReleaseSpriteInHand())
+		if (wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT))
 		{
-			s_tilePlayground.clearSpriteInHand();
-			MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::NORMAL);
+			std::optional<TilePlayground::PlaceableSprite> spriteToReplace = shouldReplaceSpriteInHand();
+			if (spriteToReplace.has_value())
+			{
+				s_tilePlayground.replaceSpriteInHand(spriteToReplace.value());
+			}
+			else if (shouldReleaseSpriteInHand())
+			{
+				s_tilePlayground.clearSpriteInHand();
+				MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::NORMAL);
+			}
 		}
 	}
 }
 
+std::optional<TilePlayground::PlaceableSprite> MainScreen::shouldReplaceSpriteInHand()
+{
+	for (const SpritePreviewerButtonPair& pair : s_spritePreviewerButtons)
+	{
+		if (!pair.first._isVisible)
+		{
+			continue;
+		}
+
+		for (const SpriteWithExternalRect& sprite : pair.first._spritesToPreview)
+		{
+			if (pointInRect(s_mousePositionThisFrame, sprite.rect))
+			{
+				return TilePlayground::PlaceableSprite {std::move(sprite.sprite), pair.first._layer};
+			}
+		}
+	}
+
+	return std::nullopt;
+}
+
 bool MainScreen::shouldReleaseSpriteInHand()
 {
-	bool wantsToChangeOrCollapseLayer = false;
 	for (const SpritePreviewerButtonPair& pair : s_spritePreviewerButtons)
 	{
 		if (pointInRect(s_mousePositionThisFrame, pair.second._text._mainCollider))
 		{
-			wantsToChangeOrCollapseLayer = true;
+			return false;
 		}
 	}
 
-	return wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT) && !wantsToChangeOrCollapseLayer;
+	return true;
 }
 
 void MainScreen::toggleSpritePreviewerAndDisableOthers(SpritePreviewer& spritePreviewer)
