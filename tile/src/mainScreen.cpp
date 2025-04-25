@@ -140,7 +140,7 @@ void MainScreen::update()
 
 	if (isKeyDown(SDL_SCANCODE_LCTRL))
 	{
-		if (wasKeyPressedThisFrame(SDL_SCANCODE_Z))
+		if (wasKeyPressedThisFrame(k_undoKey))
 		{
 			s_tilePlayground.undoLastPlacedSprite();
 		}
