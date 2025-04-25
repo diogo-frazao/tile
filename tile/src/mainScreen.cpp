@@ -136,23 +136,38 @@ void MainScreen::update()
 		toggleAddSpritesScreen();
 	}
 
-	if (s_tilePlayground.hasSpriteInHand())
-	{
-		MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::DRAGGING);
-		s_tilePlayground.getSpriteInHand().position = s_mousePositionThisFrame;
+	handleSpriteInHand();
 
-		if (wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT))
+	if (isKeyDown(SDL_SCANCODE_LCTRL))
+	{
+		if (wasKeyPressedThisFrame(SDL_SCANCODE_Z))
 		{
-			std::optional<TilePlayground::PlaceableSprite> spriteToReplace = shouldReplaceSpriteInHand();
-			if (spriteToReplace.has_value())
-			{
-				s_tilePlayground.replaceSpriteInHand(spriteToReplace.value());
-			}
-			else if (shouldReleaseSpriteInHand())
-			{
-				s_tilePlayground.clearSpriteInHand();
-				MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::NORMAL);
-			}
+			s_tilePlayground.undoLastPlacedSprite();
+		}
+	}
+}
+
+void MainScreen::handleSpriteInHand()
+{
+	if (!s_tilePlayground.hasSpriteInHand())
+	{
+		return;
+	}
+
+	MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::DRAGGING);
+	s_tilePlayground.getSpriteInHand().position = s_mousePositionThisFrame;
+
+	if (wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT))
+	{
+		std::optional<TilePlayground::PlaceableSprite> spriteToReplace = shouldReplaceSpriteInHand();
+		if (spriteToReplace.has_value())
+		{
+			s_tilePlayground.replaceSpriteInHand(spriteToReplace.value());
+		}
+		else if (shouldReleaseSpriteInHand())
+		{
+			s_tilePlayground.clearSpriteInHand();
+			MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::NORMAL);
 		}
 	}
 }

@@ -8,6 +8,13 @@
 inline SDL_Rect s_src{};
 inline SDL_FRect s_dest{};
 
+inline constexpr int k_invalidIndex = -1;
+
+inline bool isIndexValid(int index)
+{
+	return index != k_invalidIndex;
+}
+
 struct IVec2
 {
 	int32_t x = 0;

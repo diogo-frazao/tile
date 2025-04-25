@@ -12,6 +12,8 @@ inline const SDL_Scancode k_returnKey = SDL_SCANCODE_ESCAPE;
 inline const int k_createSpriteOnSpritePreviewerClickMouseButton = SDL_BUTTON_LEFT;
 inline const int k_deleteSpriteOnSpritePreviewerClickMouseButton = SDL_BUTTON_RIGHT;
 
+inline const SDL_Scancode k_undoKey = SDL_SCANCODE_Z;
+
 struct KeyState
 {
 	bool isDown = false;
