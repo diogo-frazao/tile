@@ -33,6 +33,8 @@ private:
 	bool shouldReleaseSpriteInHand();
 	SDL_Texture* _uiTexture;
 	Button _addSpriteButton;
+	Sprite _undoButton;
+	Sprite _redoButton;
 };
 
 class SettingsScreen

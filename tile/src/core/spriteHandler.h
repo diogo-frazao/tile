@@ -1,6 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include "lib.h"
+#include "input.h"
 
 struct SDL_Texture;
 struct SDL_Rect;
@@ -14,6 +15,7 @@ enum SpriteType
 	MOCKUP,
 	BUTTON,
 	PREVIEWER_BG,
+	UNDO_BUTTON,
 	SPRITES_MAX,
 };
 
@@ -35,6 +37,16 @@ struct Sprite
 		offset = IVec2();
 	}
 
+	bool tryPress()
+	{
+		if (wasMouseButtonPressedThisFrame(k_createSpriteOnSpritePreviewerClickMouseButton))
+		{
+			return pointInRect(s_mousePositionThisFrame, {position, size});
+		}
+
+		return false;
+	}
+
 	Sprite() : position(0.f, 0.f), size(0, 0), offset(0, 0) {};
 	Sprite(const IVec2& size, const IVec2& offset) : size(size), offset(offset) {};
 };
@@ -45,5 +57,5 @@ namespace textures
 	Sprite getSprite(SpriteType type);
 }
 
-void renderSprite(const Sprite& sprite);
+void renderSprite(const Sprite& sprite, bool flipHorizontal = false);
 void renderSpriteInsideRect(const Sprite& sprite, const Vec2& targetRect);

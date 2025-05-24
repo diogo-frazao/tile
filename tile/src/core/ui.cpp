@@ -204,7 +204,7 @@ InteractableText::InteractableText(const char* text, const Vec2& position, uint1
 
 void InteractableText::update()
 {
-	_mainCollider.centerPoint = _worldPosition;
+	_mainCollider.topLeftPoint = _worldPosition;
 	_mainCollider.size = _worldBounds;
 }
 
@@ -251,7 +251,7 @@ void InteractableText::setupDrawMode(DrawMode drawMode)
 	}
 
 	_drawMode = drawMode;
-	_mainCollider.centerPoint = _worldPosition;
+	_mainCollider.topLeftPoint = _worldPosition;
 }
 
 void InteractableText::tryHover()
@@ -290,7 +290,7 @@ Button::Button(const char* buttonText, const SpriteType buttonSprite, const Vec2
 	_text._worldPosition = finalTextPos;
 
 	// Change text collider to cover the whole sprite
-	_text._mainCollider.centerPoint = _sprite.position;
+	_text._mainCollider.topLeftPoint = _sprite.position;
 	_text._mainCollider.size = _sprite.size;
 }
 

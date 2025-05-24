@@ -7,12 +7,18 @@
 #include "core/log.h"
 #include "core/ui.h"
 #include <cmath>
+#include "core/debugUtils.h"
 
 void MainScreen::start()
 {
 	s_active = true;
 	_uiTexture = createUITexture();
 	_addSpriteButton = Button("+", BUTTON, Vec2(0, 5), 62);
+
+	_undoButton = textures::getSprite(UNDO_BUTTON);
+	_undoButton.position = {250 , 5};
+	_redoButton = textures::getSprite(UNDO_BUTTON);
+	_redoButton.position = {_undoButton.position.x + _undoButton.size.x + 5, 5};
 
 	Button backgroundButton {"0", BUTTON, Vec2(0, _addSpriteButton._sprite.position.y + _addSpriteButton._sprite.size.y + 1.f)};
 	Button middlegroundButton {"1", BUTTON, Vec2(0, backgroundButton._sprite.position.y + backgroundButton._sprite.size.y + 1.f)};
@@ -145,6 +151,16 @@ void MainScreen::update()
 			s_tilePlayground.undoLastPlacedSprite();
 		}
 	}
+
+	if (_undoButton.tryPress())
+	{
+		D_LOG(LOG, "Undo");
+	}
+
+	if (_redoButton.tryPress())
+	{
+		D_LOG(LOG, "Redo");
+	}
 }
 
 void MainScreen::handleSpriteInHand()
@@ -245,6 +261,12 @@ void MainScreen::render()
 	{
 		renderSprite(placeableSprite.sprite);
 	}
+
+	renderSprite(_undoButton);
+	debugDrawRect({_undoButton.position, _undoButton.size});
+
+	renderSprite(_redoButton, true);
+	debugDrawRect({_redoButton.position, _redoButton.size});
 }
 
 void MainScreen::destroy()

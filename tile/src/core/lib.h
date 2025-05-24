@@ -36,12 +36,12 @@ struct Vec2
 
 struct RectCollider
 {
-	Vec2 centerPoint;
+	Vec2 topLeftPoint;
 	Vec2 size;
 	SDL_Color debugColor{252, 15, 192, 255};
 
 	RectCollider() = default;
-	RectCollider(const Vec2& pos, const Vec2& size) : centerPoint(pos), size(size) {};
+	RectCollider(const Vec2& pos, const Vec2& size) : topLeftPoint(pos), size(size) {};
 };
 
 enum LayerType
@@ -113,10 +113,10 @@ inline float mapZeroToOne(int value, float min, float max)
 
 inline bool pointInRect(const IVec2& point, const RectCollider& rect)
 {
-	return point.x >= rect.centerPoint.x &&
-		point.x <= rect.centerPoint.x + rect.size.x &&
-		point.y >= rect.centerPoint.y &&
-		point.y <= rect.centerPoint.y + rect.size.y;
+	return point.x >= rect.topLeftPoint.x &&
+		point.x <= rect.topLeftPoint.x + rect.size.x &&
+		point.y >= rect.topLeftPoint.y &&
+		point.y <= rect.topLeftPoint.y + rect.size.y;
 }
 
 inline int convertStringToInt(std::string_view word)

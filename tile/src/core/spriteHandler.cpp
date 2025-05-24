@@ -46,7 +46,11 @@ namespace textures
 				break;
 			case PREVIEWER_BG:
 				sprite.offset = { 338, 0 };
-				sprite.size = { 9,9 };
+				sprite.size = { 9, 9 };
+				break;
+			case UNDO_BUTTON:
+				sprite.offset = { 362, 0};
+				sprite.size = { 10, 9};
 				break;
 			default:
 				D_ASSERT(false, "Invalid texture to load");
@@ -56,7 +60,7 @@ namespace textures
 	}
 }
 
-void renderSprite(const Sprite& sprite)
+void renderSprite(const Sprite& sprite, bool flipHorizontal)
 {
 	s_src.x = sprite.offset.x;
 	s_src.y = sprite.offset.y;
@@ -68,7 +72,7 @@ void renderSprite(const Sprite& sprite)
 	s_dest.w = (float)sprite.size.x;
 	s_dest.h = (float)sprite.size.y;
 
-	SDL_RenderCopyExF(s_renderer, s_atlasTexture, &s_src, &s_dest, 0, nullptr, SDL_FLIP_NONE);
+	SDL_RenderCopyExF(s_renderer, s_atlasTexture, &s_src, &s_dest, 0, nullptr, flipHorizontal ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
 void renderSpriteInsideRect(const Sprite& sprite, const Vec2& targetRect)
