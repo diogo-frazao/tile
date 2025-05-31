@@ -36,6 +36,9 @@ public:
 			}
 		};
 
+		std::array<int16_t, 10> _placedSpritesIndexesHistory;
+		std::array<PlaceableSprite, 10> _removedSprites;
+
 		void pushSpriteIndexToHistory(int16_t spriteIndex)
 		{
 			for (uint8_t i = 0; i < _placedSpritesIndexesHistory.size(); ++i)
@@ -94,9 +97,6 @@ public:
 				}
 			}
 		}
-
-		std::array<int16_t, 10> _placedSpritesIndexesHistory;
-		std::array<PlaceableSprite, 10> _removedSprites;
 	};
 
 	Sprite& getSpriteInHand()
@@ -184,6 +184,7 @@ public:
 			return;
 		}
 
+		clearSpriteInHand();
 		_undoRedoSprites.moveSpriteToRemovedSprites(std::move(_placedSprites[lastPlacedSpriteindex]));
 		_placedSprites.erase(_placedSprites.begin() + lastPlacedSpriteindex);
 		_undoRedoSprites.deleteLastPlacedSpriteIndex();

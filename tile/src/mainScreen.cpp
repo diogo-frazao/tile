@@ -167,6 +167,7 @@ void MainScreen::handleSpriteInHand()
 {
 	if (!s_tilePlayground.hasSpriteInHand())
 	{
+		MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::NORMAL);
 		return;
 	}
 
