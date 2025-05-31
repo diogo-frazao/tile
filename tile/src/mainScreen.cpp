@@ -154,7 +154,7 @@ void MainScreen::update()
 
 	if (_undoButton.tryPress())
 	{
-		D_LOG(LOG, "Undo");
+		s_tilePlayground.undoLastPlacedSprite();
 	}
 
 	if (_redoButton.tryPress())

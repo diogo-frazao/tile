@@ -36,65 +36,46 @@ public:
 			}
 		};
 
-		std::array<int16_t, 10> _placedSpritesIndexesHistory;
-		std::array<PlaceableSprite, 10> _removedSprites;
+		std::array<int16_t, 30> _placedSpritesIndexesHistory;
+		int8_t _lastPlacedSpriteHistoryIndex = k_invalidIndex;
+
+		std::array<PlaceableSprite, 30> _removedSprites;
+		int8_t _lastRemovedSpriteIndex = k_invalidIndex;
 
 		void pushSpriteIndexToHistory(int16_t spriteIndex)
 		{
-			for (uint8_t i = 0; i < _placedSpritesIndexesHistory.size(); ++i)
-			{
-				if (isIndexValid(_placedSpritesIndexesHistory[i]))
-				{
-					continue;
-				}
-
-				_placedSpritesIndexesHistory[i] = spriteIndex;
-				return;
-			}
-
-			// If we get here, the array is full with valid placeable sprites
-			// TODO: We will start overriding them in order
+			_lastPlacedSpriteHistoryIndex = (_lastPlacedSpriteHistoryIndex + 1) % _placedSpritesIndexesHistory.size();
+			_placedSpritesIndexesHistory[_lastPlacedSpriteHistoryIndex] = spriteIndex;
 		}
 
 		void moveSpriteToRemovedSprites(PlaceableSprite&& other)
 		{
-			for (uint8_t i = 0; i < _removedSprites.size(); ++i)
-			{
-				if (_removedSprites[i].isValid())
-				{
-					continue;
-				}
-
-				_removedSprites[i] = other;
-				return;
-			}
-
-			// If we get here, the array is full with valid placeable sprites
-			// TODO: We will start overriding them in order
+			_lastRemovedSpriteIndex = (_lastRemovedSpriteIndex + 1) % _removedSprites.size();
+			_removedSprites[_lastRemovedSpriteIndex] = other;
 		}
 
 		int16_t getLastPlacedSpriteIndex()
 		{
-			for (int16_t i = _placedSpritesIndexesHistory.size() - 1; i >= 0; --i)
+			if (!isIndexValid(_lastPlacedSpriteHistoryIndex))
 			{
-				if (isIndexValid(_placedSpritesIndexesHistory[i]))
-				{
-					return _placedSpritesIndexesHistory[i];
-				}
+				return -1;
 			}
-
-			return k_invalidIndex;
+			return _placedSpritesIndexesHistory[_lastPlacedSpriteHistoryIndex];
 		}
 
-		void deleteLastPlacedSpriteIndex()
+		void deleteLastPlacedSpriteHistoryIndex()
 		{
-			for (int16_t i = _placedSpritesIndexesHistory.size() - 1; i >= 0; --i)
+			_placedSpritesIndexesHistory[_lastPlacedSpriteHistoryIndex] = k_invalidIndex;
+
+			if (_lastPlacedSpriteHistoryIndex == 0)
 			{
-				if (isIndexValid(_placedSpritesIndexesHistory[i]))
-				{
-					_placedSpritesIndexesHistory[i] = k_invalidIndex;
-					return;
-				}
+				int lastIndex = _placedSpritesIndexesHistory.size() - 1;
+				bool hasValidSpriteAtLastIndex = isIndexValid(_placedSpritesIndexesHistory[lastIndex]);
+				_lastPlacedSpriteHistoryIndex = hasValidSpriteAtLastIndex ? lastIndex : k_invalidIndex;
+			}
+			else
+			{
+				--_lastPlacedSpriteHistoryIndex;
 			}
 		}
 	};
@@ -178,16 +159,17 @@ public:
 
 	void undoLastPlacedSprite()
 	{
-		int16_t lastPlacedSpriteindex = _undoRedoSprites.getLastPlacedSpriteIndex();
-		if (!isIndexValid(lastPlacedSpriteindex))
+		int16_t lastPlacedSpriteIndex = _undoRedoSprites.getLastPlacedSpriteIndex();
+		if (!isIndexValid(lastPlacedSpriteIndex))
 		{
 			return;
 		}
 
+		_undoRedoSprites.moveSpriteToRemovedSprites(std::move(_placedSprites[lastPlacedSpriteIndex]));
+		_placedSprites.erase(_placedSprites.begin() + lastPlacedSpriteIndex);
+		_undoRedoSprites.deleteLastPlacedSpriteHistoryIndex();
+
 		clearSpriteInHand();
-		_undoRedoSprites.moveSpriteToRemovedSprites(std::move(_placedSprites[lastPlacedSpriteindex]));
-		_placedSprites.erase(_placedSprites.begin() + lastPlacedSpriteindex);
-		_undoRedoSprites.deleteLastPlacedSpriteIndex();
 	}
 
 	UndoRedoPlaceSprites _undoRedoSprites;
