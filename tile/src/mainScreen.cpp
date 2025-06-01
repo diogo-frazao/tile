@@ -150,6 +150,10 @@ void MainScreen::update()
 		{
 			s_tilePlayground.undoLastPlacedSprite();
 		}
+		else if (wasKeyReleasedThisFrame(k_redoKey))
+		{
+			s_tilePlayground.redoLastRemovedSprite();
+		}
 	}
 
 	if (_undoButton.tryPress())
@@ -159,7 +163,7 @@ void MainScreen::update()
 
 	if (_redoButton.tryPress())
 	{
-		D_LOG(LOG, "Redo");
+		s_tilePlayground.redoLastRemovedSprite();
 	}
 }
 

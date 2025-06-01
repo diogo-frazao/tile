@@ -12,7 +12,7 @@ inline constexpr int k_invalidIndex = -1;
 
 inline bool isIndexValid(int index)
 {
-	return index != k_invalidIndex;
+	return index > k_invalidIndex;
 }
 
 struct IVec2

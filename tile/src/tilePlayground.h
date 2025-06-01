@@ -23,6 +23,12 @@ public:
 		{
 			return layer != EMPTY;
 		}
+
+		void invalidate()
+		{
+			sprite.invalidate();
+			layer = EMPTY;
+		}
 	};
 
 	class UndoRedoPlaceSprites
@@ -78,22 +84,38 @@ public:
 				--_lastPlacedSpriteHistoryIndex;
 			}
 		}
+
+		void deleteLastRemovedSpriteIndex()
+		{
+			_removedSprites[_lastRemovedSpriteIndex].invalidate();
+
+			if (_lastRemovedSpriteIndex == 0)
+			{
+				int lastIndex = _removedSprites.size() - 1;
+				bool hasValidSpriteAtLastIndex = _removedSprites[_lastRemovedSpriteIndex].isValid();
+				_lastRemovedSpriteIndex = hasValidSpriteAtLastIndex ? lastIndex : k_invalidIndex;
+			}
+			else
+			{
+				--_lastRemovedSpriteIndex;
+			}
+		}
 	};
 
 	Sprite& getSpriteInHand()
 	{
-		D_ASSERT((_spriteInHandIndex > -1), "Can't access invalid sprite in hand");
+		D_ASSERT((_spriteInHandIndex > k_invalidIndex), "Can't access invalid sprite in hand");
 		return _placedSprites[_spriteInHandIndex].sprite;
 	}
 
 	bool hasSpriteInHand()
 	{
-		return _spriteInHandIndex > -1;
+		return isIndexValid(_spriteInHandIndex);
 	}
 
 	void clearSpriteInHand()
 	{
-		_spriteInHandIndex = -1;
+		_spriteInHandIndex = k_invalidIndex;
 	}
 
 	void replaceSpriteInHand(const PlaceableSprite& sprite)
@@ -110,12 +132,46 @@ public:
 			// Since the rendering order will change
 			_placedSprites.erase(_placedSprites.begin() + _spriteInHandIndex);
 			clearSpriteInHand();
-			addSpriteToRender(sprite);
+			addSpriteToRenderAndPutSpriteInHand(sprite);
 		}
 		
 	}
 
-	void addSpriteToRender(const PlaceableSprite& placeableSprite)
+	void addSpriteToRender(PlaceableSprite&& placeableSprite)
+	{
+		if (_placedSprites.size() == 0)
+		{
+			_placedSprites.emplace_back(placeableSprite);
+			_undoRedoSprites.pushSpriteIndexToHistory(0);
+			return;
+		}
+
+		int16_t indexToPlaceSprite = -1;
+		for (uint16_t i = 0; i < _placedSprites.size(); ++i)
+		{
+			if (_placedSprites[i].layer <= placeableSprite.layer)
+			{
+				indexToPlaceSprite++;
+				continue;
+			}
+			else
+			{
+				indexToPlaceSprite = (indexToPlaceSprite == -1) ? 0 : indexToPlaceSprite;
+				_placedSprites.insert(_placedSprites.begin() + indexToPlaceSprite, placeableSprite);
+				_undoRedoSprites.pushSpriteIndexToHistory(indexToPlaceSprite);
+				return;
+			}
+		}
+
+		if (indexToPlaceSprite == (_placedSprites.size() - 1))
+		{
+			_placedSprites.emplace_back(placeableSprite);
+			_undoRedoSprites.pushSpriteIndexToHistory(_placedSprites.size() - 1);
+			return;
+		}
+	}
+
+	void addSpriteToRenderAndPutSpriteInHand(const PlaceableSprite& placeableSprite)
 	{
 		if (hasSpriteInHand())
 		{
@@ -170,6 +226,17 @@ public:
 		_undoRedoSprites.deleteLastPlacedSpriteHistoryIndex();
 
 		clearSpriteInHand();
+	}
+
+	void redoLastRemovedSprite()
+	{
+		if(!isIndexValid(_undoRedoSprites._lastRemovedSpriteIndex))
+		{
+			return;
+		}
+
+		addSpriteToRender(std::move(_undoRedoSprites._removedSprites[_undoRedoSprites._lastRemovedSpriteIndex]));
+		_undoRedoSprites.deleteLastRemovedSpriteIndex();
 	}
 
 	UndoRedoPlaceSprites _undoRedoSprites;

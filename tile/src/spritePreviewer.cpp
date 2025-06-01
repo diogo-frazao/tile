@@ -80,7 +80,7 @@ void SpritePreviewer::render()
 			// Since the sprite will be follwing the mouse, make it match already to avoid flickering
 			sprite.position = s_mousePositionThisFrame;
 			
-			MainScreen::s_tilePlayground.addSpriteToRender({sprite, _layer});
+			MainScreen::s_tilePlayground.addSpriteToRenderAndPutSpriteInHand({sprite, _layer});
 		}
 		else if (didPressDeleteSpriteButton(backgroundSpriteRect))
 		{
