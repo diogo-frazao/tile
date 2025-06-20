@@ -104,6 +104,19 @@ public:
 	Button(const char* buttonText, const SpriteType buttonSprite, const Vec2& position, uint8_t buttonSize = 40);
 };
 
+class SpriteButton
+{
+public:
+	SpriteButton() = default;
+	SpriteButton(const Sprite&& normalSprite, const Sprite&& hoveredSprite);
+	void update();
+	void render(bool flipHorizontal = false);
+	bool tryHover();
+	bool tryPress();
+	Sprite _normalSprite;
+	Sprite _hoveredSprite;
+	Sprite _sprite;
+};
 
 void destroyWidget(const InteractableText& widget);
 void destroyWidget(InteractableText* widget);

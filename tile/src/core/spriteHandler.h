@@ -16,6 +16,7 @@ enum SpriteType
 	BUTTON,
 	PREVIEWER_BG,
 	UNDO_BUTTON,
+	UNDO_BUTTON_HOVERED,
 	SPRITES_MAX,
 };
 
@@ -35,16 +36,6 @@ struct Sprite
 		position = Vec2();
 		size = IVec2();
 		offset = IVec2();
-	}
-
-	bool tryPress()
-	{
-		if (wasMouseButtonPressedThisFrame(k_createSpriteOnSpritePreviewerClickMouseButton))
-		{
-			return pointInRect(s_mousePositionThisFrame, {position, size});
-		}
-
-		return false;
 	}
 
 	Sprite() : position(0.f, 0.f), size(0, 0), offset(0, 0) {};

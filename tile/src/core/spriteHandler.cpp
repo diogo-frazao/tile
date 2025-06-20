@@ -52,6 +52,10 @@ namespace textures
 				sprite.offset = { 362, 0};
 				sprite.size = { 10, 9};
 				break;
+			case UNDO_BUTTON_HOVERED:
+				sprite.offset = {362, 9};
+				sprite.size = {10, 9};
+				break;
 			default:
 				D_ASSERT(false, "Invalid texture to load");
 		}

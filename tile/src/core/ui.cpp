@@ -376,6 +376,47 @@ void InputWidget::tryEditText()
 }
 
 //
+// Sprite Button
+
+SpriteButton::SpriteButton(const Sprite&& normalSprite, const Sprite&& hoveredSprite)
+{
+	_normalSprite = normalSprite;
+	_hoveredSprite = hoveredSprite;
+	_sprite = normalSprite;
+}
+
+void SpriteButton::update()
+{
+	if (tryHover())
+	{
+		_sprite.offset = _hoveredSprite.offset;
+		_sprite.size = _hoveredSprite.size;
+	}
+	else
+	{
+		_sprite.offset = _normalSprite.offset;
+		_sprite.size = _normalSprite.size;
+	}
+}
+
+bool SpriteButton::tryHover()
+{
+	return pointInRect(s_mousePositionThisFrame, RectCollider(_sprite.position, _sprite.size));
+}
+
+bool SpriteButton::tryPress()
+{
+	return wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT) && 
+	pointInRect(s_mousePositionThisFrame, RectCollider(_sprite.position, _sprite.size));
+}
+
+void SpriteButton::render(bool flipHorizontal)
+{
+	renderSprite(_sprite, flipHorizontal);
+	debugDrawRect({_sprite.position, _sprite.size});
+}
+
+//
 // Global helper functions
 
 void destroyWidget(const InteractableText& widget)

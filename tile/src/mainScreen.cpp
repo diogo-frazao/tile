@@ -15,10 +15,10 @@ void MainScreen::start()
 	_uiTexture = createUITexture();
 	_addSpriteButton = Button("+", BUTTON, Vec2(0, 5), 62);
 
-	_undoButton = textures::getSprite(UNDO_BUTTON);
-	_undoButton.position = {250 , 5};
-	_redoButton = textures::getSprite(UNDO_BUTTON);
-	_redoButton.position = {_undoButton.position.x + _undoButton.size.x + 5, 5};
+	_undoButton = SpriteButton(textures::getSprite(UNDO_BUTTON), textures::getSprite(UNDO_BUTTON_HOVERED));
+	_undoButton._sprite.position = {250 , 5};
+	_redoButton = SpriteButton(textures::getSprite(UNDO_BUTTON), textures::getSprite(UNDO_BUTTON_HOVERED));
+	_redoButton._sprite.position = {_undoButton._sprite.position.x + _undoButton._sprite.size.x + 5, 5};
 
 	Button backgroundButton {"0", BUTTON, Vec2(0, _addSpriteButton._sprite.position.y + _addSpriteButton._sprite.size.y + 1.f)};
 	Button middlegroundButton {"1", BUTTON, Vec2(0, backgroundButton._sprite.position.y + backgroundButton._sprite.size.y + 1.f)};
@@ -33,6 +33,7 @@ void MainScreen::start()
 		std::pair{std::move(middleLayerSpritePreviewer), std::move(middlegroundButton)},
 		std::pair{std::move(foregroundLayerSpritePreviewer), std::move(foregroundButton)}
 	};
+
 }
 
 void closeOpenScreenAndEnableMainScreen()
@@ -156,11 +157,13 @@ void MainScreen::update()
 		}
 	}
 
+	_undoButton.update();
 	if (_undoButton.tryPress())
 	{
 		s_tilePlayground.undoLastPlacedSprite();
 	}
 
+	_redoButton.update();
 	if (_redoButton.tryPress())
 	{
 		s_tilePlayground.redoLastRemovedSprite();
@@ -267,11 +270,8 @@ void MainScreen::render()
 		renderSprite(placeableSprite.sprite);
 	}
 
-	renderSprite(_undoButton);
-	debugDrawRect({_undoButton.position, _undoButton.size});
-
-	renderSprite(_redoButton, true);
-	debugDrawRect({_redoButton.position, _redoButton.size});
+	_undoButton.render();
+	_redoButton.render(true);
 }
 
 void MainScreen::destroy()
