@@ -40,27 +40,27 @@ void AddSpritesScreen::start()
 	_widgetLink._leftTexts.reserve(9);
 	_widgetLink._rightWidgets.reserve(9);
 
-	_widgetLink._leftTexts.push_back(InteractableText("layer", { 0,0 }, 65, k_white));
-	_widgetLink._leftTexts.push_back(InteractableText("pivot", { 0,0 }, 65, k_white));
-	_widgetLink._leftTexts.push_back(InteractableText("start x", { 0,0 }, 65, k_white));
-	_widgetLink._leftTexts.push_back(InteractableText("start y", { 0,0 }, 65, k_white));
-	_widgetLink._leftTexts.push_back(InteractableText("end x", { 0,0 }, 65, k_white));
-	_widgetLink._leftTexts.push_back(InteractableText("end y", { 0,0 }, 65, k_white));
-	_widgetLink._leftTexts.push_back(InteractableText("isTile", { 0,0 }, 65, k_white));
-	_widgetLink._leftTexts.push_back(InteractableText("tile size x", { 0,0 }, 65, k_white));
-	_widgetLink._leftTexts.push_back(InteractableText("tile size y", { 0,0 }, 65, k_white));
+	_widgetLink._leftTexts.emplace_back(InteractableText("layer", { 0,0 }, 65, k_white));
+	_widgetLink._leftTexts.emplace_back(InteractableText("pivot", { 0,0 }, 65, k_white));
+	_widgetLink._leftTexts.emplace_back(InteractableText("start x", { 0,0 }, 65, k_white));
+	_widgetLink._leftTexts.emplace_back(InteractableText("start y", { 0,0 }, 65, k_white));
+	_widgetLink._leftTexts.emplace_back(InteractableText("end x", { 0,0 }, 65, k_white));
+	_widgetLink._leftTexts.emplace_back(InteractableText("end y", { 0,0 }, 65, k_white));
+	_widgetLink._leftTexts.emplace_back(InteractableText("isTile", { 0,0 }, 65, k_white));
+	_widgetLink._leftTexts.emplace_back(InteractableText("tile size x", { 0,0 }, 65, k_white));
+	_widgetLink._leftTexts.emplace_back(InteractableText("tile size y", { 0,0 }, 65, k_white));
 
 	std::array<const char*, 3> layerOptions = { "< 0 >", "< 1 >", "< 2 >" };
 	std::array<const char*, 3> pivotOptions = { "< top >", "< center >", "< bottom >" };
-	_widgetLink._rightWidgets.push_back(new OptionSelector(std::vector<const char*>(layerOptions.begin(), layerOptions.end()), {0,0}, 65, k_white));
-	_widgetLink._rightWidgets.push_back(new OptionSelector(std::vector<const char*>(pivotOptions.begin(), pivotOptions.end()), {0,0}, 65, k_white));
-	_widgetLink._rightWidgets.push_back(new InputWidget({ 0,0 }, 65, k_white));
-	_widgetLink._rightWidgets.push_back(new InputWidget({ 0,0 }, 65, k_white));
-	_widgetLink._rightWidgets.push_back(new InputWidget({ 0,0 }, 65, k_white));
-	_widgetLink._rightWidgets.push_back(new InputWidget({ 0,0 }, 65, k_white));
-	_widgetLink._rightWidgets.push_back(new CheckBox(false, { 0,0 }, 65, k_white));
-	_widgetLink._rightWidgets.push_back(new InputWidget({ 0,0 }, 65, k_white));
-	_widgetLink._rightWidgets.push_back(new InputWidget({ 0,0 }, 65, k_white));
+	_widgetLink._rightWidgets.emplace_back(new OptionSelector(std::vector<const char*>(layerOptions.begin(), layerOptions.end()), {0,0}, 65, k_white));
+	_widgetLink._rightWidgets.emplace_back(new OptionSelector(std::vector<const char*>(pivotOptions.begin(), pivotOptions.end()), {0,0}, 65, k_white));
+	_widgetLink._rightWidgets.emplace_back(new InputWidget({ 0,0 }, 65, k_white));
+	_widgetLink._rightWidgets.emplace_back(new InputWidget({ 0,0 }, 65, k_white));
+	_widgetLink._rightWidgets.emplace_back(new InputWidget({ 0,0 }, 65, k_white));
+	_widgetLink._rightWidgets.emplace_back(new InputWidget({ 0,0 }, 65, k_white));
+	_widgetLink._rightWidgets.emplace_back(new CheckBox(false, { 0,0 }, 65, k_white));
+	_widgetLink._rightWidgets.emplace_back(new InputWidget({ 0,0 }, 65, k_white));
+	_widgetLink._rightWidgets.emplace_back(new InputWidget({ 0,0 }, 65, k_white));
 
 	_widgetLink.setupRules(Vec2(100, 45), 1, 90, LEFT, CENTER);
 }

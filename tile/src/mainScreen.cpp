@@ -144,7 +144,11 @@ void MainScreen::update()
 	}
 
 	handleSpriteInHand();
+	handleUndoAndRedoPlacedSprites();
+}
 
+void MainScreen::handleUndoAndRedoPlacedSprites()
+{
 	if (isKeyDown(SDL_SCANCODE_LCTRL))
 	{
 		if (wasKeyPressedThisFrame(k_undoKey))
@@ -219,6 +223,7 @@ std::optional<TilePlayground::PlaceableSprite> MainScreen::shouldReplaceSpriteIn
 
 bool MainScreen::shouldReleaseSpriteInHand()
 {
+	// Prevent missplacing a sprite if we're hovering a sprite previewer.
 	for (const SpritePreviewerButtonPair& pair : s_spritePreviewerButtons)
 	{
 		if (pointInRect(s_mousePositionThisFrame, pair.second._text._mainCollider))

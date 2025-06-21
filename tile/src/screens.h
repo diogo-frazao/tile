@@ -28,9 +28,13 @@ public:
 private:
 	void handleAddSpritesToLayersDebug();
 	void toggleSpritePreviewerAndDisableOthers(SpritePreviewer& spritePreviewer);
+
 	void handleSpriteInHand();
+	void handleUndoAndRedoPlacedSprites();
+
 	std::optional<TilePlayground::PlaceableSprite> shouldReplaceSpriteInHand();
 	bool shouldReleaseSpriteInHand();
+
 	SDL_Texture* _uiTexture;
 	Button _addSpriteButton;
 	SpriteButton _undoButton;

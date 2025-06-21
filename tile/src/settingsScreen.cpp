@@ -24,11 +24,11 @@ void SettingsScreen::start()
 	_widgetLink._leftTexts.reserve(2);
 	_widgetLink._rightWidgets.reserve(2);
 
-	_widgetLink._leftTexts.push_back(InteractableText("fullscreen", {0,0}, 65, k_white));
-	_widgetLink._leftTexts.push_back(InteractableText("resolution", {0,0}, 65, k_white));
+	_widgetLink._leftTexts.emplace_back(InteractableText("fullscreen", {0,0}, 65, k_white));
+	_widgetLink._leftTexts.emplace_back(InteractableText("resolution", {0,0}, 65, k_white));
 
-	_widgetLink._rightWidgets.push_back(new CheckBox(false, { 0,0 }, 65, k_white));
-	_widgetLink._rightWidgets.push_back(optionSelector);
+	_widgetLink._rightWidgets.emplace_back(new CheckBox(false, { 0,0 }, 65, k_white));
+	_widgetLink._rightWidgets.emplace_back(optionSelector);
 
 	_widgetLink.setupRules(Vec2(80, 45), 7, 90, LEFT, CENTER);
 }

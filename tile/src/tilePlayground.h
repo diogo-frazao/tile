@@ -8,7 +8,7 @@ public:
 	TilePlayground()
 	{
 		_placedSprites.reserve(50);
-		_spriteInHandIndex = -1;
+		_spriteInHandIndex = k_invalidIndex;
 	}
 
 	struct PlaceableSprite
