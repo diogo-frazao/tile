@@ -61,31 +61,32 @@ void toggleAddSpritesScreen()
 void MainScreen::handleAddSpritesToLayersDebug()
 {
 #if DEBUG_ENABLED == 1
-	static std::array<Sprite, 5> debugSprites = {
+	static std::array<Sprite, 6> debugSprites = {
 		Sprite({10,16}, {328, 9}), // sign
 		Sprite({8,5}, {347, 0}), // rock
 		Sprite({24,13}, {338, 9}), // bush
 		Sprite({35,48}, {328, 25}), // tree
-		Sprite({7,3}, {355, 0}) // mini rock
+		Sprite({7,3}, {355, 0}), // mini rock
+		Sprite({16, 16}, {372, 0}, true) // tile
 	};
 
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_1))
 	{
-		int randomSpriteIndex = rand() % 5;
+		int randomSpriteIndex = rand() % debugSprites.size();
 		Sprite spriteToAdd = debugSprites[randomSpriteIndex];
 		s_spritePreviewerButtons[BACKGROUND].first._spritesToPreview.emplace_back(spriteToAdd);
 	}
 
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_2))
 	{
-		int randomSpriteIndex = rand() % 5;
+		int randomSpriteIndex = rand() % debugSprites.size();
 		Sprite spriteToAdd = debugSprites[randomSpriteIndex];
 		s_spritePreviewerButtons[MIDDLEGROUND].first._spritesToPreview.emplace_back(spriteToAdd);
 	}
 
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_3))
 	{
-		int randomSpriteIndex = rand() % 5;
+		int randomSpriteIndex = rand() % debugSprites.size();
 		Sprite spriteToAdd = debugSprites[randomSpriteIndex];
 		s_spritePreviewerButtons[FOREGROUND].first._spritesToPreview.emplace_back(spriteToAdd);
 	}
@@ -185,17 +186,37 @@ void MainScreen::handleSpriteInHand()
 	MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::DRAGGING);
 	s_tilePlayground.getSpriteInHand().position = s_mousePositionThisFrame;
 
-	if (wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT))
+	// TODO: Improve
+	if (wasMouseButtonPressedThisFrame(SDL_BUTTON_RIGHT))
 	{
-		std::optional<TilePlayground::PlaceableSprite> spriteToReplace = shouldReplaceSpriteInHand();
-		if (spriteToReplace.has_value())
+		s_tilePlayground.clearSpriteInHand();
+		s_tilePlayground.undoLastPlacedSprite();
+		return;
+	}
+
+	if(!wasMouseButtonPressedThisFrame(SDL_BUTTON_LEFT))
+	{
+		return;
+	}
+
+	std::optional<TilePlayground::PlaceableSprite> spriteToReplace = shouldReplaceSpriteInHand();
+	if (spriteToReplace.has_value())
+	{
+		s_tilePlayground.replaceSpriteInHand(spriteToReplace.value());
+	}
+	else if (shouldReleaseSpriteInHand())
+	{
+		if (s_tilePlayground.getSpriteInHand().isTile)
 		{
-			s_tilePlayground.replaceSpriteInHand(spriteToReplace.value());
-		}
-		else if (shouldReleaseSpriteInHand())
-		{
+			// To paint tiles, as soon as we place one sprite, we create another
+			TilePlayground::PlaceableSprite& placeableSpriteInHand = s_tilePlayground.getPlaceableSpriteInHand();
 			s_tilePlayground.clearSpriteInHand();
+			s_tilePlayground.addSpriteToRenderAndPutSpriteInHand(placeableSpriteInHand);
+		}
+		else 
+		{
 			MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::NORMAL);
+			s_tilePlayground.clearSpriteInHand();
 		}
 	}
 }

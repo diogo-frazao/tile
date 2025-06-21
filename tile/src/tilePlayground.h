@@ -108,6 +108,12 @@ public:
 		return _placedSprites[_spriteInHandIndex].sprite;
 	}
 
+	PlaceableSprite& getPlaceableSpriteInHand()
+	{
+		D_ASSERT((_spriteInHandIndex > k_invalidIndex), "Can't access invalid sprite in hand");
+		return _placedSprites[_spriteInHandIndex];
+	}
+
 	bool hasSpriteInHand()
 	{
 		return isIndexValid(_spriteInHandIndex);

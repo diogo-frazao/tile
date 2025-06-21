@@ -17,7 +17,7 @@ enum SpriteType
 	PREVIEWER_BG,
 	UNDO_BUTTON,
 	UNDO_BUTTON_HOVERED,
-	SPRITES_MAX,
+	SPRITES_MAX
 };
 
 struct Sprite
@@ -25,6 +25,7 @@ struct Sprite
 	Vec2 position;
 	IVec2 size;
 	IVec2 offset;
+	bool isTile;
 
 	bool isValid()
 	{
@@ -36,10 +37,11 @@ struct Sprite
 		position = Vec2();
 		size = IVec2();
 		offset = IVec2();
+		isTile = false;
 	}
 
-	Sprite() : position(0.f, 0.f), size(0, 0), offset(0, 0) {};
-	Sprite(const IVec2& size, const IVec2& offset) : size(size), offset(offset) {};
+	Sprite() : position(0.f, 0.f), size(0, 0), offset(0, 0), isTile(false) {};
+	Sprite(const IVec2& size, const IVec2& offset, bool isTile = false) : size(size), offset(offset), isTile(isTile) {};
 };
 
 namespace textures
