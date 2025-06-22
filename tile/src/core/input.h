@@ -15,6 +15,8 @@ inline const int k_deleteSpriteOnSpritePreviewerClickMouseButton = SDL_BUTTON_RI
 inline const SDL_Scancode k_undoKey = SDL_SCANCODE_Z;
 inline const SDL_Scancode k_redoKey = SDL_SCANCODE_Y;
 
+inline const SDL_Scancode k_snapKey = SDL_SCANCODE_LSHIFT;
+
 
 struct KeyState
 {

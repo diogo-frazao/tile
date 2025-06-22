@@ -175,6 +175,12 @@ void MainScreen::handleUndoAndRedoPlacedSprites()
 	}
 }
 
+void updateSpriteInHandPositionToFollowGrid(Sprite& spriteInHand)
+{
+	spriteInHand.position.x = (s_mousePositionThisFrame.x / spriteInHand.size.x) * spriteInHand.size.x;
+	spriteInHand.position.y = (s_mousePositionThisFrame.y / spriteInHand.size.y) * spriteInHand.size.y;
+}
+
 void MainScreen::handleSpriteInHand()
 {
 	if (!s_tilePlayground.hasSpriteInHand())
@@ -184,13 +190,20 @@ void MainScreen::handleSpriteInHand()
 	}
 
 	MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::DRAGGING);
-	s_tilePlayground.getSpriteInHand().position = s_mousePositionThisFrame;
 
-	// TODO: Improve
-	if (wasMouseButtonPressedThisFrame(SDL_BUTTON_RIGHT))
+	Sprite& spriteInHand = s_tilePlayground.getSpriteInHand();
+	if (isKeyDown(k_snapKey) || spriteInHand.isTile)
 	{
-		s_tilePlayground.clearSpriteInHand();
-		s_tilePlayground.undoLastPlacedSprite();
+		updateSpriteInHandPositionToFollowGrid(spriteInHand);
+	}
+	else
+	{
+		spriteInHand.position = s_mousePositionThisFrame;
+	}
+
+	if (wasMouseButtonPressedThisFrame(SDL_BUTTON_RIGHT) || wasKeyPressedThisFrame(k_returnKey))
+	{
+		s_tilePlayground.deleteSpriteInHand();
 		return;
 	}
 
@@ -208,16 +221,19 @@ void MainScreen::handleSpriteInHand()
 	{
 		if (s_tilePlayground.getSpriteInHand().isTile)
 		{
-			// To paint tiles, as soon as we place one sprite, we create another
+			// To paint tiles, as soon as we place one sprite, we create another.
 			TilePlayground::PlaceableSprite& placeableSpriteInHand = s_tilePlayground.getPlaceableSpriteInHand();
-			s_tilePlayground.clearSpriteInHand();
+			s_tilePlayground.releaseSpriteInHand();
 			s_tilePlayground.addSpriteToRenderAndPutSpriteInHand(placeableSpriteInHand);
 		}
 		else 
 		{
-			MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::NORMAL);
-			s_tilePlayground.clearSpriteInHand();
+			s_tilePlayground.releaseSpriteInHand();
 		}
+
+		// Even for tiles change the mouse sprite to normal to give a small feedback that the tile was placed.
+		// On the next frame it will change automatically to grabbing since we have a sprite in hand.
+		MouseScreen::instance().setMouseState(MouseScreen::MouseSpriteState::NORMAL);
 	}
 }
 

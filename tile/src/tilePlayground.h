@@ -124,6 +124,20 @@ public:
 		_spriteInHandIndex = k_invalidIndex;
 	}
 
+	void releaseSpriteInHand()
+	{
+		D_ASSERT((_spriteInHandIndex > k_invalidIndex), "Trying to release invalid sprite in hand");
+		_undoRedoSprites.pushSpriteIndexToHistory(_spriteInHandIndex);
+		clearSpriteInHand();
+	}
+
+	void deleteSpriteInHand()
+	{
+		D_ASSERT((_spriteInHandIndex > k_invalidIndex), "Trying to delete invalid sprite in hand");
+		_placedSprites.erase(_placedSprites.begin() + _spriteInHandIndex);
+		clearSpriteInHand();
+	}
+
 	void replaceSpriteInHand(const PlaceableSprite& sprite)
 	{
 		D_ASSERT((_spriteInHandIndex > -1), "Can't access invalid sprite in hand");
@@ -143,7 +157,7 @@ public:
 		
 	}
 
-	void addSpriteToRender(PlaceableSprite&& placeableSprite)
+	void addSpriteToRenderAndReleaseImmediately(PlaceableSprite&& placeableSprite)
 	{
 		if (_placedSprites.size() == 0)
 		{
@@ -188,7 +202,6 @@ public:
 		{
 			_placedSprites.emplace_back(placeableSprite);
 			_spriteInHandIndex = 0;
-			_undoRedoSprites.pushSpriteIndexToHistory(0);
 			return;
 		}
 
@@ -204,7 +217,6 @@ public:
 			{
 				indexToPlaceSprite = (indexToPlaceSprite == -1) ? 0 : indexToPlaceSprite;
 				_placedSprites.insert(_placedSprites.begin() + indexToPlaceSprite, placeableSprite);
-				_undoRedoSprites.pushSpriteIndexToHistory(indexToPlaceSprite);
 				_spriteInHandIndex = indexToPlaceSprite;
 				return;
 			}
@@ -214,7 +226,6 @@ public:
 		{
 			_placedSprites.emplace_back(placeableSprite);
 			_spriteInHandIndex = _placedSprites.size() - 1;
-			_undoRedoSprites.pushSpriteIndexToHistory(_placedSprites.size() - 1);
 			return;
 		}
 	}
@@ -241,7 +252,7 @@ public:
 			return;
 		}
 
-		addSpriteToRender(std::move(_undoRedoSprites._removedSprites[_undoRedoSprites._lastRemovedSpriteIndex]));
+		addSpriteToRenderAndReleaseImmediately(std::move(_undoRedoSprites._removedSprites[_undoRedoSprites._lastRemovedSpriteIndex]));
 		_undoRedoSprites.deleteLastRemovedSpriteIndex();
 	}
 
