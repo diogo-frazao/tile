@@ -25,6 +25,7 @@ struct Sprite
 	Vec2 position;
 	IVec2 size;
 	IVec2 offset;
+	
 	bool isTile;
 
 	bool isValid()

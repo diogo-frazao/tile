@@ -269,6 +269,29 @@ bool MainScreen::shouldReleaseSpriteInHand()
 		}
 	}
 
+	// Only allow releasing a tile if a tile doesn't exist on the same layer at the same position
+	TilePlayground::PlaceableSprite& placeableSriteInHand = s_tilePlayground.getPlaceableSpriteInHand();
+	if (s_tilePlayground.getSpriteInHand().isTile)
+	{
+		for (int32_t i = 0; i < s_tilePlayground._placedSprites.size(); ++i)
+		{
+			TilePlayground::PlaceableSprite& placeableSprite = s_tilePlayground._placedSprites[i];
+
+			bool isFromDifferentLayer = placeableSprite.layer != placeableSriteInHand.layer;
+			bool isSpriteInHand = (i == s_tilePlayground._spriteInHandIndex);
+
+			if (!placeableSprite.sprite.isTile || isFromDifferentLayer || isSpriteInHand)
+			{
+				continue;
+			}
+
+			if (placeableSprite.sprite.position == placeableSriteInHand.sprite.position)
+			{
+				return false;
+			}
+		}
+	}
+
 	return true;
 }
 

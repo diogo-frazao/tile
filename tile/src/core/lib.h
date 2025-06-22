@@ -32,6 +32,11 @@ struct Vec2
 	Vec2() = default;
 	Vec2(float x, float y) : x(x), y(y) {};
 	Vec2(const IVec2& vec) : x(static_cast<float>(vec.x)), y(static_cast<float>(vec.y)) {};
+
+	bool operator==(const Vec2& other) const
+	{
+		return this->x == other.x && this->y == other.y;
+	}
 };
 
 struct RectCollider
