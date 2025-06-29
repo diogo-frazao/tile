@@ -67,7 +67,7 @@ void MainScreen::handleAddSpritesToLayersDebug()
 		Sprite({24,13}, {338, 9}), // bush
 		Sprite({35,48}, {328, 25}), // tree
 		Sprite({7,3}, {355, 0}), // mini rock
-		Sprite({16, 16}, {372, 0}, true) // tile
+		Sprite({16, 16}, {384, 0}, true, {384, 0}) // tile
 	};
 
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_1))
@@ -319,11 +319,6 @@ void MainScreen::render()
 
 	_addSpriteButton.render(_uiTexture);
 
-	if (s_tilePlayground.hasSpriteInHand())
-	{
-		renderSprite(s_tilePlayground.getSpriteInHand());
-	}
-
 	for (SpritePreviewerButtonPair& pair : s_spritePreviewerButtons)
 	{
 		pair.first.render();
@@ -332,7 +327,35 @@ void MainScreen::render()
 
 	for (TilePlayground::PlaceableSprite& placeableSprite : s_tilePlayground._placedSprites)
 	{
-		renderSprite(placeableSprite.sprite);
+		Sprite& sprite = placeableSprite.sprite;
+
+		if (sprite.isTile)
+		{
+			//								  TOP    LEFT   RIGHT  BOTTOM
+			static int8_t neighborOffsets[8] = { 0,-1,  -1,0,  1,0,   0,1 };
+			int8_t neighborMask = 0;
+
+			for (uint8_t j = 0; j < 4; ++j)
+			{
+				float neighborX = sprite.position.x + neighborOffsets[j * 2] * sprite.size.x;
+				float neighborY = sprite.position.y + neighborOffsets[j * 2 + 1] * sprite.size.y;
+				for (TilePlayground::PlaceableSprite& potentialTile : s_tilePlayground._placedSprites)
+				{
+					if (potentialTile.sprite.isTile && potentialTile.layer == placeableSprite.layer 
+						&& (potentialTile.sprite.position == Vec2(neighborX, neighborY)))
+					{
+						neighborMask |= 1 << j;
+					}
+				}
+			}
+
+			sprite.setTileOffsetFromMask(neighborMask);
+			renderSprite(sprite);
+		}
+		else
+		{
+			renderSprite(sprite);
+		}
 	}
 
 	_undoButton.render();

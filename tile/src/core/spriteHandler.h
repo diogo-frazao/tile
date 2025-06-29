@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include "lib.h"
 #include "input.h"
+#include "log.h"
 
 struct SDL_Texture;
 struct SDL_Rect;
@@ -27,6 +28,7 @@ struct Sprite
 	IVec2 offset;
 	
 	bool isTile;
+	IVec2 startingTileOffset;
 
 	bool isValid()
 	{
@@ -41,8 +43,20 @@ struct Sprite
 		isTile = false;
 	}
 
+	void setTileOffsetFromMask(uint8_t neighborMask)
+	{
+		D_ASSERT(isTile, "Trying to assign a tile offset for a sprite that's not a tile");
+
+		uint8_t row = neighborMask / 4;
+		uint8_t col = neighborMask % 4;
+
+		offset.x = startingTileOffset.x + col * size.x;
+		offset.y = startingTileOffset.y + row * size.y;
+	} 
+
 	Sprite() : position(0.f, 0.f), size(0, 0), offset(0, 0), isTile(false) {};
-	Sprite(const IVec2& size, const IVec2& offset, bool isTile = false) : size(size), offset(offset), isTile(isTile) {};
+	Sprite(const IVec2& size, const IVec2& offset, bool isTile = false, const IVec2& startingTileOffset = IVec2()) : 
+	size(size), offset(offset), isTile(isTile), startingTileOffset(startingTileOffset) {};
 };
 
 namespace textures
