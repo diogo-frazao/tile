@@ -52,7 +52,18 @@ struct Sprite
 
 		offset.x = startingTileOffset.x + col * size.x;
 		offset.y = startingTileOffset.y + row * size.y;
-	} 
+	}
+
+	void handleTileCornerFromEmptyNeighborIndex(uint8_t emptyNeighborIndex)
+	{
+		D_ASSERT(isTile, "Trying to assign a tile offset for a sprite that's not a tile");
+
+		uint8_t row = 4;
+		uint8_t col = (emptyNeighborIndex - 4);
+
+		offset.x = startingTileOffset.x + col * size.x;
+		offset.y = startingTileOffset.y + row * size.y;
+	}
 
 	Sprite() : position(0.f, 0.f), size(0, 0), offset(0, 0), isTile(false) {};
 	Sprite(const IVec2& size, const IVec2& offset, bool isTile = false, const IVec2& startingTileOffset = IVec2()) : 
