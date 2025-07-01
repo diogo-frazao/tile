@@ -34,6 +34,9 @@ private:
 
 	std::optional<TilePlayground::PlaceableSprite> shouldReplaceSpriteInHand();
 	bool shouldReleaseSpriteInHand();
+	
+	void renderTile(TilePlayground::PlaceableSprite& tile);
+	bool doesNeighborExistAtIndex(int8_t index, TilePlayground::PlaceableSprite& tileToCheck);
 
 	SDL_Texture* _uiTexture;
 	Button _addSpriteButton;

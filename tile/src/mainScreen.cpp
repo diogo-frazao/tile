@@ -8,6 +8,10 @@
 #include "core/ui.h"
 #include <cmath>
 #include "core/debugUtils.h"
+#include <array>
+
+//								  	  		       TOP    LEFT   RIGHT  BOTTOM  TOPLEFT	  TOPRIGHT  BOTTOMLEFT  BOTTOM RIGHT
+static std::array<int8_t, 16> neighborOffsets = { 0,-1,  -1,0,  1,0,   0,1,    -1, -1,     1, -1,    -1, 1,      1, 1};
 
 void MainScreen::start()
 {
@@ -328,69 +332,85 @@ void MainScreen::render()
 	for (TilePlayground::PlaceableSprite& placeableSprite : s_tilePlayground._placedSprites)
 	{
 		Sprite& sprite = placeableSprite.sprite;
-
-		if (sprite.isTile)
-		{
-			//								  	  TOP    LEFT   RIGHT  BOTTOM  TOPLEFT	 TOPRIGHT  BOTTOMLEFT BOTTOM RIGHT
-			static int8_t neighborOffsets[16] = { 0,-1,  -1,0,  1,0,   0,1 ,   -1, -1,     1, -1,    -1, 1,      1, 1};
-
-			int8_t neighborMask = 0;
-			int8_t neighborsCount = 0;
-			int8_t emptyNeighborIndex = -1;
-
-			// For each neighbor
-			for (uint8_t j = 0; j < 8; ++j)
-			{
-				float neighborX = sprite.position.x + neighborOffsets[j * 2] * sprite.size.x;
-				float neighborY = sprite.position.y + neighborOffsets[j * 2 + 1] * sprite.size.y;
-
-				bool foundNeighbor = false;
-
-				// Check if a tile exists on neighbor position
-				for (TilePlayground::PlaceableSprite& potentialTile : s_tilePlayground._placedSprites)
-				{
-					if (potentialTile.sprite.isTile && potentialTile.layer == placeableSprite.layer 
-						&& (potentialTile.sprite.position == Vec2(neighborX, neighborY)))
-					{
-						if (j < 4)
-						{
-							neighborMask |= 1 << j;
-						}
-
-						neighborsCount++;
-						foundNeighbor = true;
-					}
-				}
-
-				if (!foundNeighbor)
-				{
-					emptyNeighborIndex = j;
-				}
-			}
-
-			if (neighborsCount == 7 && emptyNeighborIndex >= 4)
-			{
-				sprite.handleTileCornerFromEmptyNeighborIndex(emptyNeighborIndex);
-				D_LOG(MINI, "Changed sprite x%i y%i", sprite.offset.x, sprite.offset.y);
-			}
-			else
-			{
-				D_LOG(MINI, "%i", neighborMask);
-				sprite.setTileOffsetFromMask(neighborMask);
-			}
-			
-			renderSprite(sprite);
-		}
-		else
+		if (!sprite.isTile)
 		{
 			renderSprite(sprite);
+			continue;
 		}
+
+		renderTile(placeableSprite);
 	}
 
 	debugDrawGrid(16);
 
 	_undoButton.render();
 	_redoButton.render(true);
+}
+
+void MainScreen::renderTile(TilePlayground::PlaceableSprite& tile)
+{
+	int8_t neighborMask = 0;
+	int8_t neighborsCount = 0;
+	int8_t emptyNeighborIndex = -1;
+
+	// For each neighbor
+	for (uint8_t j = 0; j < 8; ++j)
+	{
+		bool foundNeighbor = doesNeighborExistAtIndex(j, tile);
+
+		if (foundNeighbor)
+		{
+			bool isTopDownLeftRightIndex = j < 4;
+			if (isTopDownLeftRightIndex)
+			{
+				neighborMask |= 1 << j;
+			}
+
+			neighborsCount++;
+			foundNeighbor = true;
+		}
+		else
+		{
+			emptyNeighborIndex = j;
+		}
+	}
+
+	bool isDiagonalNeighborEmpty = emptyNeighborIndex >= 4;
+	bool isCornerTilePiece = (neighborsCount == 7) && isDiagonalNeighborEmpty;
+	if (isCornerTilePiece)
+	{
+		tile.sprite.handleTileCornerFromEmptyNeighborIndex(emptyNeighborIndex);
+	}
+	else
+	{
+		tile.sprite.setTileOffsetFromMask(neighborMask);
+	}
+	
+	renderSprite(tile.sprite);
+}
+
+bool MainScreen::doesNeighborExistAtIndex(int8_t index, TilePlayground::PlaceableSprite& placeableSprite)
+{
+	Sprite& sprite = placeableSprite.sprite;
+
+	for (TilePlayground::PlaceableSprite& potentialTile : s_tilePlayground._placedSprites)
+	{
+		bool isTileFromSameLayer = potentialTile.sprite.isTile && potentialTile.layer == placeableSprite.layer;
+		if (!isTileFromSameLayer)
+		{
+			continue;
+		}
+
+		float neighborX = sprite.position.x + neighborOffsets[index * 2] * sprite.size.x;
+		float neighborY = sprite.position.y + neighborOffsets[index * 2 + 1] * sprite.size.y;
+
+		if (potentialTile.sprite.position == Vec2(neighborX, neighborY))
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void MainScreen::destroy()
