@@ -33,7 +33,7 @@ namespace textures
 				sprite.size = { 7, 10 };
 				break;
 			case CURSOR_DRAGGING:
-				sprite.offset = { 7, 0 };
+				sprite.offset = { 0, 10 };
 				sprite.size = { 11, 9 };
 				break;
 			case MOCKUP:

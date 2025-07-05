@@ -65,34 +65,54 @@ void toggleAddSpritesScreen()
 void MainScreen::handleAddSpritesToLayersDebug()
 {
 #if DEBUG_ENABLED == 1
-	static std::array<Sprite, 6> debugSprites = {
-		Sprite({10,16}, {328, 9}), // sign
-		Sprite({8,5}, {347, 0}), // rock
-		Sprite({24,13}, {338, 9}), // bush
-		Sprite({35,48}, {328, 25}), // tree
-		Sprite({7,3}, {355, 0}), // mini rock
+	static std::array<Sprite, 14> debugSprites = {
+		Sprite({256,128}, {16, 0}), // bg
+		Sprite({80,15}, {0, 128}), // water
+		Sprite({49,12}, {0, 144}), // clouds
+		Sprite({256,83}, {0, 160}), // trees
+		Sprite({34,43}, {272, 0}), // tree 
+		Sprite({16,12}, {272, 48}), // frog
+		Sprite({18,16}, {288, 48}), // fish
+		Sprite({16,16}, {272, 64}), // sign
+		Sprite({9,6}, {288, 64}), // leaf
+		Sprite({6,4}, {288, 70}), // rock
+		Sprite({16,16}, {304, 64}), // random1
+		Sprite({16,16}, {320, 64}), // random2
+		Sprite({16,16}, {336, 64}), // random3  
 		Sprite({16, 16}, {384, 0}, true, {384, 0}) // tile
 	};
 
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_1))
 	{
-		int randomSpriteIndex = rand() % debugSprites.size();
-		Sprite spriteToAdd = debugSprites[randomSpriteIndex];
-		s_spritePreviewerButtons[BACKGROUND].first._spritesToPreview.emplace_back(spriteToAdd);
+		for (Sprite& sprite : debugSprites)
+		{
+			s_spritePreviewerButtons[BACKGROUND].first._spritesToPreview.emplace_back(sprite);
+		}
+		//int randomSpriteIndex = rand() % debugSprites.size();
+		//Sprite spriteToAdd = debugSprites[randomSpriteIndex];
+		//s_spritePreviewerButtons[BACKGROUND].first._spritesToPreview.emplace_back(spriteToAdd);
 	}
 
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_2))
 	{
-		int randomSpriteIndex = rand() % debugSprites.size();
+		for (Sprite& sprite : debugSprites)
+		{
+			s_spritePreviewerButtons[MIDDLEGROUND].first._spritesToPreview.emplace_back(sprite);
+		}
+		/*int randomSpriteIndex = rand() % debugSprites.size();
 		Sprite spriteToAdd = debugSprites[randomSpriteIndex];
-		s_spritePreviewerButtons[MIDDLEGROUND].first._spritesToPreview.emplace_back(spriteToAdd);
+		s_spritePreviewerButtons[MIDDLEGROUND].first._spritesToPreview.emplace_back(spriteToAdd);*/
 	}
 
 	if (wasKeyPressedThisFrame(SDL_SCANCODE_3))
 	{
-		int randomSpriteIndex = rand() % debugSprites.size();
+		for (Sprite& sprite : debugSprites)
+		{
+			s_spritePreviewerButtons[FOREGROUND].first._spritesToPreview.emplace_back(sprite);
+		}
+		/*int randomSpriteIndex = rand() % debugSprites.size();
 		Sprite spriteToAdd = debugSprites[randomSpriteIndex];
-		s_spritePreviewerButtons[FOREGROUND].first._spritesToPreview.emplace_back(spriteToAdd);
+		s_spritePreviewerButtons[FOREGROUND].first._spritesToPreview.emplace_back(spriteToAdd);*/
 	}
 #endif
 }
@@ -316,19 +336,6 @@ void MainScreen::toggleSpritePreviewerAndDisableOthers(SpritePreviewer& spritePr
 
 void MainScreen::render()
 {
-	// TODO remove later
-	static Sprite mockup = textures::getSprite(MOCKUP);
-	mockup.position = { 0,0 };
-	renderSprite(mockup);
-
-	_addSpriteButton.render(_uiTexture);
-
-	for (SpritePreviewerButtonPair& pair : s_spritePreviewerButtons)
-	{
-		pair.first.render();
-		pair.second.render(_uiTexture);
-	}
-
 	for (TilePlayground::PlaceableSprite& placeableSprite : s_tilePlayground._placedSprites)
 	{
 		Sprite& sprite = placeableSprite.sprite;
@@ -342,6 +349,14 @@ void MainScreen::render()
 	}
 
 	debugDrawGrid(16);
+
+	_addSpriteButton.render(_uiTexture);
+
+	for (SpritePreviewerButtonPair& pair : s_spritePreviewerButtons)
+	{
+		pair.first.render();
+		pair.second.render(_uiTexture);
+	}
 
 	_undoButton.render();
 	_redoButton.render(true);
