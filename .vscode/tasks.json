@@ -1,48 +1,15 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "Build C++ Project",
-            "type": "shell",
-            "command": "g++",
-            "args": [
-		        "-g",
-                "-I", "bin/dependencies/SDL2/include",
-                "-I", "bin/dependencies/imgui",
-                "-L", "bin/dependencies/SDL2_gcc/lib",
-
-                "tile/src/addSpritesScreen.cpp",
-                "tile/src/main.cpp",
-                "tile/src/mainScreen.cpp",
-                "tile/src/mouseScreen.cpp",
-                "tile/src/settingsScreen.cpp",
-                "tile/src/spritePreviewer.cpp",
-                "tile/src/core/app.cpp",
-                "tile/src/core/input.cpp",
-                "tile/src/core/spriteHandler.cpp",
-                "tile/src/core/ui.cpp",
-                "tile/src/core/widgetLink.cpp",
-
-                "bin/dependencies/imgui/imgui.cpp",
-                "bin/dependencies/imgui/imgui_demo.cpp",
-                "bin/dependencies/imgui/imgui_draw.cpp",
-                "bin/dependencies/imgui/imgui_impl_sdl2.cpp",
-                "bin/dependencies/imgui/imgui_impl_sdlrenderer2.cpp",
-                "bin/dependencies/imgui/imgui_tables.cpp",
-                "bin/dependencies/imgui/imgui_widgets.cpp",
-
-                "-o", "tile.exe",
-                "-lmingw32",
-                "-lSDL2main",
-                "-lSDL2",
-                "-lSDL2_ttf",
-                "-lSDL2_image"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "problemMatcher": ["$gcc"]
-        }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build tile",
+      "type": "shell",
+      "command": "make",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"]
+    }
+  ]
 }

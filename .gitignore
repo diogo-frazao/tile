@@ -4,3 +4,5 @@ bin/intermediates
 raw_files/
 tile.exe
 tile/src/todo.txt
+build/
+NUL
