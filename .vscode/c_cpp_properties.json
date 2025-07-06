@@ -4,6 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/bin/dependencies/SDL2/include",
+                "${workspaceFolder}/bin/dependencies/imgui"
             ],
             "defines": [],
             "compilerPath": "C:/msys64/ucrt64/bin/g++.exe",

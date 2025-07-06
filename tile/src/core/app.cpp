@@ -5,6 +5,9 @@
 #include "input.h"
 #include <SDL_ttf.h>
 #include <cmath>
+#include <imgui.h>
+#include <imgui_impl_sdl2.h>
+#include <imgui_impl_sdlrenderer2.h>
 
 void App::runApp()
 {
@@ -51,6 +54,11 @@ void App::initWindow()
 	// Only the mouse input needs to be adjusted taking into account the current window size.
 	// Everything else adapts to the window size as if the size was still 320x180
 	SDL_SetWindowSize(s_window, 960, 540);
+
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui_ImplSDL2_InitForSDLRenderer(s_window, s_renderer);
+	ImGui_ImplSDLRenderer2_Init(s_renderer);
 }
 
 void App::start()
@@ -65,6 +73,7 @@ void App::update()
 {
 	SDL_Event ev;
 	uint64_t lastFrameTimeStamp = SDL_GetTicks64();
+	bool showDemoWindow = true;
 	while (true)
 	{
 		static constexpr uint8_t s_targetFrameRate = 60;
@@ -77,6 +86,7 @@ void App::update()
 			//D_LOG(MINI, "FPS: %i", 1000 / millisecondsSinceLastFrame);
 			while (SDL_PollEvent(&ev))
 			{
+				ImGui_ImplSDL2_ProcessEvent(&ev);
 				if (ev.type == SDL_QUIT)
 				{
 					return;
@@ -85,6 +95,12 @@ void App::update()
 				handleKeyboardInput(ev);
 				handleMouseInput(ev);
 			}
+
+			ImGui_ImplSDLRenderer2_NewFrame();
+    		ImGui_ImplSDL2_NewFrame();
+    		ImGui::NewFrame();
+
+			ImGui::ShowDemoWindow(&showDemoWindow);
 
 			_settingsScreen.update();
 			_addSpritesScreen.update();
@@ -99,12 +115,14 @@ void App::update()
 
 void App::render()
 {
+	ImGui::Render();
 	SDL_SetRenderDrawColor(s_renderer, 32, 33, 63, 1);
 	SDL_RenderClear(s_renderer);
 
 	_mainScreen.render();
 	// Update panel between main screen and ui screens
 	_panelScreen.render();
+	ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), s_renderer);
 	_settingsScreen.render();
 	_addSpritesScreen.render();
 	MouseScreen::instance().render();
@@ -117,6 +135,10 @@ void App::killWindow()
 	_mainScreen.destroy();
 	_settingsScreen.destroy();
 	_addSpritesScreen.destroy();
+
+	ImGui_ImplSDLRenderer2_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
 
 	SDL_DestroyRenderer(s_renderer);
 	SDL_DestroyWindow(s_window);
