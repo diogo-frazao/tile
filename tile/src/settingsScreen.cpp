@@ -7,6 +7,7 @@
 #include <vector>
 #include <array>
 #include "userDefaults.h"
+#include <imgui.h>
 
 void SettingsScreen::start()
 {
@@ -78,6 +79,16 @@ void SettingsScreen::onSettingsDiscarded()
 	}
 }
 
+static void setImGuiDisplaySizeToWindowSize()
+{
+	int windowWidth = 0;
+	int windowHeight = 0;
+	SDL_GetWindowSize(s_window, &windowWidth, &windowHeight);
+
+	ImGuiIO& io = ImGui::GetIO();
+	io.DisplaySize = ImVec2(static_cast<float>(windowWidth), static_cast<float>(windowHeight));
+}
+
 void SettingsScreen::onSettingsSaved(const std::vector<int16_t>& results)
 {
 	D_ASSERT((_widgetLink._rightWidgets.size() == results.size()), "Invalid results");
@@ -114,6 +125,8 @@ void SettingsScreen::onSettingsSaved(const std::vector<int16_t>& results)
 	{
 		SDL_SetWindowFullscreen(s_window, 0);
 	}
+
+	setImGuiDisplaySizeToWindowSize();
 
 	user_defaults::applySettings(user_defaults::Settings(resolutionIndex, enableFullscreen));
 	s_active = false;

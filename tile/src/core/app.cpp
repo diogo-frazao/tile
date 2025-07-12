@@ -18,6 +18,61 @@ void App::runApp()
 	killWindow();
 }
 
+static void setImGuiDisplaySizeToWindowSize()
+{
+	int windowWidth = 0;
+	int windowHeight = 0;
+	SDL_GetWindowSize(s_window, &windowWidth, &windowHeight);
+
+	ImGuiIO& io = ImGui::GetIO();
+	io.DisplaySize = ImVec2(static_cast<float>(windowWidth), static_cast<float>(windowHeight));
+}
+
+void handleImGuiInput(SDL_Event& ev)
+{
+	bool wasMouseClick = (ev.type == SDL_MOUSEBUTTONDOWN) || (ev.type == SDL_MOUSEBUTTONUP);
+	bool performedMouseAction = wasMouseClick || (ev.type == SDL_MOUSEMOTION);
+
+	if (!performedMouseAction)
+	{
+		ImGui_ImplSDL2_ProcessEvent(&ev);
+		return;
+	}
+
+	IVec2 mousePosAtScreenSize;
+	SDL_GetMouseState(&mousePosAtScreenSize.x, &mousePosAtScreenSize.y);	
+	
+	IVec2 mousePosScaledDown;
+	mousePosScaledDown.x = wasMouseClick ? ev.button.x : ev.motion.x;
+	mousePosScaledDown.y = wasMouseClick ? ev.button.y : ev.motion.y;
+
+	// Override mouse input to use screen size for imgui
+	if (wasMouseClick)
+	{
+		ev.button.x = mousePosAtScreenSize.x;
+		ev.button.y = mousePosAtScreenSize.y;
+	}
+	else
+	{
+		ev.motion.x = mousePosAtScreenSize.x;
+		ev.motion.y = mousePosAtScreenSize.y;
+	}
+	
+	ImGui_ImplSDL2_ProcessEvent(&ev);
+	
+	// Restore input scaled by logical size
+	if (wasMouseClick)
+	{
+		ev.button.x = mousePosScaledDown.x;
+		ev.button.y = mousePosScaledDown.y;
+	}
+	else
+	{
+		ev.motion.x = mousePosScaledDown.x;
+		ev.motion.y = mousePosScaledDown.y;
+	}
+}
+
 void App::initWindow()
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -59,6 +114,8 @@ void App::initWindow()
 	ImGui::CreateContext();
 	ImGui_ImplSDL2_InitForSDLRenderer(s_window, s_renderer);
 	ImGui_ImplSDLRenderer2_Init(s_renderer);
+	
+	setImGuiDisplaySizeToWindowSize();
 }
 
 void App::start()
@@ -85,13 +142,13 @@ void App::update()
 			lastFrameTimeStamp = SDL_GetTicks64();
 			//D_LOG(MINI, "FPS: %i", 1000 / millisecondsSinceLastFrame);
 			while (SDL_PollEvent(&ev))
-			{
-				ImGui_ImplSDL2_ProcessEvent(&ev);
+			{				
 				if (ev.type == SDL_QUIT)
 				{
 					return;
 				}
 
+				handleImGuiInput(ev);
 				handleKeyboardInput(ev);
 				handleMouseInput(ev);
 			}
@@ -120,9 +177,15 @@ void App::render()
 	SDL_RenderClear(s_renderer);
 
 	_mainScreen.render();
-	// Update panel between main screen and ui screens
 	_panelScreen.render();
+	
+	// Disable logical size for ImGui rendering at native resolution
+	SDL_RenderSetLogicalSize(s_renderer, 0, 0);
 	ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), s_renderer);
+
+	// Restore logical size for game rendering
+	SDL_RenderSetLogicalSize(s_renderer, k_screenWidth, k_screenHeight);
+	
 	_settingsScreen.render();
 	_addSpritesScreen.render();
 	MouseScreen::instance().render();
