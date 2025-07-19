@@ -23,6 +23,9 @@ void MouseScreen::start()
 
 void MouseScreen::update()
 {
+	// Needed to override imgui and hide the mouse every frame
+	SDL_ShowCursor(0);
+
 	_mouseSprite.position.x = lerp(_lastMousePosition.x, s_mousePositionThisFrame.x, 0.6f);
 	_mouseSprite.position.y = lerp(_lastMousePosition.y, s_mousePositionThisFrame.y, 0.6f);
 

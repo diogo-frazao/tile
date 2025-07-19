@@ -10,6 +10,11 @@ void AddSpritesScreen::createSpriteFromResults(const std::vector<int16_t>& resul
 	int16_t startY = results[3];
 	int16_t endX = results[4];
 	int16_t endY = results[5];
+
+	int16_t isTile = results[6];
+	int16_t startingTileX = results[7];
+	int16_t startingTileY = results[8];
+
 	D_ASSERT((endX >= startX) && (endY >= startY), "Trying to add invalid sprite. Size is wrong");
 
 	// Ignore empty sprites results
@@ -18,7 +23,11 @@ void AddSpritesScreen::createSpriteFromResults(const std::vector<int16_t>& resul
 		return;
 	}
 
-	Sprite sprite{{endX - startX, endY - startY}, {startX, startY}};
+	IVec2 spriteSize {endX - startX, endY - startY};
+	IVec2 spriteOffset {startX, startY};
+	IVec2 startingTileOffset {startingTileX, startingTileY};
+	Sprite sprite{spriteSize, spriteOffset, isTile, startingTileOffset};
+
 	MainScreen::s_spritePreviewerButtons[layerToAddSprite].first._spritesToPreview.emplace_back(std::move(sprite));
 
 	D_LOG(MINI, "Added sprite with offset %i,%i size %i,%i for layer %i", 
@@ -47,8 +56,8 @@ void AddSpritesScreen::start()
 	_widgetLink._leftTexts.emplace_back(InteractableText("end x", { 0,0 }, 65, k_white));
 	_widgetLink._leftTexts.emplace_back(InteractableText("end y", { 0,0 }, 65, k_white));
 	_widgetLink._leftTexts.emplace_back(InteractableText("isTile", { 0,0 }, 65, k_white));
-	_widgetLink._leftTexts.emplace_back(InteractableText("tile size x", { 0,0 }, 65, k_white));
-	_widgetLink._leftTexts.emplace_back(InteractableText("tile size y", { 0,0 }, 65, k_white));
+	_widgetLink._leftTexts.emplace_back(InteractableText("starting tile x", { 0,0 }, 65, k_white));
+	_widgetLink._leftTexts.emplace_back(InteractableText("starting size y", { 0,0 }, 65, k_white));
 
 	std::array<const char*, 3> layerOptions = { "< 0 >", "< 1 >", "< 2 >" };
 	std::array<const char*, 3> pivotOptions = { "< top >", "< center >", "< bottom >" };

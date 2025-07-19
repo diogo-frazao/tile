@@ -66,7 +66,7 @@ struct Sprite
 	}
 
 	Sprite() : position(0.f, 0.f), size(0, 0), offset(0, 0), isTile(false) {};
-	Sprite(const IVec2& size, const IVec2& offset, bool isTile = false, const IVec2& startingTileOffset = IVec2()) : 
+	Sprite(const IVec2 size, const IVec2 offset, bool isTile = false, const IVec2 startingTileOffset = IVec2()) : 
 	size(size), offset(offset), isTile(isTile), startingTileOffset(startingTileOffset) {};
 };
 
