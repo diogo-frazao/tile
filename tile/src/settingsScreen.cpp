@@ -95,7 +95,7 @@ void SettingsScreen::onSettingsSaved(const std::vector<int16_t>& results)
 	D_LOG(LOG, "Settings saved");
 
 	int8_t resolutionIndex = results[1];
-	D_ASSERT((resolutionIndex >= 0 && resolutionIndex < user_defaults::_resolutions.size()), "Invlid resolution index");
+	D_ASSERT((resolutionIndex >= 0 && resolutionIndex < static_cast<int8_t>(user_defaults::_resolutions.size())), "Invlid resolution index");
 	switch (resolutionIndex)
 	{
 		case 0:

@@ -11,7 +11,7 @@ void AddSpritesScreen::createSpriteFromResults(const std::vector<int16_t>& resul
 	int16_t endX = results[4];
 	int16_t endY = results[5];
 
-	int16_t isTile = results[6];
+	bool isTile = static_cast<bool>(results[6]);
 	int16_t startingTileX = results[7];
 	int16_t startingTileY = results[8];
 

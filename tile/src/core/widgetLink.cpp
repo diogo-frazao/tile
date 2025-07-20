@@ -99,6 +99,11 @@ void WidgetLink::update()
 				inputWidget->tryEditText();
 				break;
 			}
+			case INVALID:
+			{
+				D_ASSERT(false, "Invalid widget type");
+				break;
+			}
 		}
 	}
 
@@ -177,6 +182,15 @@ void WidgetLink::update()
 				}
 				break;
 			}
+			case INPUT_WIDGET:
+			{
+				break;
+			}
+			case INVALID:
+			{
+				D_ASSERT(false, "Invalid widget type");
+				break;
+			}
 		}
 	}
 }
@@ -249,6 +263,7 @@ std::vector<int16_t> WidgetLink::getResults()
 				results.emplace_back(convertStringToInt(inputWidget->_currentText));
 				break;
 			}
+			case INVALID:
 			default:
 			{
 				D_ASSERT(false, "this type of widget is not supported by the widget link");

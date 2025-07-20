@@ -73,7 +73,7 @@ OptionSelector::OptionSelector(const std::vector<const char*>& options, const Ve
 	const SDL_Color& color, const DrawMode drawMode, bool allowWrap, int8_t selectedIndex)
 {
 	D_ASSERT((options.size() > 0) && (options.size() < 250), "Invalid options array");
-	D_ASSERT((selectedIndex < options.size()), "Invalid default index");
+	D_ASSERT((selectedIndex < static_cast<int8_t>(options.size())), "Invalid default index");
 	Vec2 textBounds;
 	SDL_Texture* textTexture = createText(textBounds, options[selectedIndex], size, color);
 
@@ -95,7 +95,7 @@ OptionSelector::OptionSelector(const std::vector<const char*>& options, const Ve
 
 void OptionSelector::selectOption(int8_t index)
 {
-	bool isIndexValid = index <= _options.size() - 1;
+	bool isIndexValid = index <= static_cast<int8_t>(_options.size()) - 1;
 	D_ASSERT(isIndexValid, "Invalid option index to select");
 	_selectedIndex = index;
 	recreateText(*this, _options[_selectedIndex]);
@@ -119,7 +119,7 @@ void OptionSelector::trySwapOption()
 
 void OptionSelector::onRightPressed()
 {
-	if ((_selectedIndex == (_options.size() - 1)) && _allowWrap)
+	if ((_selectedIndex == static_cast<int8_t>(_options.size() - 1)) && _allowWrap)
 	{
 		_selectedIndex = 0;
 	}

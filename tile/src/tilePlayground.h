@@ -183,7 +183,7 @@ public:
 			}
 		}
 
-		if (indexToPlaceSprite == (_placedSprites.size() - 1))
+		if (indexToPlaceSprite == static_cast<int16_t>((_placedSprites.size() - 1)))
 		{
 			_placedSprites.emplace_back(placeableSprite);
 			_undoRedoSprites.pushSpriteIndexToHistory(_placedSprites.size() - 1);
@@ -222,7 +222,7 @@ public:
 			}
 		}
 
-		if (indexToPlaceSprite == (_placedSprites.size() - 1))
+		if (indexToPlaceSprite == static_cast<int16_t>((_placedSprites.size() - 1)))
 		{
 			_placedSprites.emplace_back(placeableSprite);
 			_spriteInHandIndex = _placedSprites.size() - 1;

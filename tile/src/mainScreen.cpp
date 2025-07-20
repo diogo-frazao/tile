@@ -297,7 +297,8 @@ bool MainScreen::shouldReleaseSpriteInHand()
 	TilePlayground::PlaceableSprite& placeableSriteInHand = s_tilePlayground.getPlaceableSpriteInHand();
 	if (s_tilePlayground.getSpriteInHand().isTile)
 	{
-		for (int32_t i = 0; i < s_tilePlayground._placedSprites.size(); ++i)
+		int32_t placedSpritesSize = static_cast<int32_t>(s_tilePlayground._placedSprites.size());
+		for (int32_t i = 0; i < placedSpritesSize; ++i)
 		{
 			TilePlayground::PlaceableSprite& placeableSprite = s_tilePlayground._placedSprites[i];
 

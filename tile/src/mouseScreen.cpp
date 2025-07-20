@@ -56,6 +56,9 @@ void MouseScreen::setMouseState(MouseSpriteState state)
 		case MouseSpriteState::DRAGGING:
 			_mouseSprite = textures::getSprite(CURSOR_DRAGGING);
 			break;
+		case MouseSpriteState::INVALID:
+			D_ASSERT(false, "Invalid mouse state");
+			break;
 	}
 
 	_mouseSprite.position = previousPos;
