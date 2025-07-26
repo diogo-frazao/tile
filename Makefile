@@ -18,7 +18,8 @@ SRC_TILE = \
   tile/src/core/input.cpp \
   tile/src/core/spriteHandler.cpp \
   tile/src/core/ui.cpp \
-  tile/src/core/widgetLink.cpp
+  tile/src/core/widgetLink.cpp \
+  tile/src/layerInspectorScreen.cpp
 
 SRC_IMGUI = \
   bin/dependencies/imgui/imgui.cpp \

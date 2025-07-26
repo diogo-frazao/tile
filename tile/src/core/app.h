@@ -30,4 +30,5 @@ private:
 	SettingsScreen _settingsScreen;
 	AddSpritesScreen _addSpritesScreen;
 	MainScreen _mainScreen;
+	LayerInspectorScreen _layerInspectorScreen;
 };

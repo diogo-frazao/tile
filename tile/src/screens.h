@@ -44,6 +44,13 @@ private:
 	SpriteButton _redoButton;
 };
 
+class LayerInspectorScreen
+{
+public:
+	void update();
+	inline static bool s_active = false;
+};
+
 class SettingsScreen
 {
 public:

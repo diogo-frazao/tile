@@ -130,7 +130,6 @@ void App::update()
 {
 	SDL_Event ev;
 	uint64_t lastFrameTimeStamp = SDL_GetTicks64();
-	bool showDemoWindow = true;
 	while (true)
 	{
 		static constexpr uint8_t s_targetFrameRate = 60;
@@ -157,12 +156,11 @@ void App::update()
     		ImGui_ImplSDL2_NewFrame();
     		ImGui::NewFrame();
 
-			ImGui::ShowDemoWindow(&showDemoWindow);
-
 			_settingsScreen.update();
 			_addSpritesScreen.update();
 			_mainScreen.update();
 			MouseScreen::instance().update();
+			_layerInspectorScreen.update();
 
 			render();
 			resetKeyboardAndMouseInput();
