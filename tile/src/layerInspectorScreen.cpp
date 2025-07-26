@@ -9,28 +9,34 @@ void LayerInspectorScreen::update()
 
     if (ImGui::BeginTabItem("Background"))
     {
-        ImGui::BeginChild("##SpritesTreeChild", {ImGui::GetContentRegionAvail().x * 0.5f, 0}, true);
+        if (ImGui::BeginChild("##SpritesTreeChild", {ImGui::GetContentRegionAvail().x * 0.5f, 0}, ImGuiChildFlags_Borders, ImGuiWindowFlags_NoMove))
+        {
+            if (ImGui::BeginTable("##SpritesTree", 1))
+            {
+                ImGui::TableNextRow();
+                ImGui::TableNextColumn();
+                ImGui::Checkbox("Debug colliders", &s_debugCollidersEnabled);
+                ImGui::Text("Test");
 
-        ImGui::BeginTable("##SpritesTree", 1);
-            ImGui::TableNextRow();
-            ImGui::TableNextColumn();
-            ImGui::Checkbox("Debug colliders", &s_debugCollidersEnabled);
-            ImGui::Text("Test");
-        ImGui::EndTable();
-
+                ImGui::EndTable();
+            }
+        }
         ImGui::EndChild();
 
         ImGui::SameLine();
 
-        ImGui::BeginChild("##PropertiesChild");
+        if (ImGui::BeginChild("##PropertiesChild"))
+        {
+            if (ImGui::BeginTable("##Properties", 1))
+            {
+                ImGui::TableNextRow();
+                ImGui::TableNextColumn();
+                ImGui::Checkbox("SomeProperty", &s_debugCollidersEnabled);
+                ImGui::Checkbox("SomeOtherProperty", &s_debugCollidersEnabled);
 
-        ImGui::BeginTable("##Properties", 1);
-            ImGui::TableNextRow();
-            ImGui::TableNextColumn();
-            ImGui::Checkbox("SomeProperty", &s_debugCollidersEnabled);
-            ImGui::Checkbox("SomeOtherProperty", &s_debugCollidersEnabled);
-        ImGui::EndTable();
-
+                ImGui::EndTable();
+            }
+        }
         ImGui::EndChild();
 
         ImGui::EndTabItem();
