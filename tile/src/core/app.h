@@ -3,6 +3,7 @@
 #include "../screens.h"
 
 inline bool s_debugCollidersEnabled = false;
+inline bool s_useCustomMouse = false;
 
 // Base game res
 inline constexpr uint16_t k_screenWidth = 320;

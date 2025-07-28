@@ -23,6 +23,12 @@ void MouseScreen::start()
 
 void MouseScreen::update()
 {
+	if (!s_useCustomMouse)
+	{
+		SDL_ShowCursor(1);
+		return;
+	}
+
 	// Needed to override imgui and hide the mouse every frame
 	SDL_ShowCursor(0);
 
@@ -35,6 +41,11 @@ void MouseScreen::update()
 
 void MouseScreen::render()
 {
+	if (!s_useCustomMouse)
+	{
+		return;
+	}
+	
 	debugDrawPoint(s_mousePositionThisFrame);
 	renderSprite(_mouseSprite);
 }
