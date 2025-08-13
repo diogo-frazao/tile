@@ -2,6 +2,31 @@
 
 #include <stdio.h>
 
+// Platform detection
+#ifdef _WIN32
+    #define PLATFORM_WINDOWS 1
+#elif defined(__APPLE__)
+    #define PLATFORM_MACOS 1
+    #include <signal.h>
+#else
+    #define PLATFORM_LINUX 1
+    #include <signal.h>
+#endif
+
+// Platform-specific debug break
+#ifdef PLATFORM_WINDOWS
+    #define DEBUG_BREAK() __debugbreak()
+#else
+    #define DEBUG_BREAK() raise(SIGTRAP)
+#endif
+
+// Platform-specific sprintf
+#ifdef PLATFORM_WINDOWS
+    #define SPRINTF_S(buffer, size, format, ...) sprintf_s(buffer, size, format, __VA_ARGS__)
+#else
+    #define SPRINTF_S(buffer, size, format, ...) snprintf(buffer, size, format, __VA_ARGS__)
+#endif
+
 // Disable for distribution builds
 #define DEBUG_ENABLED 1
 
@@ -79,16 +104,20 @@ void _log(const LogType logType, const char* msg, Args... args)
             textColor = TEXT_COLOR_RED;
             break;
         default:
-            __debugbreak();
+            DEBUG_BREAK();
             return;
     }
 
     // Init color, prefix, message and close color
     char formatBuffer[8192]{};
-    sprintf_s(formatBuffer, sizeof(formatBuffer), "%s %s %s \033[0m", TextColorTable[textColor], prefix, msg);
+    SPRINTF_S(formatBuffer, sizeof(formatBuffer), "%s %s %s \033[0m", TextColorTable[textColor], prefix, msg);
     // Add arguments to the end of the string
     char textBuffer[8912]{};
-    sprintf_s(textBuffer, sizeof(formatBuffer), formatBuffer, args...);
+    if constexpr (sizeof...(args) > 0) {
+        SPRINTF_S(textBuffer, sizeof(textBuffer), formatBuffer, args...);
+    } else {
+        SPRINTF_S(textBuffer, sizeof(textBuffer), "%s", formatBuffer);
+    }
     // Send buffer to console
     puts(textBuffer);
 }
@@ -97,10 +126,10 @@ void _log(const LogType logType, const char* msg, Args... args)
 #define D_LOG(logType, msg, ...) _log(logType, msg, ##__VA_ARGS__);
 #define D_ASSERT(x, msg, ...)           \
 {                                       \
-    if (!x)                             \
+    if (!(x))                           \
     {                                   \
         D_LOG(ERROR, msg, ##__VA_ARGS__);    \
-        __debugbreak();                 \
+        DEBUG_BREAK();                  \
     }                                   \
 }                                       \
 

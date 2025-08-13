@@ -1,12 +1,26 @@
+# Detect operating system
+UNAME_S := $(shell uname -s)
+
 CXX = g++
-CXXFLAGS = -g -Wall \
-  -Ibin/dependencies/SDL2/include \
-  -Ibin/dependencies/imgui
 
-LDFLAGS = -Lbin/dependencies/SDL2_gcc/lib \
-  -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image
+# Platform-specific settings
+ifeq ($(UNAME_S),Darwin)    # macOS
+    CXXFLAGS = -g -Wall -std=c++17 \
+      $(shell sdl2-config --cflags) \
+      -Ibin/dependencies/imgui
+    LDFLAGS = -lSDL2main $(shell sdl2-config --libs) -lSDL2_ttf -lSDL2_image
+    TARGET = tile_game
+    CLEAN_CMD = rm -rf build $(TARGET)
+else                        # Windows (MSYS2/MinGW)
+    CXXFLAGS = -g -Wall -std=c++17 \
+      -Ibin/dependencies/SDL2/include \
+      -Ibin/dependencies/imgui
+    LDFLAGS = -Lbin/dependencies/SDL2_gcc/lib \
+      -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image
+    TARGET = tile.exe
+    CLEAN_CMD = if exist build rd /s /q build && if exist $(TARGET) del /q $(TARGET)
+endif
 
-# Source files
 SRC_TILE = \
   tile/src/addSpritesScreen.cpp \
   tile/src/main.cpp \
@@ -35,9 +49,6 @@ SRC = $(SRC_TILE) $(SRC_IMGUI)
 # Object files go in build/
 OBJ = $(patsubst %.cpp,build/%.o,$(SRC))
 
-# Final binary
-TARGET = tile.exe
-
 # Default target
 all: $(TARGET)
 
@@ -47,12 +58,11 @@ $(TARGET): $(OBJ)
 
 # Compile rule: ensures build/ directories exist before compiling
 build/%.o: %.cpp
-	@mkdir -p $(dir $@)
+	mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Clean rule (works on Windows with PowerShell or CMD)
+# Clean rule (cross-platform)
 clean:
-	@if exist build rd /s /q build
-	@if exist $(TARGET) del /q $(TARGET)
+	$(CLEAN_CMD)
 
 .PHONY: all clean
