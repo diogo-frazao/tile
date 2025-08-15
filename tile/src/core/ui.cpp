@@ -35,8 +35,12 @@ static SDL_Texture* createText(Vec2& outWorldBounds, const char* text, uint16_t 
 		return nullptr;
 	}
 
-	SDL_Surface* const textSurface = TTF_RenderUTF8_Solid(font, text, color);
+	SDL_Surface* const textSurface = TTF_RenderUTF8_Blended(font, text, color);
+	
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 	SDL_Texture* const textTexture = SDL_CreateTextureFromSurface(s_renderer, textSurface);
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+	
 	if (textTexture == nullptr)
 	{
 		D_ASSERT(false, "Failed to load font %s. Error: %s", fontPath, TTF_GetError());
@@ -445,7 +449,10 @@ void destroyWidget(InteractableText* widget)
 
 SDL_Texture* createUITexture()
 {
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 	SDL_Texture* uiTexture = SDL_CreateTexture(s_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, k_uiResolutionWidth, k_uiResolutionHeight);
 	SDL_SetTextureBlendMode(uiTexture, SDL_BLENDMODE_BLEND);
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+	
 	return uiTexture;
 }
