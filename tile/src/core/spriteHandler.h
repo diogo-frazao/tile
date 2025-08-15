@@ -8,6 +8,8 @@ struct SDL_Texture;
 struct SDL_Rect;
 struct SDL_FRect;
 inline SDL_Texture* s_atlasTexture;
+inline int32_t s_atlasTextureWidth;
+inline int32_t s_atlasTextureHeight;
 
 enum SpriteType
 {
@@ -26,9 +28,11 @@ struct Sprite
 	Vec2 position;
 	IVec2 size;
 	IVec2 offset;
-	
+
 	bool isTile;
 	IVec2 startingTileOffset;
+
+	bool isVisible = true;
 
 	bool isValid()
 	{

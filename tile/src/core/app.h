@@ -1,6 +1,5 @@
 #pragma once
 #include <stdint.h>
-#include "../screens.h"
 
 inline bool s_debugCollidersEnabled = false;
 inline bool s_useCustomMouse = false;
@@ -26,10 +25,4 @@ private:
 	void update();
 	void render();
 	void killWindow();
-
-	PanelScreen _panelScreen;
-	SettingsScreen _settingsScreen;
-	AddSpritesScreen _addSpritesScreen;
-	MainScreen _mainScreen;
-	LayerInspectorScreen _layerInspectorScreen;
 };

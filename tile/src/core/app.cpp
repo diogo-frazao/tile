@@ -8,6 +8,7 @@
 #include <imgui.h>
 #include <imgui_impl_sdl2.h>
 #include <imgui_impl_sdlrenderer2.h>
+#include "../screens.h"
 
 void App::runApp()
 {
@@ -120,26 +121,29 @@ void App::initWindow()
 
 void App::start()
 {
-	_mainScreen.start();
-	_settingsScreen.start();
-	_addSpritesScreen.start();
-	MouseScreen::instance().start();
+	getMainScreen().start();
+	getSettingsScreen().start();
+	getAddSpritesScreen().start();
+	getMouseScreen().start();
+	getLayerInspectorScreen().start();
 }
 
 void App::update()
 {
 	SDL_Event ev;
-	uint64_t lastFrameTimeStamp = SDL_GetTicks64();
+	uint64_t lastFrameTimeStamp = 0;
+
 	while (true)
 	{
-		static constexpr uint8_t s_targetFrameRate = 60;
-		static const uint8_t s_millisecondsBetweenFrames = static_cast<uint8_t>(std::floorf(1000.f / s_targetFrameRate));
+		static constexpr uint8_t k_targetFrameRate = 60;
+		static const uint8_t k_targetMillisecondsBetweenFrames = static_cast<uint8_t>(std::floorf(1000.f / k_targetFrameRate));
 
-		const uint64_t millisecondsSinceLastFrame = SDL_GetTicks64() - lastFrameTimeStamp;
-		if (millisecondsSinceLastFrame >= s_millisecondsBetweenFrames)
+		const uint64_t currentTimeStamp = SDL_GetTicks64();
+		const uint64_t millisecondsSinceLastFrame = currentTimeStamp - lastFrameTimeStamp;
+		
+		if (millisecondsSinceLastFrame >= k_targetMillisecondsBetweenFrames)
 		{
-			lastFrameTimeStamp = SDL_GetTicks64();
-			//D_LOG(MINI, "FPS: %i", 1000 / millisecondsSinceLastFrame);
+			lastFrameTimeStamp = currentTimeStamp;
 			while (SDL_PollEvent(&ev))
 			{				
 				if (ev.type == SDL_QUIT)
@@ -156,14 +160,22 @@ void App::update()
     		ImGui_ImplSDL2_NewFrame();
     		ImGui::NewFrame();
 
-			_settingsScreen.update();
-			_addSpritesScreen.update();
-			_mainScreen.update();
-			MouseScreen::instance().update();
-			_layerInspectorScreen.update();
+			getSettingsScreen().update();
+			getAddSpritesScreen().update();
+			getMainScreen().update();
+			getMouseScreen().update();
+			getLayerInspectorScreen().update();
 
 			render();
 			resetKeyboardAndMouseInput();
+		}
+		else
+		{
+			uint32_t millisecondsToSleep = k_targetMillisecondsBetweenFrames - millisecondsSinceLastFrame;
+			if (millisecondsToSleep > 1)
+			{
+				SDL_Delay(millisecondsToSleep - 1);
+			}
 		}
 	}
 }
@@ -174,8 +186,9 @@ void App::render()
 	SDL_SetRenderDrawColor(s_renderer, 32, 33, 63, 1);
 	SDL_RenderClear(s_renderer);
 
-	_mainScreen.render();
-	_panelScreen.render();
+	getMainScreen().render();
+	getLayerInspectorScreen().render();
+	getPanelScreen().render();
 	
 	// Disable logical size for ImGui rendering at native resolution
 	SDL_RenderSetLogicalSize(s_renderer, 0, 0);
@@ -184,18 +197,18 @@ void App::render()
 	// Restore logical size for game rendering
 	SDL_RenderSetLogicalSize(s_renderer, k_screenWidth, k_screenHeight);
 	
-	_settingsScreen.render();
-	_addSpritesScreen.render();
-	MouseScreen::instance().render();
+	getSettingsScreen().render();
+	getAddSpritesScreen().render();
+	getMouseScreen().render();
 
 	SDL_RenderPresent(s_renderer);
 }
 
 void App::killWindow()
 {
-	_mainScreen.destroy();
-	_settingsScreen.destroy();
-	_addSpritesScreen.destroy();
+	getMainScreen().destroy();
+	getSettingsScreen().destroy();
+	getAddSpritesScreen().destroy();
 
 	ImGui_ImplSDLRenderer2_Shutdown();
     ImGui_ImplSDL2_Shutdown();

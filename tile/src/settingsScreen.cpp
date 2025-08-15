@@ -36,7 +36,7 @@ void SettingsScreen::start()
 
 void SettingsScreen::update()
 {
-	if (!s_active)
+	if (!_isActive)
 	{
 		return;
 	}
@@ -46,7 +46,7 @@ void SettingsScreen::update()
 
 void SettingsScreen::render()
 {
-	if (!s_active)
+	if (!_isActive)
 	{
 		return;
 	}
@@ -129,7 +129,7 @@ void SettingsScreen::onSettingsSaved(const std::vector<int16_t>& results)
 	setImGuiDisplaySizeToWindowSize();
 
 	user_defaults::applySettings(user_defaults::Settings(resolutionIndex, enableFullscreen));
-	s_active = false;
-	PanelScreen::s_isPanelActive = false;
-	MainScreen::s_active = true;
+	_isActive = false;
+	getPanelScreen()._isPanelActive = false;
+	getMainScreen()._isActive = true;
 }

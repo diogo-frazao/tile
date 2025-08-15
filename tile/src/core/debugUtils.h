@@ -3,6 +3,14 @@
 #include "lib.h"
 #include <SDL_render.h>
 
+inline void drawRect(const RectCollider& rect)
+{
+    SDL_SetRenderDrawColor(s_renderer, rect.debugColor.r, rect.debugColor.g, rect.debugColor.b, rect.debugColor.a);
+    SDL_FRect debugRect{ rect.topLeftPoint.x, rect.topLeftPoint.y, rect.size.x, rect.size.y };
+    SDL_RenderDrawRectF(s_renderer, &debugRect);
+    SDL_SetRenderDrawColor(s_renderer, 0,0,0,1);
+}
+
 inline void debugDrawRect(const RectCollider& rect)
 {
     if (!s_debugCollidersEnabled)
@@ -10,10 +18,7 @@ inline void debugDrawRect(const RectCollider& rect)
         return;
     }
 
-    SDL_SetRenderDrawColor(s_renderer, rect.debugColor.r, rect.debugColor.g, rect.debugColor.b, rect.debugColor.a);
-    SDL_FRect debugRect{ rect.topLeftPoint.x, rect.topLeftPoint.y, rect.size.x, rect.size.y };
-    SDL_RenderDrawRectF(s_renderer, &debugRect);
-    SDL_SetRenderDrawColor(s_renderer, 0,0,0,1);
+    drawRect(rect);
 }
 
 inline void debugDrawPoint(const Vec2& pos)

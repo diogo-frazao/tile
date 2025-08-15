@@ -22,9 +22,9 @@ public:
 	void update();
 	void render();
 	void destroy();
-	inline static bool s_active = false;
-	inline static std::array<SpritePreviewerButtonPair, 3> s_spritePreviewerButtons;
-	inline static TilePlayground s_tilePlayground;
+	bool _isActive = false;
+	std::array<SpritePreviewerButtonPair, 3> _spritePreviewerButtons;
+	TilePlayground _tilePlayground;
 private:
 	void handleAddSpritesToLayersDebug();
 	void toggleSpritePreviewerAndDisableOthers(SpritePreviewer& spritePreviewer);
@@ -47,8 +47,10 @@ private:
 class LayerInspectorScreen
 {
 public:
+	void start();
 	void update();
-	inline static bool s_active = false;
+	void render();
+	void onUndoLastPlacedSprite();
 };
 
 class SettingsScreen
@@ -58,7 +60,7 @@ public:
 	void update();
 	void render();
 	void destroy();
-	inline static bool s_active = false;
+	bool _isActive = false;
 	void onSettingsSaved(const std::vector<int16_t>& results);
 	void onSettingsDiscarded();
 private:
@@ -75,7 +77,7 @@ public:
 	void update();
 	void render();
 	void destroy();
-	inline static bool s_active = false;
+	bool _isActive = false;
 private:
 	void createSpriteFromResults(const std::vector<int16_t>& results);
 	SDL_Texture* _uiTexture;
@@ -88,7 +90,7 @@ class PanelScreen
 {
 public:
 	void render();
-	inline static bool s_isPanelActive = false;
+	bool _isPanelActive = false;
 };
 
 class MouseScreen
@@ -101,12 +103,6 @@ public:
 		DRAGGING
 	};
 
-	static MouseScreen& instance()
-	{
-		static MouseScreen mouseScreen;
-		return mouseScreen;
-	}
-
 	void start();
 	void update();
 	void render();
@@ -116,3 +112,39 @@ private:
 	Sprite _mouseSprite;
 	IVec2 _lastMousePosition;
 };
+
+inline MainScreen& getMainScreen()
+{
+	static MainScreen mainScreen;
+	return mainScreen;
+}
+
+inline LayerInspectorScreen& getLayerInspectorScreen()
+{
+	static LayerInspectorScreen layerInspectorScreen;
+	return layerInspectorScreen;
+}
+
+inline SettingsScreen& getSettingsScreen()
+{
+	static SettingsScreen settingsScreen;
+	return settingsScreen;
+}
+
+inline AddSpritesScreen& getAddSpritesScreen()
+{
+	static AddSpritesScreen addSpritesScreen;
+	return addSpritesScreen;
+}
+
+inline PanelScreen& getPanelScreen()
+{
+	static PanelScreen panelScreen;
+	return panelScreen;
+}
+
+inline MouseScreen& getMouseScreen()
+{
+	static MouseScreen mouseScreen;
+	return mouseScreen;
+}

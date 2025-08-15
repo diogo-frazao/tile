@@ -1,6 +1,8 @@
 #include "core/spriteHandler.h"
+
 #include <vector>
 #include <array>
+#include <functional>
 
 class TilePlayground
 {
@@ -205,29 +207,119 @@ public:
 			return;
 		}
 
-		int16_t indexToPlaceSprite = -1;
 		for (uint16_t i = 0; i < _placedSprites.size(); ++i)
 		{
 			if (_placedSprites[i].layer <= placeableSprite.layer)
 			{
-				indexToPlaceSprite++;
 				continue;
 			}
 			else
 			{
-				indexToPlaceSprite = (indexToPlaceSprite == -1) ? 0 : indexToPlaceSprite;
-				_placedSprites.insert(_placedSprites.begin() + indexToPlaceSprite, placeableSprite);
-				_spriteInHandIndex = indexToPlaceSprite;
+				_placedSprites.insert(_placedSprites.begin() + i, placeableSprite);
+				_spriteInHandIndex = i;
 				return;
 			}
 		}
 
-		if (indexToPlaceSprite == static_cast<int16_t>((_placedSprites.size() - 1)))
+		_placedSprites.emplace_back(placeableSprite);
+		_spriteInHandIndex = _placedSprites.size() - 1;
+	}
+
+	void resetHistory()
+	{
+		_undoRedoSprites._lastRemovedSpriteIndex = k_invalidIndex;
+		for (PlaceableSprite& removedSprite : _undoRedoSprites._removedSprites)
 		{
-			_placedSprites.emplace_back(placeableSprite);
-			_spriteInHandIndex = _placedSprites.size() - 1;
+			removedSprite.invalidate();
+		}
+
+		_undoRedoSprites._lastPlacedSpriteHistoryIndex = k_invalidIndex;
+		for (int16_t& n : _undoRedoSprites._placedSpritesIndexesHistory)
+		{
+			n = k_invalidIndex;
+		}
+	}
+
+	bool sendPlacedSpriteBackwards(size_t spriteIndex, size_t& outNewSpriteIndex)
+	{
+		if (spriteIndex >= _placedSprites.size())
+		{
+			D_ASSERT(false, "Invalid sprite index to find on _placedSprites");
+			return false;
+		}
+
+		if (spriteIndex == 0)
+		{
+			D_LOG(MINI, "Skipped send backwards since sprite is already at the back of the layer");
+			return false;
+		}
+
+		PlaceableSprite& currentSprite = _placedSprites[spriteIndex];
+		PlaceableSprite& spriteToReplace = _placedSprites[spriteIndex - 1];
+
+		if (currentSprite.layer != spriteToReplace.layer)
+		{
+			D_LOG(MINI, "Skipped send backwards since sprite is already at the back of the layer");
+			return false;
+		}
+
+		swapElements(_placedSprites[spriteIndex], _placedSprites[spriteIndex - 1]);
+		resetHistory();
+
+		outNewSpriteIndex = spriteIndex - 1;
+		return true;
+	}
+
+	bool bringPlacedSpriteForward(size_t spriteIndex, size_t& outNewSpriteIndex)
+	{
+		if (spriteIndex >= _placedSprites.size())
+		{
+			D_ASSERT(false, "Invalid sprite index to find on _placedSprites");
+			return false;
+		}
+
+		if (spriteIndex == _placedSprites.size() - 1)
+		{
+			D_LOG(MINI, "Skipped bring forward since sprite is already at the top of the layer");
+			return false;
+		}
+
+		PlaceableSprite& currentSprite = _placedSprites[spriteIndex];
+		PlaceableSprite& spriteToReplace = _placedSprites[spriteIndex + 1];
+
+		if (currentSprite.layer != spriteToReplace.layer)
+		{
+			D_LOG(MINI, "Skipped bring forward since sprite is already at the top of the layer");
+			return false;
+		}
+
+		swapElements(_placedSprites[spriteIndex], _placedSprites[spriteIndex + 1]);
+		resetHistory();
+
+		outNewSpriteIndex = spriteIndex + 1;
+		return true;
+	}
+
+	void deletePlacedSprite(PlaceableSprite* placeableSpriteToRemove)
+	{
+		int16_t indexForSpriteToRemove = k_invalidIndex;
+		for (size_t i = 0; i < _placedSprites.size(); ++i)
+		{
+			if (&_placedSprites[i] == placeableSpriteToRemove)
+			{
+				indexForSpriteToRemove = i;
+				break;
+			}
+		}
+
+		if (!isIndexValid(indexForSpriteToRemove))
+		{
+			D_ASSERT(false, "Couldn't find and delete sprite on _placedSprites");
 			return;
 		}
+
+		_placedSprites.erase(_placedSprites.begin() + indexForSpriteToRemove);
+		resetHistory();
 	}
 
 	void undoLastPlacedSprite()
@@ -243,6 +335,11 @@ public:
 		_undoRedoSprites.deleteLastPlacedSpriteHistoryIndex();
 
 		clearSpriteInHand();
+
+		if(_lastSpriteUndoDelegate != nullptr)
+		{
+			_lastSpriteUndoDelegate();
+		}
 	}
 
 	void redoLastRemovedSprite()
@@ -259,4 +356,5 @@ public:
 	UndoRedoPlaceSprites _undoRedoSprites;
 	int16_t _spriteInHandIndex;
 	std::vector<PlaceableSprite> _placedSprites;
+	std::function<void()> _lastSpriteUndoDelegate;
 };

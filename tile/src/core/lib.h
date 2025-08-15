@@ -46,7 +46,7 @@ struct RectCollider
 	SDL_Color debugColor{252, 15, 192, 255};
 
 	RectCollider() = default;
-	RectCollider(const Vec2& pos, const Vec2& size) : topLeftPoint(pos), size(size) {};
+	RectCollider(const Vec2& topLeftPoint, const Vec2& size) : topLeftPoint(topLeftPoint), size(size) {};
 };
 
 enum LayerType
@@ -56,6 +56,8 @@ enum LayerType
 	MIDDLEGROUND,
 	FOREGROUND
 };
+
+inline const char* s_layersAsString[3] = {"Background", "Middleground", "Foreground"};
 
 inline float lerp(float a, float b, float t)
 {
@@ -147,4 +149,12 @@ inline int convertStringToInt(std::string_view word)
 	}
 
 	return result; 
+}
+
+template <typename T>
+void swapElements(T& a, T&b)
+{
+	T temp = a;
+	a = b;
+	b = temp;
 }

@@ -28,14 +28,14 @@ void AddSpritesScreen::createSpriteFromResults(const std::vector<int16_t>& resul
 	IVec2 startingTileOffset {startingTileX, startingTileY};
 	Sprite sprite{spriteSize, spriteOffset, isTile, startingTileOffset};
 
-	MainScreen::s_spritePreviewerButtons[layerToAddSprite].first._spritesToPreview.emplace_back(std::move(sprite));
+	getMainScreen()._spritePreviewerButtons[layerToAddSprite].first._spritesToPreview.emplace_back(std::move(sprite));
 
 	D_LOG(MINI, "Added sprite with offset %i,%i size %i,%i for layer %i", 
 		sprite.offset.x, sprite.offset.y, sprite.size.x, sprite.size.y, layerToAddSprite);
 
-	s_active = false;
-	PanelScreen::s_isPanelActive = false;
-	MainScreen::s_active = true;
+	_isActive = false;
+	getPanelScreen()._isPanelActive = false;
+	getMainScreen()._isActive = true;
 }
 
 void AddSpritesScreen::start()
@@ -76,7 +76,7 @@ void AddSpritesScreen::start()
 
 void AddSpritesScreen::update()
 {
-	if (!s_active)
+	if (!_isActive)
 	{
 		return;
 	}
@@ -86,7 +86,7 @@ void AddSpritesScreen::update()
 
 void AddSpritesScreen::render()
 {
-	if (!s_active)
+	if (!_isActive)
 	{
 		return;
 	}

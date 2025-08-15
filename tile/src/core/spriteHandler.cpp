@@ -19,6 +19,8 @@ namespace textures
 
 		SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 		s_atlasTexture = texture;
+
+		SDL_QueryTexture(s_atlasTexture, nullptr, nullptr, &s_atlasTextureWidth, &s_atlasTextureHeight);
 		return s_atlasTexture;
 	}
 
