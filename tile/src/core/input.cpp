@@ -1,6 +1,7 @@
 #include "input.h"
 #include "log.h"
 #include "app.h"
+#include <SDL_Render.h>
 
 void calculateMousePositionThisFrame()
 {
@@ -9,17 +10,15 @@ void calculateMousePositionThisFrame()
 
 IVec2 getMousePosition()
 {
-	int32_t w = 0;
-	SDL_GetWindowSize(s_window, &w, nullptr);
-	uint8_t screenfactor = w / k_screenWidth;
+	int32_t windowMouseX;
+	int32_t windowMouseY;
+	SDL_GetMouseState(&windowMouseX, &windowMouseY);
 
-	int32_t mx = 0;
-	int32_t my = 0;
-	SDL_GetMouseState(&mx, &my);
+	float logicalMouseX;
+	float logicalMouseY;
+	SDL_RenderWindowToLogical(s_renderer, windowMouseX, windowMouseY, &logicalMouseX, &logicalMouseY);
 
-	int32_t mouseX = mx / screenfactor;
-	int32_t mouseY = my / screenfactor;
-	return IVec2(mouseX, mouseY);
+	return IVec2{static_cast<int32_t>(logicalMouseX), static_cast<int32_t>(logicalMouseY)};
 }
 
 void handleKeyboardInput(SDL_Event& ev)
