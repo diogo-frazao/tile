@@ -21,28 +21,8 @@ else                        # Windows (MSYS2/MinGW)
     CLEAN_CMD = if exist build rd /s /q build && if exist $(TARGET) del /q $(TARGET)
 endif
 
-SRC_TILE = \
-  tile/src/addSpritesScreen.cpp \
-  tile/src/main.cpp \
-  tile/src/mainScreen.cpp \
-  tile/src/mouseScreen.cpp \
-  tile/src/settingsScreen.cpp \
-  tile/src/spritePreviewer.cpp \
-  tile/src/core/app.cpp \
-  tile/src/core/input.cpp \
-  tile/src/core/spriteHandler.cpp \
-  tile/src/core/ui.cpp \
-  tile/src/core/widgetLink.cpp \
-  tile/src/layerInspectorScreen.cpp
-
-SRC_IMGUI = \
-  bin/dependencies/imgui/imgui.cpp \
-  bin/dependencies/imgui/imgui_demo.cpp \
-  bin/dependencies/imgui/imgui_draw.cpp \
-  bin/dependencies/imgui/imgui_impl_sdl2.cpp \
-  bin/dependencies/imgui/imgui_impl_sdlrenderer2.cpp \
-  bin/dependencies/imgui/imgui_tables.cpp \
-  bin/dependencies/imgui/imgui_widgets.cpp
+SRC_TILE  := $(wildcard tile/src/**/*.cpp) $(wildcard tile/src/*.cpp)
+SRC_IMGUI := $(wildcard bin/dependencies/imgui/*.cpp)
 
 SRC = $(SRC_TILE) $(SRC_IMGUI)
 
