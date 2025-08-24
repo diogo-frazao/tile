@@ -27,9 +27,6 @@
     #define SPRINTF_S(buffer, size, format, ...) snprintf(buffer, size, format, __VA_ARGS__)
 #endif
 
-// Disable for distribution builds
-#define DEBUG_ENABLED 1
-
 enum TextColor
 {
     TEXT_COLOR_BLACK,
@@ -122,7 +119,11 @@ void _log(const LogType logType, const char* msg, Args... args)
     puts(textBuffer);
 }
 
-#if DEBUG_ENABLED == 1
+#ifdef RELEASE_BUILD
+#define D_LOG(logType, msg, ...)
+#define D_ASSERT(x, msg, ...)
+
+#else
 #define D_LOG(logType, msg, ...) _log(logType, msg, ##__VA_ARGS__);
 #define D_ASSERT(x, msg, ...)           \
 {                                       \
@@ -132,9 +133,5 @@ void _log(const LogType logType, const char* msg, Args... args)
         DEBUG_BREAK();                  \
     }                                   \
 }                                       \
-
-#else
-#define D_LOG(logType, msg, ...)
-#define D_ASSERT(x, msg, ...)
 
 #endif

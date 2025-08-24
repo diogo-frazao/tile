@@ -64,7 +64,7 @@ void toggleAddSpritesScreen()
 
 void MainScreen::handleAddSpritesToLayersDebug()
 {
-#if DEBUG_ENABLED == 1
+#ifndef RELEASE_BUILD
 	static std::array<Sprite, 14> debugSprites = {
 		Sprite({256,128}, {16, 0}), // bg
 		Sprite({80,15}, {0, 128}), // water

@@ -5,7 +5,7 @@
             "name": "Debug tile",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/tile.exe",
+            "program": "${workspaceFolder}/build/tile.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

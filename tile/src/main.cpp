@@ -1,4 +1,3 @@
-#include <SDL.h>
 #include "core/app.h"
 
 #ifdef _WIN32

@@ -1,8 +1,4 @@
-.vs
-bin/x64/
-bin/intermediates
-raw_files/
+build/intermediaries/
+build/tile/
 tile.exe
-tile/src/todo.txt
-build/
-NUL
+imgui.ini
